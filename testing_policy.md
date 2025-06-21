@@ -20,8 +20,28 @@ L'état final du projet vise à permettre tout projet graphique, indépendemment
 
 ### Objectifs des tests
 
+Les tests unitaires seront utilisés pour vérifier le bon fonctionnement de chaque fonctionalité et des shaders de SHIMERA. Les tests unitaires seront écrits en C++ avec le framework Catch2.
+
+Les tests de performance seront utilisés pour vérifier la vitesse de génération des shaders sur différentes librairies graphique.
+
 ### Types de tests
-  - ### Tests unitaires
-  - ### Tests d'intégration
-  - ### Tests fonctionnels
-  - ### Tests de performance
+#### Tests unitaires
+
+Nous utiliserons un outil capable de tester nos shaders en les comparant à des images de référence de rendu.
+Au préalable, les images seront générées à partir du shader testé dans un environnement graphique crée pour la production.
+Les tests seront vérifiés à partir du pourcentage de résultat, lié à la tolérance de correspondance entre les images.
+
+Le résultat sera traité de 3 manières suivantes:
+ - Le test sera validé si la correspondance est supérieure à 95%
+ - Le test sera aussi validé si la correspondance est supérieure à 90% mais un ticket sera généré pour qu'un membre puisse vérifier si le shader est problématique.
+ - Le test échouera si la correspondance est inférieure à 90%.
+
+#### Tests d'intégration
+
+Nous ferons en sorte de vérifier que la construction de la librairie se passe correctement à chaque merge sur la branche de développement (dev) et sur la branche de production (main). De plus, ces test integreront les tests unitaires et de performance sur chaques merge.
+
+#### Tests fonctionnels
+#### Tests de performance
+
+Nous crérons un programme capable de mesurer la vitesse de génération des shaders sur différentes librairies graphiques. Le but étant d'avoir le temps le plus court possible pour la génération des shaders sur chaque librairie graphique.
+
