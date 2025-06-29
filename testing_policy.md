@@ -50,4 +50,4 @@ Les tests de performance seront utilisés pour vérifier la vitesse de générat
 
 - ### Tests de performance
 
-  Nous crérons un programme capable de mesurer la vitesse de générationdes shaders sur différentes librairies graphiques. Le but étant d'avoirle temps le plus court possible pour la génération des shaders surchaque librairie graphique.
+  Nous crérons un programme capable de mesurer la vitesse de génération des shaders sur différentes librairies graphiques. Le but étant d'avoirle temps le plus court possible pour la génération des shaders surchaque librairie graphique.
