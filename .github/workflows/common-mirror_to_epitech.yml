@@ -10,6 +10,9 @@ jobs:
       steps:
         - uses: actions/checkout@v4
 
+        - name: Mark /github/workspace as safe
+          run: git config --global --add safe.directory /github/workspace
+
         - name: Extract branches name
           id: get_tag
           run: echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
