@@ -1,4 +1,4 @@
-# {Shimera} Politique de test
+# **{Shimera} Politique de test**
 > Un guide pour pouvoir décrire les politiques de test du projet.
 
 ## Sommaire

@@ -1,4 +1,4 @@
-# {Shimera} Environnement Technique
+# **{Shimera} Environnement Technique**
 > Un guide pour pouvoir appréhender l'environnement technique du projet.
 
 ## Sommaire

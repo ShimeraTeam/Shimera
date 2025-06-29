@@ -1,4 +1,4 @@
-# {Shimera} Déploiement**
+# **{Shimera} Déploiement**
 > Un guide qui décrit comment est structuré notre dépot et notre CI/CD.
 
 ## Sommaire
