@@ -21,7 +21,7 @@ L'état final du projet vise à permettre tout projet graphique, indépendemment
 
 Les tests unitaires seront utilisés pour vérifier le bon fonctionnement de chaque fonctionalité et des shaders de SHIMERA. Les tests unitaires seront écrits en C++ avec le framework Catch2.
 
-Les tests d'intégration permettront de valider 
+Les tests d'intégration permettront de valider
 
 Les tests de performance seront utilisés pour vérifier la vitesse de génération des shaders sur différentes librairies graphique.
 
