@@ -10,7 +10,7 @@ jobs:
       steps:
         - uses: actions/checkout@v4
 
-        - name: Mark /github/workspace as safe
+        - name: Mark /github/workspace as safe 
           run: git config --global --add safe.directory /github/workspace
 
         - name: Extract branches name
