@@ -1,0 +1,27 @@
+name: Common - Mirror to Epitech Repository
+on: push
+env:
+  DEST_REPO: git@github.com:EpitechPromo2027/G-EIP-600-TLS-6-1-eip-leo.maurel.git
+  SRC_REPO: git@github.com:ShimeraTeam/Shimera.git
+
+jobs:
+    mirror-push:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+
+        - name: Mark /github/workspace as safe 
+          run: git config --global --add safe.directory /github/workspace
+
+        - name: Extract branches name
+          id: get_tag
+          run: echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+
+        - name: Mirror to Epitech Repository
+          uses: wei/git-sync@v3
+          with:
+            source_repo: ${{ env.SRC_REPO }}
+            source_branch: ${{ env.BRANCH_NAME }}
+            destination_repo: ${{ env.DEST_REPO }}
+            destination_branch: ${{ env.BRANCH_NAME }}
+            ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
