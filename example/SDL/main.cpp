@@ -67,15 +67,15 @@ int main(int argc, char **argv) {
 
 		// Dessiner un cercle (rouge) à gauche
 		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-		drawCircle(renderer, 150, 200, 80);
+		drawCircle(renderer, 175, 200, 80);
 
 		// Dessiner un carré (vert) au centre
 		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-		drawRectangle(renderer, 330, 120, 140, 140);
+		drawRectangle(renderer, 400 - 160/2, 200 - 160/2, 160, 160);
 
 		// Dessiner un triangle (bleu) à droite
 		SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-		drawTriangle(renderer, 550, 100, 160);
+		drawTriangle(renderer, 545, 120, 160);
 
 		SDL_RenderPresent(renderer);
 		SDL_Delay(16); // ~60 FPS
