@@ -1,0 +1,9 @@
+[submodule "learnings/LearningOpenGLEddy"]
+	path = learnings/LearningOpenGLEddy
+	url = https://github.com/ShimeraTeam/LearningOpenGLEddy
+[submodule "learnings/LearningOpenGLPaul"]
+	path = learnings/LearningOpenGLPaul
+	url = https://github.com/ShimeraTeam/LearningOpenGLPaul
+[submodule "learnings/LearningOpenGLLeo"]
+	path = learnings/LearningOpenGLLeo
+	url = https://github.com/ShimeraTeam/LearningOpenGLeo
