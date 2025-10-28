@@ -1,8 +1,5 @@
 name: CMake - Build & Publish release
-on:
-  push:
-    tags:
-      - '*.*.*.rc'
+on: workflow_dispatch
 
 permissions:
   contents: write

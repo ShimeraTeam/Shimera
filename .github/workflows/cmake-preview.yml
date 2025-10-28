@@ -1,8 +1,5 @@
 name: CMake - Build & Publish pre-release
-on:
-  push:
-    tags:
-      - '*.*.*.dev'
+on: workflow_dispatch
 
 permissions:
   contents: write
