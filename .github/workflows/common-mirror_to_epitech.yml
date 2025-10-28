@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - master
-      - dev
 
 env:
   DEST_REPO: git@github.com:EpitechPromo2027/G-EIP-600-TLS-6-1-eip-leo.maurel.git
