@@ -1,9 +1,10 @@
 #include <SFML/Graphics.hpp>
 #include <optional>
+#include "Shader.h"
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode({800, 400}), "SFML3 - Formes géométriques");
+    sf::RenderWindow window(sf::VideoMode({800, 400}), sf::String(L"SFML3 - Formes géométriques"));
 
     sf::CircleShape circle(80.f);
     circle.setFillColor(sf::Color::Red);
@@ -16,6 +17,7 @@ int main()
     sf::CircleShape triangle(105.f, 3);
     triangle.setFillColor(sf::Color::Blue);
     triangle.setPosition(sf::Vector2f(625.f - 105.f, 200.f - 80.f));
+    //Shader shader("../res/shaders/BasicShader.vert", "../res/shaders/BasicShader.frag");
 
     while (window.isOpen())
     {

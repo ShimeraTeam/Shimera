@@ -8,4 +8,5 @@ target("sfml")
     set_kind("binary")
     add_files("src/*.cpp")
     add_packages("sfml")
-
+    includes("../../main-shared-library")
+    add_deps("main-lib")
