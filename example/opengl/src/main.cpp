@@ -4,91 +4,9 @@
 #include <GLFW/glfw3.h>
 #include <GL/glew.h>
 
-#define ASSERT(x) if (!(x)) __debugbreak();
-#define GLC(x) cglClearError();\
-    x;\
-    ASSERT(cglLogCall(#x, __FILE__, __LINE__));
-
-static void cglClearError()
-{
-    while (glGetError() != GL_NO_ERROR);
-}
-
-static bool cglLogCall(const char *function, const char *file, int line)
-{
-    while (const GLenum error = glGetError())
-    {
-        std::cerr << "[OpenGL ERROR] (" << error << "): " << function << " -> " << file << ":" << line << std::endl;
-        return false;
-    }
-    return true;
-}
-
-struct ShaderProgramSource
-{
-    std::string vertex;
-    std::string fragment;
-};
-
-static std::string readFile(const std::string &filePath)
-{
-    std::ifstream stream(filePath);
-    if (!stream.is_open()) {
-        std::cerr << "ERROR: can't open file: " << filePath << std::endl;
-        return "";
-    }
-    std::stringstream buffer;
-    buffer << stream.rdbuf();
-    return buffer.str();
-}
-
-static ShaderProgramSource parseShader(const std::string &vertexFilePath, const std::string &fragmentFilePath)
-{
-    ShaderProgramSource source;
-    source.vertex = readFile(vertexFilePath);
-    source.fragment = readFile(fragmentFilePath);
-    return source;
-}
-
-unsigned int compileShader(unsigned int type, const std::string &source)
-{
-    GLC(unsigned int id = glCreateShader(type);)
-    const char *str = source.c_str();
-    GLC(glShaderSource(id, 1, &str, nullptr));
-    GLC(glCompileShader(id));
-
-    int result;
-    GLC(glGetShaderiv(id, GL_COMPILE_STATUS, &result));
-    if (result == GL_FALSE)
-    {
-        int lenght;
-        GLC(glGetShaderiv(id, GL_INFO_LOG_LENGTH, &lenght));
-        char *message = (char *) alloca(lenght * sizeof(char)); // -> char message[lenght]
-        GLC(glGetShaderInfoLog(id, lenght, &lenght, message));
-        std::cout << "Failed to compile " << (type == GL_VERTEX_SHADER ? "vertex" : "fragment") << " shader" << std::endl;
-        std::cout << message << std::endl;
-        GLC(glDeleteShader(id));
-        return 0;
-    }
-
-    return id;
-}
-
-unsigned int createShader(const std::string &vertexSource, const std::string &fragmentSource)
-{
-    GLC(unsigned int program = glCreateProgram());
-    GLC(unsigned int vertex = compileShader(GL_VERTEX_SHADER, vertexSource));
-    GLC(unsigned int fragment = compileShader(GL_FRAGMENT_SHADER, fragmentSource));
-
-    GLC(glAttachShader(program, vertex));
-    GLC(glAttachShader(program, fragment));
-    GLC(glLinkProgram(program));
-    GLC(glValidateProgram(program));
-    GLC(glDeleteShader(vertex));
-    GLC(glDeleteShader(fragment));
-
-    return program;
-}
+#include "Framebuffer.h"
+#include "glUtils.h"
+#include "PostProcessingQuad.h"
 
 int main(void)
 {
@@ -153,17 +71,51 @@ int main(void)
     ASSERT(location != 1);
     GLC(glUniform4f(location, 0.3, 0.3, 0.8, 1.0));
 
+    unsigned int vao;
+    GLC(glGenVertexArrays(1, &vao));
+    GLC(glBindVertexArray(vao));
+
+    GLC(glBindBuffer(GL_ARRAY_BUFFER, buffer));
+    GLC(glEnableVertexAttribArray(0));
+    GLC(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0));
+
+    GLC(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
+
+    // Unbind for now
+    GLC(glBindVertexArray(0));
+
+    Framebuffer framebuffer(640, 480);
+    PostProcessingQuad postQuad(
+        "./res/shader/postprocessing/postprocess.vert",
+        "./res/shader/postprocessing/grayscale.frag"
+    );
+
+    float r = 0.0f;
+    float increment = 0.05f;
     while (!glfwWindowShouldClose(window))
     {
-        /* Render here */
+        /// Render into our framebuffer
+        framebuffer.bind();
+        GLC(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
         GLC(glClear(GL_COLOR_BUFFER_BIT));
 
+        // Use the basic shader and bind VAO
+        GLC(glUseProgram(shader));
+        GLC(glUniform4f(location, r, 0.3f, 0.8f, 1.0f));
+        GLC(glBindVertexArray(vao));
         GLC(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
-        /* Swap front and back buffers */
-        glfwSwapBuffers(window);
+        if (r > 1.0f) increment = -0.05f;
+        else if (r < 0.0f) increment = 0.05f;
+        r += increment;
 
-        /* Poll for and process events */
+        // Render to screen
+        framebuffer.unbind();
+        GLC(glClearColor(0.1f, 0.1f, 0.1f, 1.0f));
+        GLC(glClear(GL_COLOR_BUFFER_BIT));
+        postQuad.render(framebuffer.getTexture());
+
+        glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
