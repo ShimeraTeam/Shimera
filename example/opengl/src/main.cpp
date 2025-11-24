@@ -87,7 +87,7 @@ int main(void)
     Framebuffer framebuffer(640, 480);
     PostProcessingQuad postQuad(
         "./res/shader/postprocessing/postprocess.vert",
-        "./res/shader/postprocessing/colorshift.frag"
+        "./res/shader/postprocessing/distortion.frag"
     );
 
     float r = 0.0f;
