@@ -87,7 +87,7 @@ int main(void)
     Framebuffer framebuffer(640, 480);
     PostProcessingQuad postQuad(
         "./res/shader/postprocessing/postprocess.vert",
-        "./res/shader/postprocessing/grayscale.frag"
+        "./res/shader/postprocessing/colorshift.frag"
     );
 
     float r = 0.0f;
@@ -120,7 +120,9 @@ int main(void)
     }
 
     GLC(glDeleteProgram(shader));
-
+    GLC(glDeleteVertexArrays(1, &vao));
+    GLC(glDeleteBuffers(1, &buffer));
+    GLC(glDeleteBuffers(1, &ibo));
     glfwTerminate();
     return 0;
 }
