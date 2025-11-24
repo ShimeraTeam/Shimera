@@ -10,7 +10,7 @@ set_languages("cxx17")
 
 add_requires("glfw", "glew")
 
-target("opengl_learning")
+target("opengl_exemple")
     set_kind("binary")
     set_rundir("$(projectdir)")
     add_files("src/*.cpp")
