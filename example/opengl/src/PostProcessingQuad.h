@@ -1,7 +1,3 @@
-//
-// Created by leoma on 24/11/2025.
-//
-
 #ifndef OPENGL_LEARNING_POSTPROCESSINGQUAD_H
 #define OPENGL_LEARNING_POSTPROCESSINGQUAD_H
 #include <string>
@@ -13,6 +9,7 @@ class PostProcessingQuad {
         ~PostProcessingQuad();
         void render(unsigned int texture) const;
         unsigned int getShader() const;
+        void bindShader() const;
 
     private:
         unsigned int vao, vbo, ebo;

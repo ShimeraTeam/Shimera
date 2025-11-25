@@ -4,14 +4,14 @@ in vec2 texCoords;
 out vec4 color;
 
 uniform sampler2D u_screenTexture;
-//uniform float time; // Hardcoded for now
-const float time = 0.0;
-//uniform float noiseScale; // Hardcoded for now
-const float noiseScale = 3.0;
-//uniform float distortionStrength; // Hardcoded for now
-const float distortionStrength = 0.13;
-//uniform float timeScale; // Hardcoded for now
-const float timeScale = 0.1;
+uniform float time;
+//const float time = 0.0;
+uniform float noiseScale;
+//const float noiseScale = 3.0;
+uniform float distortionStrength;
+//const float distortionStrength = 0.13;
+uniform float timeScale;
+//const float timeScale = 0.1;
 
 // https://www.shadertoy.com/view/XdXBRH from https://iquilezles.org/articles/gradientnoise/
 vec2 hash(in ivec2 p) {

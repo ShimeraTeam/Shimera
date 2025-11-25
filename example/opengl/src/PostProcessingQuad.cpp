@@ -82,3 +82,7 @@ void PostProcessingQuad::render(unsigned int texture) const {
 unsigned int PostProcessingQuad::getShader() const {
     return shader;
 }
+
+void PostProcessingQuad::bindShader() const {
+    GLC(glUseProgram(shader));
+}

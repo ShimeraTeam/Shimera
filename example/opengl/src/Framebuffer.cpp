@@ -1,7 +1,3 @@
-//
-// Created by leoma on 24/11/2025.
-//
-
 #include "Framebuffer.h"
 
 #include <iostream>

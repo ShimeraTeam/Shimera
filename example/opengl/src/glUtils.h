@@ -1,7 +1,3 @@
-//
-// Created by leoma on 24/11/2025.
-//
-
 #ifndef OPENGL_LEARNING_UTILS_H
     #define OPENGL_LEARNING_UTILS_H
 

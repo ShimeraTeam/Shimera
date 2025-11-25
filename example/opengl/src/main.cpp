@@ -1,12 +1,12 @@
 #include <iostream>
-#include <fstream>
-#include <sstream>
 #include <GLFW/glfw3.h>
 #include <GL/glew.h>
 
 #include "Framebuffer.h"
 #include "glUtils.h"
 #include "PostProcessingQuad.h"
+#include "uniform/Uniform.hpp"
+#include "uniform/Vec4.hpp"
 
 int main(void)
 {
@@ -67,9 +67,7 @@ int main(void)
     unsigned int shader = createShader(source.vertex, source.fragment);
     GLC(glUseProgram(shader));
 
-    GLC(int location = glGetUniformLocation(shader, "u_Color"));
-    ASSERT(location != 1);
-    GLC(glUniform4f(location, 0.3, 0.3, 0.8, 1.0));
+    Uniform colorUniform(shader, "u_Color", Vec4(0.3f, 0.3f, 0.8f, 1.0f));
 
     unsigned int vao;
     GLC(glGenVertexArrays(1, &vao));
@@ -90,6 +88,11 @@ int main(void)
         "./res/shader/postprocessing/distortion.frag"
     );
 
+    Uniform uf_time(postQuad.getShader(), "time", 0.0f);
+    Uniform uf_noiseScale(postQuad.getShader(), "noiseScale", 3.0f);
+    Uniform uf_distortionStrength(postQuad.getShader(), "distortionStrength", 0.13f);
+    Uniform uf_timeScale(postQuad.getShader(), "timeScale", 0.1f);
+
     float r = 0.0f;
     float increment = 0.05f;
     while (!glfwWindowShouldClose(window))
@@ -101,7 +104,7 @@ int main(void)
 
         // Use the basic shader and bind VAO
         GLC(glUseProgram(shader));
-        GLC(glUniform4f(location, r, 0.3f, 0.8f, 1.0f));
+        colorUniform = Vec4(r, 0.3f, 0.8f, 1.0f);
         GLC(glBindVertexArray(vao));
         GLC(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
@@ -111,6 +114,8 @@ int main(void)
 
         // Render to screen
         framebuffer.unbind();
+        postQuad.bindShader();
+        uf_time += 0.06f;
         GLC(glClearColor(0.1f, 0.1f, 0.1f, 1.0f));
         GLC(glClear(GL_COLOR_BUFFER_BIT));
         postQuad.render(framebuffer.getTexture());
