@@ -2,6 +2,7 @@
 #define OPENGL_LEARNING_UNIFORM_H
 #include <string>
 
+#include "../glUtils.h"
 #include "Vec4.hpp"
 
 template <typename T>
