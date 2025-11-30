@@ -3,7 +3,18 @@
 
     #include <string>
 
-    #define ASSERT(x) if (!(x)) __debugbreak();
+    // Cross-platform debug break
+    #if defined(_WIN32) || defined(_MSC_VER)
+        #define DEBUG_BREAK() __debugbreak()
+    #elif defined(__GNUC__) || defined(__clang__)
+        #include <signal.h>
+        #define DEBUG_BREAK() raise(SIGTRAP)
+    #else
+        #include <cstdlib>
+        #define DEBUG_BREAK() abort()
+    #endif
+
+    #define ASSERT(x) if (!(x)) DEBUG_BREAK();
     #define GLC(x) cglClearError();\
     x;\
     ASSERT(cglLogCall(#x, __FILE__, __LINE__));
