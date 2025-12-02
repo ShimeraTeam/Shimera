@@ -2,9 +2,9 @@
 #include <GLFW/glfw3.h>
 #include <GL/glew.h>
 
-#include "Framebuffer.h"
-#include "glUtils.h"
-#include "PostProcessingQuad.h"
+#include "../../common/Framebuffer.h"
+#include "../../common/glUtils.h"
+#include "../../common/PostProcessingQuad.h"
 #include "uniform/Uniform.hpp"
 #include "uniform/Vec4.hpp"
 

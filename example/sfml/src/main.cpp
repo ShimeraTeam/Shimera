@@ -1,9 +1,39 @@
+#include <iostream>
 #include <SFML/Graphics.hpp>
 #include <optional>
+#include <GL/glew.h>
+#include <SFML/OpenGL.hpp>
+
+#include "../../common/Framebuffer.h"
+#include "../../common/PostProcessingQuad.h"
+#include "../../common/uniform/Uniform.hpp"
+#include "../../common/uniform/Vec4.hpp"
+
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode({800, 400}), "SFML3 - Formes géométriques");
+    sf::VideoMode videoMode({800, 400});
+    sf::RenderWindow window(videoMode, "SFML3 - Post-Processing with OpenGL");
+    window.setActive(true);
+
+    if (glewInit() != GLEW_OK)
+        std::cerr << "[GLEW] initialization failed!" << std::endl;
+
+    std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
+
+    sf::RenderTexture renderTexture(videoMode.size);
+
+    Framebuffer framebuffer(videoMode.size.x, videoMode.size.y);
+    // May need to change the path manually for now
+    PostProcessingQuad postQuad(
+    "common/res/shader/postprocessing/postprocess.vert",
+    "common/res/shader/postprocessing/distortion.frag"
+    );
+
+    Uniform uf_time(postQuad.getShader(), "time", 0.0f);
+    Uniform uf_noiseScale(postQuad.getShader(), "noiseScale", 3.0f);
+    Uniform uf_distortionStrength(postQuad.getShader(), "distortionStrength", 0.13f);
+    Uniform uf_timeScale(postQuad.getShader(), "timeScale", 0.1f);
 
     sf::CircleShape circle(80.f);
     circle.setFillColor(sf::Color::Red);
@@ -25,13 +55,27 @@ int main()
                 window.close();
         }
 
-        window.clear(sf::Color::Black);
+        // render what SFML rendered to our --opengl framebuffer-- nope juste the renderTexture for now...
+        // (change our context to the framebuffer)
+        // framebuffer.bind();
 
-        window.draw(circle);
-        window.draw(rectangle);
-        window.draw(triangle);
+        renderTexture.clear(sf::Color::Black);
+        renderTexture.draw(circle);
+        renderTexture.draw(rectangle);
+        renderTexture.draw(triangle);
+        renderTexture.display(); // push the SFML rendered content to the framebuffer
 
-        window.display();
+        // apply post-processing effect
+        framebuffer.unbind();
+        postQuad.bindShader();
+        uf_time += 0.006f;
+        glClear(GL_COLOR_BUFFER_BIT);
+        // TODO: use framebuffer.getTexture() instead of renderTexture.getTexture().getNativeHandle()
+        postQuad.render(renderTexture.getTexture().getNativeHandle());
+
+        // reset OpenGL states for SFML (else it won't display correctly)
+        // window.resetGLStates();
+        window.display(); // display the post-processed result (so display the current OpenGL buffer)
     }
 
     return 0;
