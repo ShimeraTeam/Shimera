@@ -7,3 +7,6 @@
 [submodule "learnings/LearningOpenGLLeo"]
 	path = learnings/LearningOpenGLLeo
 	url = https://github.com/ShimeraTeam/LearningOpenGLeo
+[submodule "docs"]
+	path = docs
+	url = https://github.com/ShimeraTeam/ShimeraDocs
