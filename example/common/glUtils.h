@@ -1,0 +1,36 @@
+#ifndef OPENGL_LEARNING_UTILS_H
+    #define OPENGL_LEARNING_UTILS_H
+
+    #include <string>
+
+    // Cross-platform debug break
+    #if defined(_WIN32) || defined(_MSC_VER)
+        #define DEBUG_BREAK() __debugbreak()
+    #elif defined(__GNUC__) || defined(__clang__)
+        #include <signal.h>
+        #define DEBUG_BREAK() raise(SIGTRAP)
+    #else
+        #include <cstdlib>
+        #define DEBUG_BREAK() abort()
+    #endif
+
+    #define ASSERT(x) if (!(x)) DEBUG_BREAK();
+    #define GLC(x) cglClearError();\
+    x;\
+    ASSERT(cglLogCall(#x, __FILE__, __LINE__));
+
+    struct ShaderProgramSource
+    {
+        std::string vertex;
+        std::string fragment;
+    };
+
+    void cglClearError();
+    bool cglLogCall(const char *function, const char *file, int line);
+
+    std::string readFile(const std::string &filePath);
+    ShaderProgramSource parseShader(const std::string &vertexFilePath, const std::string &fragmentFilePath);
+    unsigned int compileShader(unsigned int type, const std::string &source);
+    unsigned int createShader(const std::string &vertexSource, const std::string &fragmentSource);
+
+#endif //OPENGL_LEARNING_UTILS_H
