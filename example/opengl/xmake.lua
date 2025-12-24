@@ -14,6 +14,11 @@ target("opengl_exemple")
     set_kind("binary")
     set_rundir("$(projectdir)")
     add_files("src/*.cpp")
+
+    add_linkdirs("../common/build/linux/x86_64/release")
+    add_links("shimera")
+    add_includedirs("../common")
+
     add_packages("glfw", "glew")
 
     if is_plat("windows") then

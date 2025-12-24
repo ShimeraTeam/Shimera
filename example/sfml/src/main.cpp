@@ -4,10 +4,7 @@
 #include <GL/glew.h>
 #include <SFML/OpenGL.hpp>
 
-#include "../../common/Framebuffer.h"
-#include "../../common/PostProcessingQuad.h"
-#include "../../common/uniform/Uniform.hpp"
-#include "../../common/uniform/Vec4.hpp"
+#include "shimera.h"
 
 
 int main()
