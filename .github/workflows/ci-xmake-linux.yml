@@ -59,7 +59,8 @@ jobs:
               libx11-dev libxrandr-dev libxi-dev libxinerama-dev libxcursor-dev \
               libgl1-mesa-dev libglu1-mesa-dev libpng-dev libfreetype6-dev \
               libxkbcommon-dev libxcb1-dev libxcb-image0-dev libxcb-keysyms1-dev \
-              libxcb-shm0-dev libxcb-randr0-dev
+              libxcb-shm0-dev libxcb-randr0-dev \
+              xorg-dev autoconf automake libtool m4
 
           - name: Setup xmake
             uses: xmake-io/github-action-setup-xmake@v1
