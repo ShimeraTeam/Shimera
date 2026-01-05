@@ -19,6 +19,6 @@ jobs:
             xmake-version: latest
 
         - name: Build Sml
-          run: xmake
+          run: xmake -y
           working-directory: ./example/sfml
           
