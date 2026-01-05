@@ -37,4 +37,12 @@ jobs:
         - name: Build Sfml
           run: xmake -y
           working-directory: ./example/sfml
+
+        - name: Build OpenGl
+          run: xmake -y
+          working-directory: ./example/opengl
+
+        - name: Build Sdl
+          run: xmake -y
+          working-directory: ./example/sdl
           
