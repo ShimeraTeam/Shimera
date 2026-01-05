@@ -8,7 +8,7 @@ on:
       - task/46-create-memory-workflow
 
 jobs:
-    ci-linux:
+    Setup-dependencies:
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v4
@@ -22,21 +22,51 @@ jobs:
             libgl1-mesa-dev libglu1-mesa-dev libpng-dev libfreetype6-dev \
             libxkbcommon-dev libxcb1-dev libxcb-image0-dev libxcb-keysyms1-dev \
             libxcb-shm0-dev libxcb-randr0-dev
+    
+    Build-Sfml:
+      runs-on: ubuntu-latest
+      needs: Setup-dependencies
+      steps:
+        - uses: actions/checkout@v4
 
         - name: Setup xmake
           uses: xmake-io/github-action-setup-xmake@v1
           with:
             xmake-version: latest
+            actions-cache-folder: '.xmake-cache'
 
         - name: Build Sfml
           run: xmake -y
           working-directory: ./example/sfml
 
-        - name: Build OpenGl
-          run: xmake -y
-          working-directory: ./example/opengl
+    Build-OpenGL:
+        runs-on: ubuntu-latest
+        needs: Setup-dependencies
+        steps:
+          - uses: actions/checkout@v4
 
-        - name: Build Sdl
-          run: xmake -y
-          working-directory: ./example/sdl
+          - name: Setup xmake
+            uses: xmake-io/github-action-setup-xmake@v1
+            with:
+              xmake-version: latest
+              actions-cache-folder: '.xmake-cache'
           
+          - name: Build OpenGl
+            run: xmake -y
+            working-directory: ./example/opengl
+
+    Build-Sdl:
+        runs-on: ubuntu-latest
+        needs: Setup-dependencies
+        steps:
+          - uses: actions/checkout@v4
+
+          - name: Setup xmake
+            uses: xmake-io/github-action-setup-xmake@v1
+            with:
+              xmake-version: latest
+              actions-cache-folder: '.xmake-cache'
+
+          - name: Build Sdl
+            run: xmake -y
+            working-directory: ./example/sdl
