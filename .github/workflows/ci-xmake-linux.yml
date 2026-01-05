@@ -1,0 +1,24 @@
+name: CI / Linux (xmake)
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - dev
+      - task/46-create-memory-workflow
+
+jobs:
+    ci-linux:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+
+        - name: Setup xmake
+          uses: xmake-io/github-action-setup-xmake@v1
+          with:
+            xmake-version: latest
+
+        - name: Build Sml
+          run: xmake
+          working-directory: ./example/sfml
+          
