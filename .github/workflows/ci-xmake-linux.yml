@@ -13,12 +13,28 @@ jobs:
       steps:
         - uses: actions/checkout@v4
 
+        - name: Install system dependencies
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y \
+            build-essential \
+            cmake \
+            libx11-dev \
+            libxrandr-dev \
+            libxi-dev \
+            libxinerama-dev \
+            libxcursor-dev \
+            libgl1-mesa-dev \
+            libglu1-mesa-dev \
+            libpng-dev \
+            libfreetype6-dev
+
         - name: Setup xmake
           uses: xmake-io/github-action-setup-xmake@v1
           with:
             xmake-version: latest
 
-        - name: Build Sml
+        - name: Build Sfml
           run: xmake -y
           working-directory: ./example/sfml
           
