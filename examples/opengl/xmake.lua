@@ -1,8 +1,5 @@
 add_rules("mode.debug", "mode.release")
 
--- install dependencies in the local folder instead of the global path
---set_policy("package.install_locally", true)
-
 if is_plat("windows") then
     set_toolchains("msvc")
 end
@@ -10,14 +7,14 @@ set_languages("cxx17")
 
 add_requires("glfw", "glew")
 
-target("opengl_exemple")
+target("opengl-example")
     set_kind("binary")
     set_rundir("$(projectdir)")
     add_files("src/*.cpp")
 
-    add_linkdirs("../common/build/linux/x86_64/release")
+    add_linkdirs("../../build/linux/x86_64/release")
     add_links("shimera")
-    add_includedirs("../common")
+    add_includedirs("../../include")
 
     add_packages("glfw", "glew")
 

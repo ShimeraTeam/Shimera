@@ -1,10 +1,10 @@
-#include "Framebuffer.h"
+#include <Framebuffer.h>
 
 #include <iostream>
 #include <ostream>
 #include <GL/glew.h>
 
-#include "glUtils.h"
+#include <glUtils.h>
 
 
 Framebuffer::Framebuffer(int w, int h)
