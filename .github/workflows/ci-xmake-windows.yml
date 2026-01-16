@@ -1,0 +1,67 @@
+name: CI / Windows (xmake)
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - dev
+
+jobs:
+    Setup-xmake:
+      runs-on: windows-latest
+      steps:
+        - uses: actions/checkout@v4
+
+        - name: Setup xmake
+          uses: xmake-io/github-action-setup-xmake@v1
+          with:
+            xmake-version: latest
+            actions-cache-folder: '.xmake-cache'
+    
+    Build-Sfml:
+      runs-on: windows-latest
+      needs: Setup-xmake
+      steps:
+        - uses: actions/checkout@v4
+
+        - name: Setup xmake
+          uses: xmake-io/github-action-setup-xmake@v1
+          with:
+            xmake-version: latest
+            actions-cache-folder: '.xmake-cache'
+
+        - name: Build Sfml
+          run: xmake -y
+          working-directory: ./example/sfml
+
+    Build-OpenGL:
+        runs-on: windows-latest
+        needs: Setup-xmake
+        steps:
+          - uses: actions/checkout@v4
+
+          - name: Setup xmake
+            uses: xmake-io/github-action-setup-xmake@v1
+            with:
+              xmake-version: latest
+              actions-cache-folder: '.xmake-cache'
+          
+          - name: Build OpenGl
+            run: xmake -y
+            working-directory: ./example/opengl
+
+    Build-Sdl:
+        runs-on: windows-latest
+        needs: Setup-xmake
+        steps:
+          - uses: actions/checkout@v4
+
+          - name: Setup xmake
+            uses: xmake-io/github-action-setup-xmake@v1
+            with:
+              xmake-version: latest
+              actions-cache-folder: '.xmake-cache'
+
+          - name: Build Sdl
+            run: xmake -y
+            working-directory: ./example/sdl
