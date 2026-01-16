@@ -5,9 +5,11 @@ on:
     branches:
       - master
       - dev
+      - fix/75-ci-and-docs
 
 jobs:
-    Setup-xmake:
+    Build-Shimera:
+      name: Build Shimera
       runs-on: windows-latest
       steps:
         - uses: actions/checkout@v4
@@ -16,13 +18,29 @@ jobs:
           uses: xmake-io/github-action-setup-xmake@v1
           with:
             xmake-version: latest
-            actions-cache-folder: '.xmake-cache'
+            actions-cache-folder: ".xmake-cache"
+
+        - name: Build Shimera
+          run: xmake -y
+
+        - name: Upload Shimera build
+          uses: actions/upload-artifact@v4
+          with:
+            name: shimera-build
+            path: build/
     
     Build-Sfml:
+      name: Build Sfml example
       runs-on: windows-latest
-      needs: Setup-xmake
+      needs: Build-Shimera
       steps:
         - uses: actions/checkout@v4
+
+        - name: Download Shimera build
+          uses: actions/download-artifact@v4
+          with:
+            name: shimera-build
+            path: build/
 
         - name: Setup xmake
           uses: xmake-io/github-action-setup-xmake@v1
@@ -32,36 +50,50 @@ jobs:
 
         - name: Build Sfml
           run: xmake -y
-          working-directory: ./example/sfml
+          working-directory: ./examples/sfml
 
     Build-OpenGL:
-        runs-on: windows-latest
-        needs: Setup-xmake
-        steps:
-          - uses: actions/checkout@v4
+      name: Build OpenGL example
+      runs-on: windows-latest
+      needs: Build-Shimera
+      steps:
+        - uses: actions/checkout@v4
 
-          - name: Setup xmake
-            uses: xmake-io/github-action-setup-xmake@v1
-            with:
-              xmake-version: latest
-              actions-cache-folder: '.xmake-cache'
+        - name: Download Shimera build
+          uses: actions/download-artifact@v4
+          with:
+            name: shimera-build
+            path: build/
+
+        - name: Setup xmake
+          uses: xmake-io/github-action-setup-xmake@v1
+          with:
+            xmake-version: latest
+            actions-cache-folder: '.xmake-cache'
           
-          - name: Build OpenGl
-            run: xmake -y
-            working-directory: ./example/opengl
+        - name: Build OpenGl
+          run: xmake -y
+          working-directory: ./examples/opengl
 
     Build-Sdl:
-        runs-on: windows-latest
-        needs: Setup-xmake
-        steps:
-          - uses: actions/checkout@v4
+      name: Build Sdl example
+      runs-on: windows-latest
+      needs: Build-Shimera
+      steps:
+        - uses: actions/checkout@v4
 
-          - name: Setup xmake
-            uses: xmake-io/github-action-setup-xmake@v1
-            with:
-              xmake-version: latest
-              actions-cache-folder: '.xmake-cache'
+        - name: Download Shimera build
+          uses: actions/download-artifact@v4
+          with:
+            name: shimera-build
+            path: build/
 
-          - name: Build Sdl
-            run: xmake -y
-            working-directory: ./example/sdl
+        - name: Setup xmake
+          uses: xmake-io/github-action-setup-xmake@v1
+          with:
+            xmake-version: latest
+            actions-cache-folder: '.xmake-cache'
+
+        - name: Build Sdl
+          run: xmake -y
+          working-directory: ./examples/sdl
