@@ -4,10 +4,13 @@ add_requires("sfml", "glew")
 
 set_languages("c++17")
 
-target("sfml")
+target("sfml-example")
     set_kind("binary")
     add_files("src/*.cpp")
-    add_files("../common/*.cpp")
-    add_includedirs("../common")
+
+    add_linkdirs("../../build/linux/x86_64/release")
+    add_links("shimera")
+    add_includedirs("../../include")
+
     add_packages("sfml", "glew")
 

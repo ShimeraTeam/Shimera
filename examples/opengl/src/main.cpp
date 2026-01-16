@@ -2,10 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <GL/glew.h>
 
-#include "../../common/Framebuffer.h"
-#include "../../common/glUtils.h"
-#include "../../common/PostProcessingQuad.h"
-#include "../../common/uniform/Uniform.hpp"
+#include <shimera.h>
 
 int main(void)
 {
@@ -59,8 +56,8 @@ int main(void)
     GLC(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW));
 
     ShaderProgramSource source = parseShader(
-        "../common/res/shader/basic.vert",
-        "../common/res/shader/basic.frag"
+        "res/shader/basic.vert",
+        "res/shader/basic.frag"
         );
 
     unsigned int shader = createShader(source.vertex, source.fragment);
@@ -83,8 +80,8 @@ int main(void)
 
     Framebuffer framebuffer(640, 480);
     PostProcessingQuad postQuad(
-        "../common/res/shader/postprocessing/postprocess.vert",
-        "../common/res/shader/postprocessing/distortion.frag"
+        "res/shader/postprocessing/postprocess.vert",
+        "res/shader/postprocessing/distortion.frag"
     );
 
     Uniform uf_time(postQuad.getShader(), "time", 0.0f);

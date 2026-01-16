@@ -2,8 +2,8 @@
 #define OPENGL_LEARNING_UNIFORM_H
 #include <string>
 
-#include "../glUtils.h"
-#include "Vec4.hpp"
+#include <glUtils.h>
+#include <uniform/Vec4.hpp>
 
 template <typename T>
 class Uniform {

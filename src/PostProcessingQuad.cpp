@@ -2,12 +2,12 @@
 // Created by leoma on 24/11/2025.
 //
 
-#include "PostProcessingQuad.h"
+#include <PostProcessingQuad.h>
 
 #include <iostream>
 #include <GL/glew.h>
 
-#include "glUtils.h"
+#include <glUtils.h>
 
 
 PostProcessingQuad::PostProcessingQuad(const std::string& vertPath,

@@ -4,10 +4,7 @@
 #include <GL/glew.h>
 #include <SFML/OpenGL.hpp>
 
-#include "../../common/Framebuffer.h"
-#include "../../common/PostProcessingQuad.h"
-#include "../../common/uniform/Uniform.hpp"
-#include "../../common/uniform/Vec4.hpp"
+#include <shimera.h>
 
 
 int main()
@@ -26,8 +23,8 @@ int main()
     Framebuffer framebuffer(videoMode.size.x, videoMode.size.y);
     // May need to change the path manually for now
     PostProcessingQuad postQuad(
-    "common/res/shader/postprocessing/postprocess.vert",
-    "common/res/shader/postprocessing/distortion.frag"
+    "res/shader/postprocessing/postprocess.vert",
+    "res/shader/postprocessing/distortion.frag"
     );
 
     Uniform uf_time(postQuad.getShader(), "time", 0.0f);
