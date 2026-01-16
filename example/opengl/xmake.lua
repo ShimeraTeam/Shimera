@@ -13,6 +13,7 @@ add_requires("glfw", "glew")
 target("opengl_exemple")
     set_kind("binary")
     set_rundir("$(projectdir)")
+    add_files("../common/*.cpp")
     add_files("src/*.cpp")
     add_packages("glfw", "glew")
 
