@@ -147,6 +147,20 @@ target("myapp")
     add_packages("glew")
 ```
 
+## Build Examples
+
+To build the example projects included with Shimera:
+
+```bash
+xmake b <example_name>
+```
+
+Here is how to build the SFML example:
+
+```bash
+xmake b sfml-example
+```
+
 ## Project Structure
 
 ```
