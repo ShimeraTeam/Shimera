@@ -44,14 +44,14 @@ int main()
     triangle.setFillColor(sf::Color::Blue);
     triangle.setPosition(sf::Vector2f(750.f - 105.f, 270.f - 80.f));
 
-    // Load image texture
-    sf::Texture texture;
-    if (!texture.loadFromFile("examples/res/test.jpg")) {
-        std::cerr << "Error loading image" << std::endl;
-    }
-    sf::Sprite sprite(texture);
-    sprite.setPosition(sf::Vector2f(0.f, 0.f));
-    sprite.setScale(sf::Vector2f(0.5f, 0.5f)); // 50% de la taille originale
+    // To draw a picture, uncomment the line below
+    // sf::Texture texture;
+    // if (!texture.loadFromFile("examples/res/test.jpg")) {
+    //     std::cerr << "Error loading image" << std::endl;
+    // }
+    // sf::Sprite sprite(texture);
+    // sprite.setPosition(sf::Vector2f(0.f, 0.f));
+    // sprite.setScale(sf::Vector2f(0.5f, 0.5f)); // 50% de la taille originale (1920x1080 -> 960x540)
 
     while (window.isOpen())
     {
@@ -66,7 +66,10 @@ int main()
         // framebuffer.bind();
 
         renderTexture.clear(sf::Color::Black);
-        renderTexture.draw(sprite);
+
+        // To draw a picture, uncomment the line below
+        // renderTexture.draw(sprite);
+
         renderTexture.draw(circle);
         renderTexture.draw(rectangle);
         renderTexture.draw(triangle);
