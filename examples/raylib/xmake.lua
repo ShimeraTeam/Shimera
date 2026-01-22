@@ -7,5 +7,7 @@ set_languages("c++23")
 target("raylib-example")
     set_kind("binary")
     add_files("src/*.cpp")
-
+    add_linkdirs("../../build/linux/x86_64/release")
+    add_links("shimera")
+    add_includedirs("../../include")
     add_packages("raylib", "glew")
