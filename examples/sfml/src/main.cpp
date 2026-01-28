@@ -4,15 +4,12 @@
 #include <GL/glew.h>
 #include <SFML/OpenGL.hpp>
 
-#include "../../common/Framebuffer.h"
-#include "../../common/PostProcessingQuad.h"
-#include "../../common/uniform/Uniform.hpp"
-#include "../../common/uniform/Vec4.hpp"
+#include <shimera.h>
 
 
 int main()
 {
-    sf::VideoMode videoMode({800, 400});
+    sf::VideoMode videoMode({960, 540});
     sf::RenderWindow window(videoMode, "SFML3 - Post-Processing with OpenGL");
     window.setActive(true);
 
@@ -26,8 +23,8 @@ int main()
     Framebuffer framebuffer(videoMode.size.x, videoMode.size.y);
     // May need to change the path manually for now
     PostProcessingQuad postQuad(
-    "common/res/shader/postprocessing/postprocess.vert",
-    "common/res/shader/postprocessing/distortion.frag"
+    "res/shader/postprocessing/postprocess.vert",
+    "res/shader/postprocessing/distortion.frag"
     );
 
     Uniform uf_time(postQuad.getShader(), "time", 0.0f);
@@ -37,15 +34,24 @@ int main()
 
     sf::CircleShape circle(80.f);
     circle.setFillColor(sf::Color::Red);
-    circle.setPosition(sf::Vector2f(175.f - 80.f, 200.f - 80.f));
+    circle.setPosition(sf::Vector2f(210.f - 80.f, 270.f - 80.f));
 
     sf::RectangleShape rectangle(sf::Vector2f(160.f, 160.f));
     rectangle.setFillColor(sf::Color::Green);
-    rectangle.setPosition(sf::Vector2f(400.f - 80.f, 200.f - 80.f));
+    rectangle.setPosition(sf::Vector2f(480.f - 80.f, 270.f - 80.f));
 
     sf::CircleShape triangle(105.f, 3);
     triangle.setFillColor(sf::Color::Blue);
-    triangle.setPosition(sf::Vector2f(625.f - 105.f, 200.f - 80.f));
+    triangle.setPosition(sf::Vector2f(750.f - 105.f, 270.f - 80.f));
+
+    // To draw a picture, uncomment the line below
+    // sf::Texture texture;
+    // if (!texture.loadFromFile("examples/res/test.jpg")) {
+    //     std::cerr << "Error loading image" << std::endl;
+    // }
+    // sf::Sprite sprite(texture);
+    // sprite.setPosition(sf::Vector2f(0.f, 0.f));
+    // sprite.setScale(sf::Vector2f(0.5f, 0.5f)); // 50% de la taille originale (1920x1080 -> 960x540)
 
     while (window.isOpen())
     {
@@ -60,6 +66,10 @@ int main()
         // framebuffer.bind();
 
         renderTexture.clear(sf::Color::Black);
+
+        // To draw a picture, uncomment the line below
+        // renderTexture.draw(sprite);
+
         renderTexture.draw(circle);
         renderTexture.draw(rectangle);
         renderTexture.draw(triangle);

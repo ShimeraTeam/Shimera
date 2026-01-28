@@ -4,6 +4,7 @@
 
 # Build files
 *.exe
+build
 
 # CMake
 CMakeLists.txt.user
@@ -17,11 +18,13 @@ install_manifest.txt
 CTestTestfile.cmake
 _deps
 CMakeUserPresets.json
+
 # CLion/JetBrains specific
 cmake-build-*
 
 # Xmake
 .xmake
+
 # Generated files by Xmake
 CMakeLists.txt
 compile_commands.json

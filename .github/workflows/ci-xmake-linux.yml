@@ -1,0 +1,139 @@
+name: CI / Linux (xmake)
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - dev
+
+jobs:
+    Build-Shimera:
+      name: Build Shimera
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+
+        - name: Install system dependencies
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y \
+            build-essential cmake \
+            libx11-dev libxrandr-dev libxi-dev libxinerama-dev libxcursor-dev \
+            libgl1-mesa-dev libglu1-mesa-dev libpng-dev libfreetype6-dev \
+            libxkbcommon-dev libxcb1-dev libxcb-image0-dev libxcb-keysyms1-dev \
+            libxcb-shm0-dev libxcb-randr0-dev
+
+        - name: Setup xmake
+          uses: xmake-io/github-action-setup-xmake@v1
+          with:
+            xmake-version: latest
+            actions-cache-folder: ".xmake-cache"
+
+        - name: Build Shimera
+          run: xmake -y
+
+        - name: Upload Shimera build
+          uses: actions/upload-artifact@v4
+          with:
+            name: shimera-build
+            path: build/
+    
+    Build-Sfml:
+      name: Build Sfml example
+      runs-on: ubuntu-latest
+      needs: Build-Shimera
+      steps:
+        - uses: actions/checkout@v4
+
+        - name: Download Shimera build
+          uses: actions/download-artifact@v4
+          with:
+            name: shimera-build
+            path: build/
+
+        - name: Install system dependencies
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y \
+            build-essential cmake \
+            libx11-dev libxrandr-dev libxi-dev libxinerama-dev libxcursor-dev \
+            libgl1-mesa-dev libglu1-mesa-dev libpng-dev libfreetype6-dev \
+            libxkbcommon-dev libxcb1-dev libxcb-image0-dev libxcb-keysyms1-dev \
+            libxcb-shm0-dev libxcb-randr0-dev
+
+        - name: Setup xmake
+          uses: xmake-io/github-action-setup-xmake@v1
+          with:
+            xmake-version: latest
+            actions-cache-folder: '.xmake-cache'
+
+        - name: Build Sfml
+          run: xmake -y
+          working-directory: ./examples/sfml
+
+    Build-OpenGL:
+      name: Build OpenGL example
+      runs-on: ubuntu-latest
+      needs: Build-Shimera
+      steps:
+        - uses: actions/checkout@v4
+
+        - name: Download Shimera build
+          uses: actions/download-artifact@v4
+          with:
+            name: shimera-build
+            path: build/
+
+        - name: Install system dependencies
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y \
+            build-essential cmake \
+            libx11-dev libxrandr-dev libxi-dev libxinerama-dev libxcursor-dev \
+            libgl1-mesa-dev libglu1-mesa-dev libpng-dev libfreetype6-dev \
+            libxkbcommon-dev libxcb1-dev libxcb-image0-dev libxcb-keysyms1-dev \
+            libxcb-shm0-dev libxcb-randr0-dev \
+
+        - name: Setup xmake
+          uses: xmake-io/github-action-setup-xmake@v1
+          with:
+            xmake-version: latest
+            actions-cache-folder: '.xmake-cache'
+          
+        - name: Build OpenGl
+          run: xmake -y
+          working-directory: ./examples/opengl
+
+    Build-Sdl:
+      name: Build Sdl example
+      runs-on: ubuntu-latest
+      needs: Build-Shimera
+      steps:
+        - uses: actions/checkout@v4
+
+        - name: Download Shimera build
+          uses: actions/download-artifact@v4
+          with:
+            name: shimera-build
+            path: build/
+
+        - name: Install system dependencies
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y \
+            build-essential cmake \
+            libx11-dev libxrandr-dev libxi-dev libxinerama-dev libxcursor-dev \
+            libgl1-mesa-dev libglu1-mesa-dev libpng-dev libfreetype6-dev \
+            libxkbcommon-dev libxcb1-dev libxcb-image0-dev libxcb-keysyms1-dev \
+            libxcb-shm0-dev libxcb-randr0-dev \
+            xorg-dev autoconf automake libtool m4
+
+        - name: Setup xmake
+          uses: xmake-io/github-action-setup-xmake@v1
+          with:
+            xmake-version: latest
+            actions-cache-folder: '.xmake-cache'
+
+        - name: Build Sdl
+          run: xmake -y
+          working-directory: ./examples/sdl
