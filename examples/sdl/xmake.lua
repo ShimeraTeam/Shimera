@@ -11,8 +11,9 @@ target("sdl-example")
     set_targetdir("$(builddir)/$(plat)/$(arch)/$(mode)")
     add_files("src/*.cpp")
 
-    add_deps("shimera")
+    add_deps("shimera-sdl")
     add_includedirs("../../include")
+
     add_packages("libsdl3", "glew")
 
     if is_plat("windows") then

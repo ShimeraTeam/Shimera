@@ -4,33 +4,49 @@
 #include <GL/glew.h>
 #include <SFML/OpenGL.hpp>
 
+// Here the shimera header is outdated and should be used to include all necessary shimera components
+//TODO: Update `shimera.h` to include all necessary headers
 #include <shimera.h>
+#include "backend/BackendFactory.hpp"
+#include "backend/sfml/SFMLFramebuffer.hpp"
 
 
 int main()
 {
-    sf::VideoMode videoMode({800, 400});
-    sf::RenderWindow window(videoMode, "SFML3 - Post-Processing with OpenGL");
+    const sf::VideoMode videoMode({800, 400});
+    sf::RenderWindow window(videoMode, "SFML3 - Multi-Pass Post-Processing");
     window.setActive(true);
 
-    if (glewInit() != GLEW_OK)
+    if (glewInit() != GLEW_OK) {
         std::cerr << "[GLEW] initialization failed!" << std::endl;
+        return -1;
+    }
 
     std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
 
-    sf::RenderTexture renderTexture(videoMode.size);
+    IBackend* backend = BackendFactory::create();
+    if (!backend) {
+        std::cerr << "Failed to create backend!" << std::endl;
+        return -1;
+    }
 
-    Framebuffer framebuffer(videoMode.size.x, videoMode.size.y);
-    // May need to change the path manually for now
-    PostProcessingQuad postQuad(
-    "res/shader/postprocessing/postprocess.vert",
-    "res/shader/postprocessing/distortion.frag"
+    // Create framebuffers for ping-pong rendering
+    IFrameBuffer* sceneFramebuffer = backend->createFrameBuffer(800, 400);
+    IFrameBuffer* tempFramebuffer = backend->createFrameBuffer(800, 400);  // Intermediate pass
+
+    IPostProccessor* distortionEffect = backend->createPostProcessor(
+        "../../../../res/shader/postprocessing/postprocess.vert",
+        "../../../../res/shader/postprocessing/distortion.frag"
     );
 
-    Uniform uf_time(postQuad.getShader(), "time", 0.0f);
-    Uniform uf_noiseScale(postQuad.getShader(), "noiseScale", 3.0f);
-    Uniform uf_distortionStrength(postQuad.getShader(), "distortionStrength", 0.13f);
-    Uniform uf_timeScale(postQuad.getShader(), "timeScale", 0.1f);
+    IPostProccessor* grayscaleEffect = backend->createPostProcessor(
+        "../../../../res/shader/postprocessing/postprocess.vert",
+        "../../../../res/shader/postprocessing/grayscale.frag"
+    );
+
+    distortionEffect->setUniform("noiseScale", 3.0f);
+    distortionEffect->setUniform("distortionStrength", 0.13f);
+    distortionEffect->setUniform("timeScale", 0.1f);
 
     sf::CircleShape circle(80.f);
     circle.setFillColor(sf::Color::Red);
@@ -44,6 +60,7 @@ int main()
     triangle.setFillColor(sf::Color::Blue);
     triangle.setPosition(sf::Vector2f(625.f - 105.f, 200.f - 80.f));
 
+    float time = 0.0f;
     while (window.isOpen())
     {
         while (const std::optional event = window.pollEvent())
@@ -52,28 +69,46 @@ int main()
                 window.close();
         }
 
-        // render what SFML rendered to our --opengl framebuffer-- nope juste the renderTexture for now...
-        // (change our context to the framebuffer)
-        // framebuffer.bind();
-
-        renderTexture.clear(sf::Color::Black);
-        renderTexture.draw(circle);
-        renderTexture.draw(rectangle);
-        renderTexture.draw(triangle);
-        renderTexture.display(); // push the SFML rendered content to the framebuffer
-
-        // apply post-processing effect
-        framebuffer.unbind();
-        postQuad.bindShader();
-        uf_time += 0.006f;
+        // Render scene to the first framebuffer ("scene"Framebuffer)
+        auto* sfmlRenderTexture = static_cast<sf::RenderTexture*>(sceneFramebuffer->getNativeRenderTarget());
+        
+        sfmlRenderTexture->clear(sf::Color::Black);
+        sfmlRenderTexture->draw(circle);
+        sfmlRenderTexture->draw(rectangle);
+        sfmlRenderTexture->draw(triangle);
+        sceneFramebuffer->unbind(); // Calls display() internally
+        
+        // Ensure window context is active for post-processing
+        window.setActive(true);
+        
+        // Multi-pass rendering chain:
+        // 1. sceneFramebuffer (original) -> distortion -> tempFramebuffer
+        // 2. tempFramebuffer -> grayscale -> screen
+        
+        // Pass 1: Apply distortion to intermediate Framebuffer
+        tempFramebuffer->bind(); // Activate tempFramebuffer's OpenGL context
         glClear(GL_COLOR_BUFFER_BIT);
-        // TODO: use framebuffer.getTexture() instead of renderTexture.getTexture().getNativeHandle()
-        postQuad.render(renderTexture.getTexture().getNativeHandle());
-
-        // reset OpenGL states for SFML (else it won't display correctly)
-        // window.resetGLStates();
-        window.display(); // display the post-processed result (so display the current OpenGL buffer)
+        distortionEffect->setUniform("time", time);
+        distortionEffect->render(sceneFramebuffer->getTexture()); // "Set" the distortion effect to the scene fb
+        tempFramebuffer->unbind();
+        
+        // Pass 2: Apply grayscale to screen
+        window.setActive(true); // Switch back to window (SFML) context
+        glClear(GL_COLOR_BUFFER_BIT);
+        grayscaleEffect->render(tempFramebuffer->getTexture());
+        
+        time += 0.006f;
+        
+        window.display();
     }
+
+    // Cleanup
+    //TODO: Maybe try to auto clean this (do that in the destructor of the respective classes)
+    delete grayscaleEffect;
+    delete distortionEffect;
+    delete tempFramebuffer;
+    delete sceneFramebuffer;
+    delete backend;
 
     return 0;
 }

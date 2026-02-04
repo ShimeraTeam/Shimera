@@ -15,7 +15,7 @@ target("opengl-example")
     set_rundir("$(projectdir)")
     add_files("src/*.cpp")
 
-    add_deps("shimera")
+    add_deps("shimera-opengl")
     add_includedirs("../../include")
 
     add_packages("glfw", "glew")

@@ -15,8 +15,9 @@ target("sfml-example")
     set_targetdir("$(builddir)/$(plat)/$(arch)/$(mode)")
     add_files("src/*.cpp")
 
-    add_deps("shimera")
+    add_deps("shimera-sfml")
     add_includedirs("../../include")
+
     add_packages("sfml", "glew")
 
     if is_plat("windows") then

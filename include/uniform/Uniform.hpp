@@ -1,9 +1,12 @@
 #ifndef OPENGL_LEARNING_UNIFORM_H
 #define OPENGL_LEARNING_UNIFORM_H
-#include <string>
 
+#include <string>
 #include <glUtils.h>
+#include <variant>
 #include <uniform/Vec4.hpp>
+
+using UniformValue = std::variant<float, int, Vec4<float>>;
 
 template <typename T>
 class Uniform {
