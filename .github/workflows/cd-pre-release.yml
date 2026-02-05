@@ -1,5 +1,9 @@
 name: CD / Build & Publish pre-release
-on: workflow_dispatch
+on:
+  push:
+    tags:
+      - .*
+  workflow_dispatch:
 
 permissions:
   contents: write
