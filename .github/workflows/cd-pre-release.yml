@@ -17,7 +17,7 @@ jobs:
       runs-on: ${{ matrix.plateform }}
       name: Build Shimera
       steps:
-        - uses: actions/checkout@v4
+        - uses: actions/checkout@v6
 
         - name: Install system dependencies
           if: runner.os == 'Linux'
@@ -39,24 +39,38 @@ jobs:
         - name: Build Shimera
           run: xmake -y
 
+
+        - name: Tar Linux build
+          if: runner.os == 'Linux'
+          run: tar -cvf shimera-linux.tar build/
+
+        - name: Zip Windows build
+          if: runner.os == 'Windows'
+          run: powershell Compress-Archive -Path build\* -DestinationPath shimera-windows.zip
+
         - name: Upload Shimera build
-          uses: actions/upload-artifact@v4
+          uses: actions/upload-artifact@v6
           with:
             name: shimera-build-${{runner.os}}
-            path: build/
+            path: |
+              shimera-linux.tar
+              shimera-windows.zip
 
   publish:
     needs: [build-Shimera]
     runs-on: ubuntu-latest
     steps:
       - name: Download Linux build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: shimera-build-Linux
+          path: ./build-linux
+
       - name: Download Windows build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: shimera-build-Windows
+          path: ./build-windows
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
@@ -66,8 +80,8 @@ jobs:
           name: Shimera ${{ github.ref_name }}
           prerelease: true
           files: |
-            build-Linux/*
-            build-Windows/*
+            build-linux/shimera-linux.tar
+            build-windows/shimera-windows.zip
 
   check-tag:
     needs: [publish]
@@ -75,7 +89,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
 
       - name: Extract tag name
         id: get_tag
