@@ -1,0 +1,86 @@
+name: CD / Build & Publish pre-release
+on: workflow_dispatch
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build-Shimera:
+      strategy:
+        matrix:
+          plateform: [ubuntu-latest, windows-latest]
+      runs-on: ${{ matrix.plateform }}
+      name: Build Shimera
+      steps:
+        - uses: actions/checkout@v4
+
+        - name: Install system dependencies
+          if: runner.os == 'Linux'
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y \
+            build-essential cmake \
+            libx11-dev libxrandr-dev libxi-dev libxinerama-dev libxcursor-dev \
+            libgl1-mesa-dev libglu1-mesa-dev libpng-dev libfreetype6-dev \
+            libxkbcommon-dev libxcb1-dev libxcb-image0-dev libxcb-keysyms1-dev \
+            libxcb-shm0-dev libxcb-randr0-dev
+
+        - name: Setup xmake
+          uses: xmake-io/github-action-setup-xmake@v1
+          with:
+            xmake-version: latest
+            actions-cache-folder: ".xmake-cache"
+
+        - name: Build Shimera
+          run: xmake -y
+
+        - name: Upload Shimera build
+          uses: actions/upload-artifact@v4
+          with:
+            name: shimera-build-${{runner.os}}
+            path: build/
+
+  publish:
+    needs: [build-Shimera]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Linux build
+        uses: actions/download-artifact@v4
+        with:
+          name: shimera-build-Linux
+      - name: Download Windows build
+        uses: actions/download-artifact@v4
+        with:
+          name: shimera-build-Windows
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref_type == 'tag'
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Shimera ${{ github.ref_name }}
+          prerelease: true
+          files: |
+            build-Linux/*
+            build-Windows/*
+
+  check-tag:
+    needs: [publish]
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Extract tag name
+        id: get_tag
+        run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Delete tag
+        run: |
+          git fetch --tags
+          git tag -d $TAG_NAME
+          git push origin --delete $TAG_NAME
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
