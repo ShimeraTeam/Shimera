@@ -67,13 +67,11 @@ jobs:
         uses: actions/download-artifact@v7
         with:
           name: shimera-build-Linux
-          path: ./build-linux
 
       - name: Download Windows build
         uses: actions/download-artifact@v7
         with:
           name: shimera-build-Windows
-          path: ./build-windows
 
       - name: Check if prerelease
         id: check_prerelease
@@ -96,8 +94,8 @@ jobs:
           name: Shimera ${{ env.version }}
           prerelease: ${{ env.prerelease }}
           files: |
-            build-linux/shimera-${{ env.version }}-linux.tar
-            build-windows/shimera-${{ env.version }}-windows.zip
+            shimera-${{ env.version }}-linux.tar
+            shimera-${{ env.version }}-windows.zip
 
   check-tag:
     needs: [publish]
