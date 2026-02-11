@@ -51,13 +51,19 @@ jobs:
           if: runner.os == 'Windows'
           run: powershell Compress-Archive -Path build\* -DestinationPath shimera-${{ env.version }}-windows.zip
 
-        - name: Upload Shimera build
+        - name: Upload Linux artifact
+          if: runner.os == 'Linux'
           uses: actions/upload-artifact@v6
           with:
-            name: shimera-build-${{runner.os}}
-            path: |
-              shimera-${{ env.version }}-linux.tar
-              shimera-${{ env.version }}-windows.zip
+            name: shimera-linux
+            path: shimera-${{ env.version }}-linux.tar
+
+        - name: Upload Windows artifact
+          if: runner.os == 'Windows'
+          uses: actions/upload-artifact@v6
+          with:
+            name: shimera-windows
+            path: shimera-${{ env.version }}-windows.zip
 
   publish:
     needs: [build-Shimera]
