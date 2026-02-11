@@ -55,14 +55,14 @@ jobs:
           if: runner.os == 'Linux'
           uses: actions/upload-artifact@v6
           with:
-            name: shimera-linux
+            name: shimera-build-Linux
             path: shimera-${{ env.version }}-linux.tar
 
         - name: Upload Windows artifact
           if: runner.os == 'Windows'
           uses: actions/upload-artifact@v6
           with:
-            name: shimera-windows
+            name: shimera-build-Windows
             path: shimera-${{ env.version }}-windows.zip
 
   publish:
