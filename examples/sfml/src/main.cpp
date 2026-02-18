@@ -24,22 +24,22 @@ int main()
 
     std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
 
-    IBackend* backend = BackendFactory::create();
+    IBackend *backend = BackendFactory::create();
     if (!backend) {
         std::cerr << "Failed to create backend!" << std::endl;
         return -1;
     }
 
     // Create framebuffers for ping-pong rendering
-    IFrameBuffer* sceneFramebuffer = backend->createFrameBuffer(800, 400);
-    IFrameBuffer* tempFramebuffer = backend->createFrameBuffer(800, 400);  // Intermediate pass
+    IFrameBuffer *sceneFramebuffer = backend->createFrameBuffer(800, 400);
+    IFrameBuffer *tempFramebuffer = backend->createFrameBuffer(800, 400);  // Intermediate pass
 
-    IPostProccessor* distortionEffect = backend->createPostProcessor(
+    IPostProccessor *distortionEffect = backend->createPostProcessor(
         "../../../../res/shader/postprocessing/postprocess.vert",
         "../../../../res/shader/postprocessing/distortion.frag"
     );
 
-    IPostProccessor* grayscaleEffect = backend->createPostProcessor(
+    IPostProccessor *grayscaleEffect = backend->createPostProcessor(
         "../../../../res/shader/postprocessing/postprocess.vert",
         "../../../../res/shader/postprocessing/grayscale.frag"
     );
@@ -70,7 +70,7 @@ int main()
         }
 
         // Render scene to the first framebuffer ("scene"Framebuffer)
-        auto* sfmlRenderTexture = static_cast<sf::RenderTexture*>(sceneFramebuffer->getNativeRenderTarget());
+        auto *sfmlRenderTexture = static_cast<sf::RenderTexture*>(sceneFramebuffer->getNativeRenderTarget());
         
         sfmlRenderTexture->clear(sf::Color::Black);
         sfmlRenderTexture->draw(circle);
