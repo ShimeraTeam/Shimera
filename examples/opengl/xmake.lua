@@ -9,11 +9,13 @@ add_requires("glfw", "glew")
 
 target("opengl-example")
     set_kind("binary")
+    set_default(false)
+    set_group("examples")
+    set_targetdir("$(builddir)/$(plat)/$(arch)/$(mode)")
     set_rundir("$(projectdir)")
     add_files("src/*.cpp")
 
-    add_linkdirs("../../build/linux/x86_64/release")
-    add_links("shimera")
+    add_deps("shimera-opengl")
     add_includedirs("../../include")
 
     add_packages("glfw", "glew")
