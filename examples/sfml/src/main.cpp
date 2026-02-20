@@ -9,6 +9,7 @@
 #include <shimera.h>
 #include "backend/BackendFactory.hpp"
 #include "backend/sfml/SFMLFramebuffer.hpp"
+#include "effects/DistortionEffect.hpp"
 
 
 int main()
@@ -17,6 +18,7 @@ int main()
     sf::RenderWindow window(videoMode, "SFML3 - Multi-Pass Post-Processing");
     window.setActive(true);
 
+    //TODO: Try to embed that in the backend so the user doesn't have to worry about it (or at least make it optional)
     if (glewInit() != GLEW_OK) {
         std::cerr << "[GLEW] initialization failed!" << std::endl;
         return -1;
@@ -34,19 +36,14 @@ int main()
     IFrameBuffer *sceneFramebuffer = backend->createFrameBuffer(800, 400);
     IFrameBuffer *tempFramebuffer = backend->createFrameBuffer(800, 400);  // Intermediate pass
 
-    IPostProccessor *distortionEffect = backend->createPostProcessor(
-        "../../../../res/shader/postprocessing/postprocess.vert",
-        "../../../../res/shader/postprocessing/distortion.frag"
-    );
+    DistortionEffect distortionEffect(backend);
+    distortionEffect.withDistortionStrength(0.2f)
+                    .withNoiseScale(4.0f);
 
     IPostProccessor *grayscaleEffect = backend->createPostProcessor(
         "../../../../res/shader/postprocessing/postprocess.vert",
         "../../../../res/shader/postprocessing/grayscale.frag"
     );
-
-    distortionEffect->setUniform("noiseScale", 3.0f);
-    distortionEffect->setUniform("distortionStrength", 0.13f);
-    distortionEffect->setUniform("timeScale", 0.1f);
 
     sf::CircleShape circle(80.f);
     circle.setFillColor(sf::Color::Red);
@@ -84,12 +81,13 @@ int main()
         // Multi-pass rendering chain:
         // 1. sceneFramebuffer (original) -> distortion -> tempFramebuffer
         // 2. tempFramebuffer -> grayscale -> screen
-        
+
+        // Update the necessary uniforms for the distortion effect
+        distortionEffect.time = time;
         // Pass 1: Apply distortion to intermediate Framebuffer
         tempFramebuffer->bind(); // Activate tempFramebuffer's OpenGL context
         glClear(GL_COLOR_BUFFER_BIT);
-        distortionEffect->setUniform("time", time);
-        distortionEffect->render(sceneFramebuffer->getTexture()); // "Set" the distortion effect to the scene fb
+        distortionEffect.render(sceneFramebuffer->getTexture());
         tempFramebuffer->unbind();
         
         // Pass 2: Apply grayscale to screen
@@ -105,7 +103,6 @@ int main()
     // Cleanup
     //TODO: Maybe try to auto clean this (do that in the destructor of the respective classes)
     delete grayscaleEffect;
-    delete distortionEffect;
     delete tempFramebuffer;
     delete sceneFramebuffer;
     delete backend;
