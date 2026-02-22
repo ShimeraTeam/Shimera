@@ -1,0 +1,47 @@
+name: CI - Build Windows & Linux
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - dev
+
+jobs:
+    build-Static-Shimera:
+      strategy:
+        fail-fast: false
+        matrix:
+          plateform: [ubuntu-latest, windows-latest]
+          shared-option: [--shared=y, --shared=n]
+          backend: [opengl, sfml]
+
+      runs-on: ${{ matrix.plateform }}
+      name: Build Shimera
+      steps:
+        - uses: actions/checkout@v6
+
+        - name: Install system dependencies
+          if: runner.os == 'Linux'
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y \
+            build-essential cmake \
+            libx11-dev libxrandr-dev libxi-dev libxinerama-dev libxcursor-dev \
+            libgl1-mesa-dev libglu1-mesa-dev libpng-dev libfreetype6-dev \
+            libxkbcommon-dev libxcb1-dev libxcb-image0-dev libxcb-keysyms1-dev \
+            libxcb-shm0-dev libxcb-randr0-dev
+
+        - name: Setup xmake
+          uses: xmake-io/github-action-setup-xmake@v1
+          with:
+            xmake-version: latest
+            actions-cache-folder: ".xmake-cache"
+
+        - name: Configuration
+          run: xmake f -y -c ${{ matrix.shared-option }}
+
+        - name: Build
+          run: xmake build shimera-${{ matrix.backend }}
+        
+        - name: Build test example
+          run: xmake build ${{ matrix.backend }}-example
