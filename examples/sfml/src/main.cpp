@@ -9,6 +9,7 @@
 #include <shimera.h>
 #include "backend/BackendFactory.hpp"
 #include "backend/sfml/SFMLFramebuffer.hpp"
+#include "effects/ChromaticAberration.hpp"
 #include "effects/DistortionEffect.hpp"
 
 
@@ -37,20 +38,17 @@ int main()
     IFrameBuffer *tempFramebuffer = backend->createFrameBuffer(800, 400);  // Intermediate pass
 
     DistortionEffect distortionEffect(backend);
-    distortionEffect.withDistortionStrength(0.2f)
-                    .withNoiseScale(4.0f);
+    distortionEffect.withDistortionStrength(0.02f)
+                    .withNoiseScale(0.5f);
 
-    IPostProccessor *grayscaleEffect = backend->createPostProcessor(
-        "../../../../res/shader/postprocessing/postprocess.vert",
-        "../../../../res/shader/postprocessing/grayscale.frag"
-    );
+    ChromaticAberrationEffect chromaticAberrationEffect(backend);
 
     sf::CircleShape circle(80.f);
     circle.setFillColor(sf::Color::Red);
     circle.setPosition(sf::Vector2f(210.f - 80.f, 270.f - 80.f));
 
     sf::RectangleShape rectangle(sf::Vector2f(160.f, 160.f));
-    rectangle.setFillColor(sf::Color::Green);
+    rectangle.setFillColor(sf::Color::White);
     rectangle.setPosition(sf::Vector2f(480.f - 80.f, 270.f - 80.f));
 
     sf::CircleShape triangle(105.f, 3);
@@ -58,13 +56,13 @@ int main()
     triangle.setPosition(sf::Vector2f(750.f - 105.f, 270.f - 80.f));
 
     // To draw a picture, uncomment the line below
-    // sf::Texture texture;
-    // if (!texture.loadFromFile("examples/res/test.jpg")) {
-    //     std::cerr << "Error loading image" << std::endl;
-    // }
-    // sf::Sprite sprite(texture);
-    // sprite.setPosition(sf::Vector2f(0.f, 0.f));
-    // sprite.setScale(sf::Vector2f(0.5f, 0.5f)); // 50% de la taille originale (1920x1080 -> 960x540)
+    sf::Texture texture;
+    if (!texture.loadFromFile("../../../../examples/res/image.jpg")) {
+        std::cerr << "Error loading image" << std::endl;
+    }
+    sf::Sprite sprite(texture);
+    sprite.setPosition(sf::Vector2f(0.f, 0.f));
+    sprite.setScale(sf::Vector2f(0.5f, 0.5f)); // 50% de la taille originale (1920x1080 -> 960x540)
 
     float time = 0.0f;
     while (window.isOpen())
@@ -79,6 +77,7 @@ int main()
         auto *sfmlRenderTexture = static_cast<sf::RenderTexture*>(sceneFramebuffer->getNativeRenderTarget());
         
         sfmlRenderTexture->clear(sf::Color::Black);
+        sfmlRenderTexture->draw(sprite);
         sfmlRenderTexture->draw(circle);
         sfmlRenderTexture->draw(rectangle);
         sfmlRenderTexture->draw(triangle);
@@ -102,7 +101,7 @@ int main()
         // Pass 2: Apply grayscale to screen
         window.setActive(true); // Switch back to window (SFML) context
         glClear(GL_COLOR_BUFFER_BIT);
-        grayscaleEffect->render(tempFramebuffer->getTexture());
+        chromaticAberrationEffect.render(tempFramebuffer->getTexture());
         
         time += 0.006f;
         
@@ -111,7 +110,6 @@ int main()
 
     // Cleanup
     //TODO: Maybe try to auto clean this (do that in the destructor of the respective classes)
-    delete grayscaleEffect;
     delete tempFramebuffer;
     delete sceneFramebuffer;
     delete backend;

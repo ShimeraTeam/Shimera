@@ -5,10 +5,12 @@
 #include <string>
 #include <glUtils.h>
 #include <variant>
-#include <uniform/Vec4.hpp>
 #include <stdexcept>
 
-using UniformValue = std::variant<float, int, Vec4<float>>;
+#include "Vec2.inl"
+#include "Vec4.hpp"
+
+using UniformValue = std::variant<float, int, Vec4<float>, Vec2<float>>;
 
 template <typename T>
 class Uniform {
@@ -52,6 +54,8 @@ class Uniform {
                 GLC(glUniform1f(location, newValue));
             } else if constexpr (std::is_same_v<T, int>) {
                 GLC(glUniform1i(location, newValue));
+            } else if constexpr (std::is_same_v<T, Vec2<float>>) {
+                GLC(glUniform2f(location, newValue.x, newValue.y));
             } else if constexpr (std::is_same_v<T, Vec4<float>>) {
                 GLC(glUniform4f(location, newValue.x, newValue.y, newValue.z, newValue.w));
             } else {
