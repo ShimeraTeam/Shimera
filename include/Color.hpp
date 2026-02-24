@@ -1,13 +1,14 @@
 #ifndef SHIMERA_COLOR_HPP
 #define SHIMERA_COLOR_HPP
 
+#include <shimera_api.h>
 #include <cstdint>
 
 /**
  * Backend "abstraction-friendly" color representation
  * Normalized RGBA values (0.0 to 1.0)
  */
-struct Color {
+struct SHIMERA_API Color {
     float r;
     float g;
     float b;

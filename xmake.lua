@@ -37,6 +37,7 @@ target("shimera-opengl")
     if has_config("shared") then
         set_kind("shared")
         add_defines("SHIMERA_EXPORTS")
+        add_defines("SHIMERA_SHARED", {public = true})
     else
         set_kind("static")
     end
@@ -69,6 +70,7 @@ target("shimera-sfml")
     if has_config("shared") then
         set_kind("shared")
         add_defines("SHIMERA_EXPORTS")
+        add_defines("SHIMERA_SHARED", {public = true})
     else
         set_kind("static")
     end
@@ -97,6 +99,7 @@ target("shimera-sdl")
     if has_config("shared") then
         set_kind("shared")
         add_defines("SHIMERA_EXPORTS")
+        add_defines("SHIMERA_SHARED", {public = true})
     else
         set_kind("static")
     end

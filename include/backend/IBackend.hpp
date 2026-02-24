@@ -1,6 +1,7 @@
 #ifndef SHIMERA_IBACKEND_HPP
 #define SHIMERA_IBACKEND_HPP
 
+#include <shimera_api.h>
 #include "IFrameBuffer.hpp"
 #include "IPostProccessor.hpp"
 
@@ -8,7 +9,7 @@
  * Backend interface
  * Defines methods that should be implemented by any rendering backend and serves as a bridge
  */
-class IBackend {
+class SHIMERA_API IBackend {
     public:
         virtual ~IBackend() = default;
 

@@ -1,6 +1,7 @@
 #ifndef SHIMERA_IFRAMEBUFFER_HPP
 #define SHIMERA_IFRAMEBUFFER_HPP
 
+#include <shimera_api.h>
 #include "ITexture.hpp"
 #include "../Color.hpp"
 
@@ -8,7 +9,7 @@
  * Framebuffer interface
  * Defines methods for framebuffer operations across different backends
  */
-class IFrameBuffer {
+class SHIMERA_API IFrameBuffer {
     public:
         virtual ~IFrameBuffer() = default;
 

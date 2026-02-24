@@ -1,11 +1,12 @@
 #ifndef SHIMERA_IPOSTPROCCESSOR_HPP
 #define SHIMERA_IPOSTPROCCESSOR_HPP
 
+#include <shimera_api.h>
 #include "IShader.hpp"
 #include "ITexture.hpp"
 #include "uniform/Uniform.hpp"
 
-class IPostProccessor {
+class SHIMERA_API IPostProccessor {
     public:
         virtual ~IPostProccessor() = default;
 

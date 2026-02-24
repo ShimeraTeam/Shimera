@@ -1,9 +1,10 @@
 #ifndef SHIMERA_SFML_DISTORTIONEFFECT_HPP
 #define SHIMERA_SFML_DISTORTIONEFFECT_HPP
+#include <shimera_api.h>
 #include "ShaderEffect.inl"
 #include "backend/IBackend.hpp"
 
-class DistortionEffect final : public ShaderEffect<DistortionEffect> {
+class SHIMERA_API DistortionEffect final : public ShaderEffect<DistortionEffect> {
     public:
         float time = 0.0f;
         float noiseScale = 3.0f;
