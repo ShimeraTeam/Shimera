@@ -1,6 +1,7 @@
 #ifndef SHIMERA_SFML_SHADEREFFECTBASE_HPP
 #define SHIMERA_SFML_SHADEREFFECTBASE_HPP
 
+#include <shimera_api.h>
 #include <memory>
 
 #include "backend/IFrameBuffer.hpp"
@@ -11,7 +12,7 @@
  * Abstract class for shader effects
  * Provides common functionality for all shader effects
  */
-class ShaderEffectBase {
+class SHIMERA_API ShaderEffectBase {
     public:
         virtual ~ShaderEffectBase() = default;
 

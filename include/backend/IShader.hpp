@@ -1,12 +1,13 @@
 #ifndef SHIMERA_ISHADER_HPP
 #define SHIMERA_ISHADER_HPP
 
+#include <shimera_api.h>
 #include <cstdint>
 #include <string>
 
 #include "uniform/Uniform.hpp"
 
-class IShader {
+class SHIMERA_API IShader {
     public:
         virtual ~IShader() = default;
 

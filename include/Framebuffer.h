@@ -1,7 +1,9 @@
 #ifndef OPENGL_LEARNING_FRAMEBUFFER_H
 #define OPENGL_LEARNING_FRAMEBUFFER_H
 
-class Framebuffer
+#include <shimera_api.h>
+
+class SHIMERA_API Framebuffer
 {
     public:
         Framebuffer(int w, int h);
