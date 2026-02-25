@@ -10,6 +10,7 @@
 #include "backend/BackendFactory.hpp"
 #include "backend/sfml/SFMLFramebuffer.hpp"
 #include "effects/DistortionEffect.hpp"
+#include "effects/ColorshiftEffect.hpp"
 
 
 int main()
@@ -40,10 +41,7 @@ int main()
     distortionEffect.withDistortionStrength(0.2f)
                     .withNoiseScale(4.0f);
 
-    IPostProccessor *grayscaleEffect = backend->createPostProcessor(
-        "../../../../res/shader/postprocessing/postprocess.vert",
-        "../../../../res/shader/postprocessing/grayscale.frag"
-    );
+    ColorshiftEffect colorshiftEffect(backend, Vec3<float>(0.5f, -0.2f, 0.3f));
 
     sf::CircleShape circle(80.f);
     circle.setFillColor(sf::Color::Red);
@@ -77,19 +75,19 @@ int main()
 
         // Render scene to the first framebuffer ("scene"Framebuffer)
         auto *sfmlRenderTexture = static_cast<sf::RenderTexture*>(sceneFramebuffer->getNativeRenderTarget());
-        
+
         sfmlRenderTexture->clear(sf::Color::Black);
         sfmlRenderTexture->draw(circle);
         sfmlRenderTexture->draw(rectangle);
         sfmlRenderTexture->draw(triangle);
         sceneFramebuffer->unbind(); // Calls display() internally
-        
+
         // Ensure window context is active for post-processing
         window.setActive(true);
-        
+
         // Multi-pass rendering chain:
         // 1. sceneFramebuffer (original) -> distortion -> tempFramebuffer
-        // 2. tempFramebuffer -> grayscale -> screen
+        // 2. tempFramebuffer -> colorshift -> screen
 
         // Update the necessary uniforms for the distortion effect
         distortionEffect.time = time;
@@ -98,20 +96,19 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
         distortionEffect.render(sceneFramebuffer->getTexture());
         tempFramebuffer->unbind();
-        
-        // Pass 2: Apply grayscale to screen
+
+        // Pass 2: Apply colorshift to screen
         window.setActive(true); // Switch back to window (SFML) context
         glClear(GL_COLOR_BUFFER_BIT);
-        grayscaleEffect->render(tempFramebuffer->getTexture());
-        
+        colorshiftEffect.render(tempFramebuffer->getTexture());
+
         time += 0.006f;
-        
+
         window.display();
     }
 
     // Cleanup
     //TODO: Maybe try to auto clean this (do that in the destructor of the respective classes)
-    delete grayscaleEffect;
     delete tempFramebuffer;
     delete sceneFramebuffer;
     delete backend;

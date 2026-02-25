@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <variant>
+#include "uniform/Vec3.hpp"
 #include "uniform/Vec4.hpp"
 
 SFMLShader::SFMLShader() : programId(0) {}
@@ -55,6 +56,8 @@ void SFMLShader::setUniform(const std::string& name, const UniformValue& value) 
             GLC(glUniform1f(location, val));
         } else if constexpr (std::is_same_v<T, int>) {
             GLC(glUniform1i(location, val));
+        } else if constexpr (std::is_same_v<T, Vec3<float>>) {
+            GLC(glUniform3f(location, val.x, val.y, val.z));
         } else if constexpr (std::is_same_v<T, Vec4<float>>) {
             GLC(glUniform4f(location, val.x, val.y, val.z, val.w));
         }
