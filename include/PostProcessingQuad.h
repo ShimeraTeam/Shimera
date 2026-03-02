@@ -1,9 +1,10 @@
 #ifndef OPENGL_LEARNING_POSTPROCESSINGQUAD_H
 #define OPENGL_LEARNING_POSTPROCESSINGQUAD_H
+#include <shimera_api.h>
 #include <string>
 
 
-class PostProcessingQuad {
+class SHIMERA_API PostProcessingQuad {
     public:
         PostProcessingQuad(const std::string& vertPath, const std::string& fragPath);
         ~PostProcessingQuad();

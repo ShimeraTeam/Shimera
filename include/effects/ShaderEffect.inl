@@ -1,5 +1,5 @@
-#ifndef SHIMERA_SFML_SHADEREFFECT_INL
-#define SHIMERA_SFML_SHADEREFFECT_INL
+#ifndef SHIMERA_SHADEREFFECT_INL
+#define SHIMERA_SHADEREFFECT_INL
 #include "ShaderEffectBase.hpp"
 
 /*
@@ -32,4 +32,4 @@ class ShaderEffect : public ShaderEffectBase {
         ShaderEffect() = default;
 };
 
-#endif //SHIMERA_SFML_SHADEREFFECT_INL
+#endif //SHIMERA_SHADEREFFECT_INL

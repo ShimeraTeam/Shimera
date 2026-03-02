@@ -8,9 +8,11 @@
 #include <stdexcept>
 
 #include "Vec2.inl"
+#include <uniform/Vec3.hpp>
 #include "Vec4.hpp"
+#include <stdexcept>
 
-using UniformValue = std::variant<float, int, Vec4<float>, Vec2<float>>;
+using UniformValue = std::variant<float, int, Vec2<float>, Vec3<float>, Vec4<float>>;
 
 template <typename T>
 class Uniform {
@@ -56,6 +58,8 @@ class Uniform {
                 GLC(glUniform1i(location, newValue));
             } else if constexpr (std::is_same_v<T, Vec2<float>>) {
                 GLC(glUniform2f(location, newValue.x, newValue.y));
+            } else if constexpr (std::is_same_v<T, Vec3<float>>) {
+                GLC(glUniform3f(location, newValue.x, newValue.y, newValue.z));
             } else if constexpr (std::is_same_v<T, Vec4<float>>) {
                 GLC(glUniform4f(location, newValue.x, newValue.y, newValue.z, newValue.w));
             } else {

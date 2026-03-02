@@ -1,7 +1,9 @@
 #ifndef SHIMERA_ITEXTURE_HPP
 #define SHIMERA_ITEXTURE_HPP
 
-class ITexture {
+#include <shimera_api.h>
+
+class SHIMERA_API ITexture {
     public:
         virtual ~ITexture() = default;
 
