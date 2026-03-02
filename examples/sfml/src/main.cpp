@@ -11,11 +11,12 @@
 #include "backend/sfml/SFMLFramebuffer.hpp"
 #include "effects/DistortionEffect.hpp"
 #include "effects/ColorshiftEffect.hpp"
+#include "effects/SaturationEffect.hpp"
 
 
 int main()
 {
-    const sf::VideoMode videoMode({800, 400});
+    const sf::VideoMode videoMode({960, 540});
     sf::RenderWindow window(videoMode, "SFML3 - Multi-Pass Post-Processing");
     window.setActive(true);
 
@@ -34,14 +35,15 @@ int main()
     }
 
     // Create framebuffers for ping-pong rendering
-    IFrameBuffer *sceneFramebuffer = backend->createFrameBuffer(800, 400);
-    IFrameBuffer *tempFramebuffer = backend->createFrameBuffer(800, 400);  // Intermediate pass
+    IFrameBuffer *sceneFramebuffer = backend->createFrameBuffer(960, 540);
+    IFrameBuffer *tempFramebuffer = backend->createFrameBuffer(960, 540);  // Intermediate pass
+    IFrameBuffer *finalFramebuffer = backend->createFrameBuffer(960, 540); // Final pass (optional, can render directly to screen)
 
     DistortionEffect distortionEffect(backend);
     distortionEffect.withDistortionStrength(0.2f)
                     .withNoiseScale(4.0f);
-
     ColorshiftEffect colorshiftEffect(backend, Vec3<float>(0.5f, -0.2f, 0.3f));
+    SaturationEffect saturationEffect(backend, 1.5f);
 
     sf::CircleShape circle(80.f);
     circle.setFillColor(sf::Color::Red);
@@ -57,7 +59,7 @@ int main()
 
     // To draw a picture, uncomment the line below
     // sf::Texture texture;
-    // if (!texture.loadFromFile("examples/res/test.jpg")) {
+    // if (!texture.loadFromFile("../../../../examples/res/test.jpg")) {
     //     std::cerr << "Error loading image" << std::endl;
     // }
     // sf::Sprite sprite(texture);
@@ -77,6 +79,7 @@ int main()
         auto *sfmlRenderTexture = static_cast<sf::RenderTexture*>(sceneFramebuffer->getNativeRenderTarget());
 
         sfmlRenderTexture->clear(sf::Color::Black);
+        // sfmlRenderTexture->draw(sprite);
         sfmlRenderTexture->draw(circle);
         sfmlRenderTexture->draw(rectangle);
         sfmlRenderTexture->draw(triangle);
@@ -88,19 +91,26 @@ int main()
         // Multi-pass rendering chain:
         // 1. sceneFramebuffer (original) -> distortion -> tempFramebuffer
         // 2. tempFramebuffer -> colorshift -> screen
-
+        // 3. tempFramebuffer -> saturation -> screen
         // Update the necessary uniforms for the distortion effect
         distortionEffect.time = time;
-        // Pass 1: Apply distortion to intermediate Framebuffer
-        tempFramebuffer->bind(); // Activate tempFramebuffer's OpenGL context
+        // Pass 1: Apply distortion -> tempFramebuffer
+        tempFramebuffer->bind();
         glClear(GL_COLOR_BUFFER_BIT);
         distortionEffect.render(sceneFramebuffer->getTexture());
         tempFramebuffer->unbind();
 
-        // Pass 2: Apply colorshift to screen
-        window.setActive(true); // Switch back to window (SFML) context
+        // Pass 2: Apply colorshift -> finalFramebuffer
+        finalFramebuffer->bind();
         glClear(GL_COLOR_BUFFER_BIT);
         colorshiftEffect.render(tempFramebuffer->getTexture());
+        finalFramebuffer->unbind();
+
+        // Pass 3: Apply saturation -> screen
+        window.setActive(true);
+        glClear(GL_COLOR_BUFFER_BIT);
+        saturationEffect.updateUniforms();
+        saturationEffect.render(finalFramebuffer->getTexture());
 
         time += 0.006f;
 
@@ -109,6 +119,7 @@ int main()
 
     // Cleanup
     //TODO: Maybe try to auto clean this (do that in the destructor of the respective classes)
+    delete finalFramebuffer;
     delete tempFramebuffer;
     delete sceneFramebuffer;
     delete backend;
