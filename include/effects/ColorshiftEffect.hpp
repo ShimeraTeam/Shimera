@@ -7,15 +7,15 @@
 
 class SHIMERA_API ColorshiftEffect final : public ShaderEffect<ColorshiftEffect> {
     public:
-        Vec3<float> colorShift = Vec3<float>(0.0f);
+        Vec3<float> u_tint = Vec3<float>(0.0f);
 
         explicit ColorshiftEffect(IBackend *backend);
 
-        ColorshiftEffect(IBackend *backend, Vec3<float> colorShift);
+        ColorshiftEffect(IBackend *backend, Vec3<float> tint);
 
         void updateUniforms() override;
 
-        ColorshiftEffect &withColorShift(const Vec3<float> &colorShift);
+        ColorshiftEffect &withTint(const Vec3<float> &tint);
 };
 
 #endif //SHIMERA_COLORSHIFTEFFECT_HPP

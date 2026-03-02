@@ -17,7 +17,7 @@ void SaturationEffect::updateUniforms() {
     m_processor->setUniform("u_strength", u_strength);
 }
 
-SaturationEffect &SaturationEffect::withSaturation(float u_strength) {
+SaturationEffect &SaturationEffect::withStrength(float u_strength) {
     this->u_strength = u_strength;
     return *this;
 }
