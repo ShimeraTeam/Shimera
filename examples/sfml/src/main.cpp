@@ -13,6 +13,7 @@
 #include "effects/ColorshiftEffect.hpp"
 #include "effects/SaturationEffect.hpp"
 #include "effects/BrightnessEffect.hpp"
+#include "effects/ContrastEffect.hpp"
 
 
 int main()
@@ -44,7 +45,7 @@ int main()
     distortionEffect.withDistortionStrength(0.2f)
                     .withNoiseScale(4.0f);
     ColorshiftEffect colorshiftEffect(backend, Vec3<float>(0.5f, -0.2f, 0.3f));
-    BrightnessEffect brightnessEffect(backend, 0.5f);
+    ContrastEffect contrastEffect(backend, 1.5f);
 
     sf::CircleShape circle(80.f);
     circle.setFillColor(sf::Color::Red);
@@ -110,8 +111,8 @@ int main()
         // Pass 3: Apply brightness -> screen
         window.setActive(true);
         glClear(GL_COLOR_BUFFER_BIT);
-        brightnessEffect.updateUniforms();
-        brightnessEffect.render(finalFramebuffer->getTexture());
+        contrastEffect.updateUniforms();
+        contrastEffect.render(finalFramebuffer->getTexture());
 
         time += 0.006f;
 
