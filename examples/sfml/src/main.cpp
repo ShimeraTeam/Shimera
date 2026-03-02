@@ -42,9 +42,13 @@ int main()
                     .withNoiseScale(0.5f);
 
     ChromaticAberrationEffect chromaticAberrationEffect(backend);
+    chromaticAberrationEffect.withStrength(0.4f)
+                            .withRadius(true)
+                            .withContrast(1.5f)
+                            .withSamples(30);
 
     sf::CircleShape circle(80.f);
-    circle.setFillColor(sf::Color::Red);
+    circle.setFillColor(sf::Color::Magenta);
     circle.setPosition(sf::Vector2f(210.f - 80.f, 270.f - 80.f));
 
     sf::RectangleShape rectangle(sf::Vector2f(160.f, 160.f));
@@ -52,7 +56,7 @@ int main()
     rectangle.setPosition(sf::Vector2f(480.f - 80.f, 270.f - 80.f));
 
     sf::CircleShape triangle(105.f, 3);
-    triangle.setFillColor(sf::Color::Blue);
+    triangle.setFillColor(sf::Color::Yellow);
     triangle.setPosition(sf::Vector2f(750.f - 105.f, 270.f - 80.f));
 
     // To draw a picture, uncomment the line below
@@ -62,7 +66,7 @@ int main()
     }
     sf::Sprite sprite(texture);
     sprite.setPosition(sf::Vector2f(0.f, 0.f));
-    sprite.setScale(sf::Vector2f(0.5f, 0.5f)); // 50% de la taille originale (1920x1080 -> 960x540)
+    sprite.setScale(sf::Vector2f(1.f, 1.f)); // 50% de la taille originale (1920x1080 -> 960x540)
 
     float time = 0.0f;
     while (window.isOpen())

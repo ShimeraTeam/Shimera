@@ -6,20 +6,26 @@
 
 class ChromaticAberrationEffect final : public ShaderEffect<ChromaticAberrationEffect> {
     public:
-        Vec2<float> offset = Vec2(0.005f, 0.005f);
-        float radius = 0.0f;
+        float strength = 1.0f;
+        bool radius = false;
+        float contrast = 2.0f;
+        int samples = 20;
 
         explicit ChromaticAberrationEffect(IBackend *backend);
 
         ChromaticAberrationEffect(IBackend *backend,
-            Vec2<float> offset,
-            float radius
+            float strength,
+            bool radius,
+            float contrast = 2.0f,
+            int samples = 20
         );
 
         void updateUniforms() override;
 
-        ChromaticAberrationEffect &withOffset(Vec2<float> o);
-        ChromaticAberrationEffect &withRadius(float r);
+        ChromaticAberrationEffect &withStrength(float s);
+        ChromaticAberrationEffect &withRadius(bool r);
+        ChromaticAberrationEffect &withContrast(float c);
+        ChromaticAberrationEffect &withSamples(int s);
 };
 
 #endif //SHIMERA_SFML_CHROMATICABERRATION_HPP
