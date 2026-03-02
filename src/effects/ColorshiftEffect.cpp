@@ -3,8 +3,8 @@
 ColorshiftEffect::ColorshiftEffect(IBackend *backend)
     : ColorshiftEffect(backend, Vec3<float>(0.0f)) {}
 
-ColorshiftEffect::ColorshiftEffect(IBackend *backend, Vec3<float> colorShift)
-    : colorShift(colorShift) {
+ColorshiftEffect::ColorshiftEffect(IBackend *backend, Vec3<float> tint)
+    : u_tint(tint) {
      m_processor = std::unique_ptr<IPostProccessor>(
         backend->createPostProcessor(
             "../../../../res/shader/postprocessing/postprocess.vert",
@@ -14,10 +14,10 @@ ColorshiftEffect::ColorshiftEffect(IBackend *backend, Vec3<float> colorShift)
 }
 
 void ColorshiftEffect::updateUniforms() {
-    m_processor->setUniform("colorShift", colorShift);
+    m_processor->setUniform("u_tint", u_tint);
 }
 
-ColorshiftEffect &ColorshiftEffect::withColorShift(const Vec3<float> &colorShift) {
-    this->colorShift = colorShift;
+ColorshiftEffect &ColorshiftEffect::withTint(const Vec3<float> &tint) {
+    this->u_tint = tint;
     return *this;
 }

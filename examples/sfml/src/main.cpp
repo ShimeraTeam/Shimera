@@ -12,6 +12,7 @@
 #include "effects/DistortionEffect.hpp"
 #include "effects/ColorshiftEffect.hpp"
 #include "effects/SaturationEffect.hpp"
+#include "effects/BrightnessEffect.hpp"
 
 
 int main()
@@ -43,7 +44,7 @@ int main()
     distortionEffect.withDistortionStrength(0.2f)
                     .withNoiseScale(4.0f);
     ColorshiftEffect colorshiftEffect(backend, Vec3<float>(0.5f, -0.2f, 0.3f));
-    SaturationEffect saturationEffect(backend, 1.5f);
+    BrightnessEffect brightnessEffect(backend, 0.5f);
 
     sf::CircleShape circle(80.f);
     circle.setFillColor(sf::Color::Red);
@@ -91,7 +92,7 @@ int main()
         // Multi-pass rendering chain:
         // 1. sceneFramebuffer (original) -> distortion -> tempFramebuffer
         // 2. tempFramebuffer -> colorshift -> screen
-        // 3. tempFramebuffer -> saturation -> screen
+        // 3. tempFramebuffer -> brightness -> screen
         // Update the necessary uniforms for the distortion effect
         distortionEffect.time = time;
         // Pass 1: Apply distortion -> tempFramebuffer
@@ -106,11 +107,11 @@ int main()
         colorshiftEffect.render(tempFramebuffer->getTexture());
         finalFramebuffer->unbind();
 
-        // Pass 3: Apply saturation -> screen
+        // Pass 3: Apply brightness -> screen
         window.setActive(true);
         glClear(GL_COLOR_BUFFER_BIT);
-        saturationEffect.updateUniforms();
-        saturationEffect.render(finalFramebuffer->getTexture());
+        brightnessEffect.updateUniforms();
+        brightnessEffect.render(finalFramebuffer->getTexture());
 
         time += 0.006f;
 
