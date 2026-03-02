@@ -1,5 +1,5 @@
-#ifndef SHIMERA_SFML_SHADEREFFECTBASE_HPP
-#define SHIMERA_SFML_SHADEREFFECTBASE_HPP
+#ifndef SHIMERA_SHADEREFFECTBASE_HPP
+#define SHIMERA_SHADEREFFECTBASE_HPP
 
 #include <shimera_api.h>
 #include <memory>
@@ -33,4 +33,4 @@ class SHIMERA_API ShaderEffectBase {
         bool m_enabled = true;
 };
 
-#endif //SHIMERA_SFML_SHADEREFFECTBASE_HPP
+#endif //SHIMERA_SHADEREFFECTBASE_HPP
