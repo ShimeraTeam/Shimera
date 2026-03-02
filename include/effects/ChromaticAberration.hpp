@@ -1,10 +1,11 @@
 #ifndef SHIMERA_SFML_CHROMATICABERRATION_HPP
 #define SHIMERA_SFML_CHROMATICABERRATION_HPP
 
+#include "shimera_api.h"
 #include "ShaderEffect.inl"
 #include "backend/IBackend.hpp"
 
-class ChromaticAberrationEffect final : public ShaderEffect<ChromaticAberrationEffect> {
+class SHIMERA_API ChromaticAberrationEffect final : public ShaderEffect<ChromaticAberrationEffect> {
     public:
         float strength = 1.0f;
         bool radius = false;
