@@ -14,7 +14,7 @@ class SHIMERA_API SaturationEffect final : public ShaderEffect<SaturationEffect>
 
         void updateUniforms() override;
 
-        SaturationEffect &withSaturation(float u_strength);
+        SaturationEffect &withStrength(float u_strength);
 };
 
 #endif //SHIMERA_SATURATIONEFFECT_HPP

@@ -14,7 +14,7 @@ class SHIMERA_API BrightnessEffect final : public ShaderEffect<BrightnessEffect>
 
         void updateUniforms() override;
 
-        BrightnessEffect &withBrightness(float u_strength);
+        BrightnessEffect &withStrength(float u_strength);
 };
 
 #endif //SHIMERA_BRIGHTNESSEFFECT_HPP

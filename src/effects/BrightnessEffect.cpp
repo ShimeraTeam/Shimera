@@ -17,7 +17,7 @@ void BrightnessEffect::updateUniforms() {
     m_processor->setUniform("u_strength", u_strength);
 }
 
-BrightnessEffect &BrightnessEffect::withBrightness(float u_strength) {
+BrightnessEffect &BrightnessEffect::withStrength(float u_strength) {
     this->u_strength = u_strength;
     return *this;
 }
