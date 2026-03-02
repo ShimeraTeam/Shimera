@@ -6,15 +6,15 @@
 
 class SHIMERA_API SaturationEffect final : public ShaderEffect<SaturationEffect> {
     public:
-        float saturation = 1.0f;
+        float u_strength = 1.0f;
 
         explicit SaturationEffect(IBackend *backend);
 
-        SaturationEffect(IBackend *backend, float saturation);
+        SaturationEffect(IBackend *backend, float u_strength);
 
         void updateUniforms() override;
 
-        SaturationEffect &withSaturation(float saturation);
+        SaturationEffect &withSaturation(float u_strength);
 };
 
 #endif //SHIMERA_SATURATIONEFFECT_HPP

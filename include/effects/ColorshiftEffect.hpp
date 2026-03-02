@@ -1,10 +1,11 @@
 #ifndef SHIMERA_COLORSHIFTEFFECT_HPP
 #define SHIMERA_COLORSHIFTEFFECT_HPP
+#include <shimera_api.h>
 #include "ShaderEffect.inl"
 #include "backend/IBackend.hpp"
 #include "uniform/Vec3.hpp"
 
-class ColorshiftEffect final : public ShaderEffect<ColorshiftEffect> {
+class SHIMERA_API ColorshiftEffect final : public ShaderEffect<ColorshiftEffect> {
     public:
         Vec3<float> colorShift = Vec3<float>(0.0f);
 

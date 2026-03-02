@@ -3,8 +3,8 @@
 SaturationEffect::SaturationEffect(IBackend *backend)
     : SaturationEffect(backend, 1.0f) {}
 
-SaturationEffect::SaturationEffect(IBackend *backend, float saturation)
-    : saturation(saturation) {
+SaturationEffect::SaturationEffect(IBackend *backend, float u_strength)
+    : u_strength(u_strength) {
      m_processor = std::unique_ptr<IPostProccessor>(
             backend->createPostProcessor(
                 "../../../../res/shader/postprocessing/postprocess.vert",
@@ -14,10 +14,10 @@ SaturationEffect::SaturationEffect(IBackend *backend, float saturation)
 }
 
 void SaturationEffect::updateUniforms() {
-    m_processor->setUniform("saturation", saturation);
+    m_processor->setUniform("u_strength", u_strength);
 }
 
-SaturationEffect &SaturationEffect::withSaturation(float saturation) {
-    this->saturation = saturation;
+SaturationEffect &SaturationEffect::withSaturation(float u_strength) {
+    this->u_strength = u_strength;
     return *this;
 }
