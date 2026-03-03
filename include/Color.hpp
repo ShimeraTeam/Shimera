@@ -8,6 +8,8 @@
  * Backend "abstraction-friendly" color representation
  * Normalized RGBA values (0.0 to 1.0)
  */
+namespace shimera {
+
 struct SHIMERA_API Color {
     float r;
     float g;
@@ -31,5 +33,7 @@ struct SHIMERA_API Color {
     static constexpr Color Magenta()     { return Color(1.0f, 0.0f, 1.0f, 1.0f); }
     static constexpr Color Transparent() { return Color(0.0f, 0.0f, 0.0f, 0.0f); }
 };
+
+}
 
 #endif //SHIMERA_COLOR_HPP
