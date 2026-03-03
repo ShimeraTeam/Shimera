@@ -13,7 +13,7 @@ jobs:
         matrix:
           plateform: [ubuntu-latest, windows-latest]
           shared-option: [--shared=y, --shared=n]
-          backend: [opengl, sfml]
+          backend: [opengl, sfml, raylib]
 
       runs-on: ${{ matrix.plateform }}
       name: Build Shimera
