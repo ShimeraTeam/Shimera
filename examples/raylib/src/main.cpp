@@ -18,9 +18,9 @@ int main() {
     std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
 
     Camera camera = { 0 };
-    camera.position = (Vector3){ 10.0f, 10.0f, 10.0f };
-    camera.target = (Vector3){ 0.0f, 0.0f, 0.0f };
-    camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };
+    camera.position = { 10.0f, 10.0f, 10.0f };
+    camera.target = { 0.0f, 0.0f, 0.0f };
+    camera.up = { 0.0f, 1.0f, 0.0f };
     camera.fovy = 25.0f;
     camera.projection = CAMERA_PERSPECTIVE;
 
