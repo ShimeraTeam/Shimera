@@ -4,7 +4,6 @@
 
 #include <shimera.h>
 #include "backend/BackendFactory.hpp"
-#include "backend/raylib/RaylibFramebuffer.hpp"
 #include "effects/DistortionEffect.hpp"
 
 int main() {
@@ -59,7 +58,6 @@ int main() {
             UpdateCamera(&camera, CAMERA_THIRD_PERSON);
         }
 
-        // Render the scene in the texture
         sceneFramebuffer->bind();
         sceneFramebuffer->clear(shimera::Color{0, 0, 0, 1});
             BeginMode3D(camera);

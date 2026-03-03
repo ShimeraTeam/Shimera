@@ -6,7 +6,7 @@
 
 /**
  * Raylib Texture wrapper implementing ITexture interface
- * Wraps an existing Texture2D to help with abstraction
+ * Wraps an existing Texture to help with abstraction
  */
 class RaylibTexture final : public ITexture {
 public:

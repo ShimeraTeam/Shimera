@@ -9,7 +9,7 @@
  * Raylib Shader implementation using OpenGL
  * Since Raylib uses OpenGL underneath, we use raw OpenGL shader management
  */
-//TODO: Maybe later try to share the same code between SFML and OpenGL backends, maybe...
+//TODO: Maybe later try to share the same code between SFML, OpenGL and Raylib backends, maybe...
 class RaylibShader final : public IShader {
     public:
         RaylibShader();
