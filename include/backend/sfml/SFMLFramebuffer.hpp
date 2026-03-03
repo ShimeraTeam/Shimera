@@ -17,7 +17,7 @@ public:
 
     void bind() override;
     void unbind() override;
-    void clear(Color color) override;
+    void clear(shimera::Color color) override;
     ITexture& getTexture() override;
     void resize(int width, int height) override;
     int getWidth() const override;

@@ -17,7 +17,7 @@ void SFMLFramebuffer::unbind() {
     renderTexture.setActive(false);
 }
 
-void SFMLFramebuffer::clear(Color color) {
+void SFMLFramebuffer::clear(shimera::Color color) {
     sf::Color sfmlColor(
         static_cast<std::uint8_t>(color.r * 255),
         static_cast<std::uint8_t>(color.g * 255),
