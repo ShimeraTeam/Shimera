@@ -9,6 +9,7 @@
 #include <shimera.h>
 #include "backend/BackendFactory.hpp"
 #include "backend/sfml/SFMLFramebuffer.hpp"
+#include "effects/ChromaticAberration.hpp"
 #include "effects/DistortionEffect.hpp"
 #include "effects/ColorshiftEffect.hpp"
 #include "effects/SaturationEffect.hpp"
@@ -42,21 +43,25 @@ int main()
     IFrameBuffer *finalFramebuffer = backend->createFrameBuffer(960, 540); // Final pass (optional, can render directly to screen)
 
     DistortionEffect distortionEffect(backend);
-    distortionEffect.withDistortionStrength(0.2f)
-                    .withNoiseScale(4.0f);
-    ColorshiftEffect colorshiftEffect(backend, Vec3<float>(0.5f, -0.2f, 0.3f));
-    ContrastEffect contrastEffect(backend, 1.5f);
+    distortionEffect.withDistortionStrength(0.02f)
+                    .withNoiseScale(0.5f);
+
+    ChromaticAberrationEffect chromaticAberrationEffect(backend);
+    chromaticAberrationEffect.withStrength(0.4f)
+                            .withRadius(true)
+                            .withContrast(1.5f)
+                            .withSamples(30);
 
     sf::CircleShape circle(80.f);
-    circle.setFillColor(sf::Color::Red);
+    circle.setFillColor(sf::Color::Magenta);
     circle.setPosition(sf::Vector2f(210.f - 80.f, 270.f - 80.f));
 
     sf::RectangleShape rectangle(sf::Vector2f(160.f, 160.f));
-    rectangle.setFillColor(sf::Color::Green);
+    rectangle.setFillColor(sf::Color::White);
     rectangle.setPosition(sf::Vector2f(480.f - 80.f, 270.f - 80.f));
 
     sf::CircleShape triangle(105.f, 3);
-    triangle.setFillColor(sf::Color::Blue);
+    triangle.setFillColor(sf::Color::Yellow);
     triangle.setPosition(sf::Vector2f(750.f - 105.f, 270.f - 80.f));
 
     // To draw a picture, uncomment the line below
@@ -105,15 +110,8 @@ int main()
         // Pass 2: Apply colorshift -> finalFramebuffer
         finalFramebuffer->bind();
         glClear(GL_COLOR_BUFFER_BIT);
-        colorshiftEffect.render(tempFramebuffer->getTexture());
-        finalFramebuffer->unbind();
-
-        // Pass 3: Apply brightness -> screen
-        window.setActive(true);
-        glClear(GL_COLOR_BUFFER_BIT);
-        contrastEffect.updateUniforms();
-        contrastEffect.render(finalFramebuffer->getTexture());
-
+        chromaticAberrationEffect.render(tempFramebuffer->getTexture());
+        
         time += 0.006f;
 
         window.display();
