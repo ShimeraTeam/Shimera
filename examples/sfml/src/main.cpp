@@ -9,6 +9,7 @@
 #include <shimera.h>
 #include "backend/BackendFactory.hpp"
 #include "backend/sfml/SFMLFramebuffer.hpp"
+#include "effects/ChromaticAberration.hpp"
 #include "effects/DistortionEffect.hpp"
 #include "effects/ColorshiftEffect.hpp"
 #include "effects/GrayscaleEffect.hpp"
@@ -43,18 +44,24 @@ int main()
     DistortionEffect distortionEffect(backend);
     distortionEffect.withDistortionStrength(0.2f)
                     .withNoiseScale(4.0f);
-    GrayscaleEffect grayscaleEffect(backend);
+
+    ChromaticAberrationEffect chromaticAberrationEffect(backend);
+    chromaticAberrationEffect.withStrength(0.4f)
+                            .withRadius(true)
+                            .withContrast(1.5f)
+                            .withSamples(30);
+
 
     sf::CircleShape circle(80.f);
-    circle.setFillColor(sf::Color::Red);
+    circle.setFillColor(sf::Color::Magenta);
     circle.setPosition(sf::Vector2f(210.f - 80.f, 270.f - 80.f));
 
     sf::RectangleShape rectangle(sf::Vector2f(160.f, 160.f));
-    rectangle.setFillColor(sf::Color::Green);
+    rectangle.setFillColor(sf::Color::White);
     rectangle.setPosition(sf::Vector2f(480.f - 80.f, 270.f - 80.f));
 
     sf::CircleShape triangle(105.f, 3);
-    triangle.setFillColor(sf::Color::Blue);
+    triangle.setFillColor(sf::Color::Yellow);
     triangle.setPosition(sf::Vector2f(750.f - 105.f, 270.f - 80.f));
 
     // To draw a picture, uncomment the line below
@@ -99,11 +106,11 @@ int main()
         distortionEffect.render(sceneFramebuffer->getTexture());
         tempFramebuffer->unbind();
 
-        // Pass 2: Apply grayscale (saturation = 0.0) -> screen
-        window.setActive(true);
+        // Pass 2: Apply colorshift -> finalFramebuffer
+        finalFramebuffer->bind();
         glClear(GL_COLOR_BUFFER_BIT);
-        grayscaleEffect.render(tempFramebuffer->getTexture());
-
+        chromaticAberrationEffect.render(tempFramebuffer->getTexture());
+        
         time += 0.006f;
 
         window.display();

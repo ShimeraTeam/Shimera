@@ -15,7 +15,7 @@ class SHIMERA_API IFrameBuffer {
 
         virtual void bind() = 0;
         virtual void unbind() = 0;
-        virtual void clear(Color color) = 0;
+        virtual void clear(shimera::Color color) = 0;
         virtual ITexture& getTexture() = 0;
         virtual void resize(int width, int height) = 0;
         [[nodiscard]] virtual int getWidth() const = 0;
