@@ -13,6 +13,7 @@
 #include "effects/DistortionEffect.hpp"
 #include "effects/ColorshiftEffect.hpp"
 #include "effects/GrayscaleEffect.hpp"
+#include "effects/SaturationEffect.hpp"
 #include "effects/BrightnessEffect.hpp"
 #include "effects/ContrastEffect.hpp"
 
@@ -40,6 +41,7 @@ int main()
     // Create framebuffers for ping-pong rendering
     IFrameBuffer *sceneFramebuffer = backend->createFrameBuffer(960, 540);
     IFrameBuffer *tempFramebuffer = backend->createFrameBuffer(960, 540);  // Intermediate pass
+    IFrameBuffer *finalFramebuffer = backend->createFrameBuffer(960, 540); // Final pass (optional, can render directly to screen)
 
     DistortionEffect distortionEffect(backend);
     distortionEffect.withDistortionStrength(0.2f)
@@ -110,7 +112,7 @@ int main()
         finalFramebuffer->bind();
         glClear(GL_COLOR_BUFFER_BIT);
         chromaticAberrationEffect.render(tempFramebuffer->getTexture());
-        
+
         time += 0.006f;
 
         window.display();
