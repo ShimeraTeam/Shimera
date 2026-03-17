@@ -2,7 +2,7 @@ add_rules("mode.debug", "mode.release")
 
 add_requires("libsdl3", "glew")
 
-set_languages("c++17")
+set_languages("c++23")
 
 target("sdl-example")
     set_kind("binary")

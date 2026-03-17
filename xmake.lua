@@ -9,7 +9,7 @@ add_requires("sfml", {optional = true})
 add_requires("libsdl3", {optional = true})
 add_requires("raylib", {optional = true})
 
-set_languages("c++17")
+set_languages("c++23")
 
 option("shared")
     set_default(false)
