@@ -3,7 +3,7 @@ add_rules("mode.debug", "mode.release")
 if is_plat("windows") then
     set_toolchains("msvc")
 end
-set_languages("cxx17")
+set_languages("c++23")
 
 add_requires("glfw", "glew")
 

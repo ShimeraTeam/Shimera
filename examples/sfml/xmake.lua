@@ -6,7 +6,7 @@ end
 
 add_requires("sfml", "glew")
 
-set_languages("c++17")
+set_languages("c++23")
 
 target("sfml-example")
     set_kind("binary")
