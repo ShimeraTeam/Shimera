@@ -82,6 +82,9 @@ int main()
                 window.close();
         }
 
+        if (!window.setActive(true))
+            break;
+
         // Render scene to the first framebuffer ("scene"Framebuffer)
         auto *sfmlRenderTexture = static_cast<sf::RenderTexture*>(sceneFramebuffer->getNativeRenderTarget());
 
@@ -107,11 +110,10 @@ int main()
         distortionEffect.render(sceneFramebuffer->getTexture());
         tempFramebuffer->unbind();
 
-        // Pass 2: Apply colorshift -> finalFramebuffer
-        finalFramebuffer->bind();
+        window.setActive(true);
         glClear(GL_COLOR_BUFFER_BIT);
         chromaticAberrationEffect.render(tempFramebuffer->getTexture());
-        
+
         time += 0.006f;
 
         window.display();
