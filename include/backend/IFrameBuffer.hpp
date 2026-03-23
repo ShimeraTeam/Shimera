@@ -3,7 +3,7 @@
 
 #include <shimera_api.h>
 #include "ITexture.hpp"
-#include "../Color.hpp"
+#include "../Color.inl"
 
 /**
  * Framebuffer interface

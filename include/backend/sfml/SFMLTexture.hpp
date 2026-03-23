@@ -19,7 +19,7 @@ public:
     [[nodiscard]] int getHeight() const override;
 
 private:
-    const sf::Texture& texture;
+    const sf::Texture& m_texture;
 };
 
 #endif //SHIMERA_SFML_SFMLTEXTURE_HPP

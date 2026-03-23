@@ -6,7 +6,7 @@
 
 class SHIMERA_API BrightnessEffect final : public ShaderEffect<BrightnessEffect> {
     public:
-        float u_strength = 0.0f;
+        float m_uStrength = 0.0f;
 
         explicit BrightnessEffect(IBackend *backend);
 

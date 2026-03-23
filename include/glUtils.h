@@ -2,7 +2,7 @@
     #define OPENGL_LEARNING_UTILS_H
 
     #include <shimera_api.h>
-    #include <string>
+#include <string>
 
     // Cross-platform debug break
     #if defined(_WIN32) || defined(_MSC_VER)

@@ -1,14 +1,14 @@
-#ifndef SHIMERA_IPOSTPROCCESSOR_HPP
-#define SHIMERA_IPOSTPROCCESSOR_HPP
+#ifndef SHIMERA_IPOSTPROCESSOR_HPP
+#define SHIMERA_IPOSTPROCESSOR_HPP
 
 #include <shimera_api.h>
 #include "IShader.hpp"
 #include "ITexture.hpp"
-#include "uniform/Uniform.hpp"
+#include "uniform/Uniform.inl"
 
-class SHIMERA_API IPostProccessor {
+class SHIMERA_API IPostProcessor {
     public:
-        virtual ~IPostProccessor() = default;
+        virtual ~IPostProcessor() = default;
 
         virtual void setShader(const std::string& vert, const std::string& frag) = 0;
         virtual void render(ITexture& texture) = 0;
@@ -17,4 +17,4 @@ class SHIMERA_API IPostProccessor {
         virtual void bindShader() = 0;
 };
 
-#endif //SHIMERA_IPOSTPROCCESSOR_HPP
+#endif //SHIMERA_IPOSTPROCESSOR_HPP

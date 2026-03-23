@@ -7,7 +7,7 @@ IFrameBuffer* RaylibBackend::createFrameBuffer(int width, int height) {
     return new RaylibFramebuffer(width, height);
 }
 
-IPostProccessor* RaylibBackend::createPostProcessor(const std::string& vert, const std::string& frag) {
+IPostProcessor* RaylibBackend::createPostProcessor(const std::string& vert, const std::string& frag) {
     auto processor = new RaylibPostProcessor();
     processor->setShader(vert, frag);
     return processor;

@@ -1,18 +1,18 @@
-#ifndef SHIMERA_RAYLIBPOSTPROCESSOR_HPP
-#define SHIMERA_RAYLIBPOSTPROCESSOR_HPP
+#ifndef SHIMERA_SFML_SFMLPOSTPROCESSOR_HPP
+#define SHIMERA_SFML_SFMLPOSTPROCESSOR_HPP
 
 #include "backend/IPostProcessor.hpp"
 #include "backend/IShader.hpp"
 #include <memory>
 
-class RaylibPostProcessor final : public IPostProcessor {
+class SFMLPostProcessor final : public IPostProcessor {
     public:
-        RaylibPostProcessor();
-        ~RaylibPostProcessor() override;
+        SFMLPostProcessor();
+        ~SFMLPostProcessor() override;
 
         // Prevent copying
-        RaylibPostProcessor(const RaylibPostProcessor&) = delete;
-        RaylibPostProcessor& operator=(const RaylibPostProcessor&) = delete;
+        SFMLPostProcessor(const SFMLPostProcessor&) = delete;
+        SFMLPostProcessor& operator=(const SFMLPostProcessor&) = delete;
 
         void setShader(const std::string& vert, const std::string& frag) override;
         void render(ITexture& texture) override;
@@ -32,4 +32,4 @@ class RaylibPostProcessor final : public IPostProcessor {
         std::unique_ptr<IShader> m_shader;
 };
 
-#endif //SHIMERA_RAYLIBPOSTPROCESSOR_HPP
+#endif //SHIMERA_SFML_SFMLPOSTPROCESSOR_HPP

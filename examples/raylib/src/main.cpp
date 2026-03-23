@@ -39,7 +39,7 @@ int main() {
     distortionEffect.withDistortionStrength(0.2f)
                     .withNoiseScale(4.0f);
 
-    IPostProccessor *grayscaleEffect = backend->createPostProcessor(
+    IPostProcessor *grayscaleEffect = backend->createPostProcessor(
         "../../../../res/shader/postprocessing/postprocess.vert",
         "../../../../res/shader/postprocessing/grayscale.frag"
     );
@@ -68,7 +68,7 @@ int main() {
 
         BeginDrawing();
             ClearBackground(BLACK);
-            distortionEffect.time = time;
+            distortionEffect.m_uTime = time;
 
             tempFramebuffer->bind();
             tempFramebuffer->clear(shimera::Color{0, 0, 0, 1});

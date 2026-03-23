@@ -8,8 +8,8 @@
 #include <stdexcept>
 
 #include "Vec2.inl"
-#include <uniform/Vec3.hpp>
-#include "Vec4.hpp"
+#include <uniform/Vec3.inl>
+#include "Vec4.inl"
 #include <stdexcept>
 
 using UniformValue = std::variant<float, int, Vec2<float>, Vec3<float>, Vec4<float>>;
@@ -18,50 +18,50 @@ template <typename T>
 class Uniform {
     public:
         Uniform(unsigned int shaderId, std::string name, T value)
-            : name(name), value(value), location(-1) {
-            GLC(location = glGetUniformLocation(shaderId, name.c_str()));
-            if (location == -1) {
+            : m_name(name), m_value(value), m_location(-1) {
+            GLC(m_location = glGetUniformLocation(shaderId, name.c_str()));
+            if (m_location == -1) {
                 throw std::runtime_error("Uniform '" + name + "' not found in shader program.");
             }
             setUniform(value);
         }
 
         Uniform& operator=(const T& newValue) {
-            if (this->value == newValue)
+            if (this->m_value == newValue)
                 return *this;
             setUniform(newValue);
-            this->value = newValue;
+            this->m_value = newValue;
             return *this;
         }
 
         T operator+(const T& increment) {
-            return this->value + increment;
+            return this->m_value + increment;
         }
 
         Uniform& operator+=(const T& increment) {
             T newValue = *this + increment;
             setUniform(newValue);
-            this->value = newValue;
+            this->m_value = newValue;
             return *this;
         }
 
     private:
-        std::string name;
-        T value;
-        int shaderId;
-        int location;
+        std::string m_name;
+        T m_value;
+        int m_shaderId;
+        int m_location;
 
         void setUniform(const T& newValue) {
             if constexpr (std::is_same_v<T, float>) {
-                GLC(glUniform1f(location, newValue));
+                GLC(glUniform1f(m_location, newValue));
             } else if constexpr (std::is_same_v<T, int>) {
-                GLC(glUniform1i(location, newValue));
+                GLC(glUniform1i(m_location, newValue));
             } else if constexpr (std::is_same_v<T, Vec2<float>>) {
-                GLC(glUniform2f(location, newValue.x, newValue.y));
+                GLC(glUniform2f(m_location, newValue.x, newValue.y));
             } else if constexpr (std::is_same_v<T, Vec3<float>>) {
-                GLC(glUniform3f(location, newValue.x, newValue.y, newValue.z));
+                GLC(glUniform3f(m_location, newValue.x, newValue.y, newValue.z));
             } else if constexpr (std::is_same_v<T, Vec4<float>>) {
-                GLC(glUniform4f(location, newValue.x, newValue.y, newValue.z, newValue.w));
+                GLC(glUniform4f(m_location, newValue.x, newValue.y, newValue.z, newValue.w));
             } else {
                 static_assert(sizeof(T) == 0, "Unsupported uniform type");
             }

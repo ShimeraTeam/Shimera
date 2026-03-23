@@ -1,4 +1,4 @@
-#include "backend/sfml/SFMLPostProccessor.hpp"
+#include "backend/sfml/SFMLPostProcessor.hpp"
 #include "backend/sfml/SFMLShader.hpp"
 #include "backend/ITexture.hpp"
 #include <GL/glew.h>
@@ -6,17 +6,17 @@
 #include <iostream>
 #include <stdexcept>
 
-SFMLPostProccessor::SFMLPostProccessor() 
-    : vao(0), vbo(0), ebo(0), shader(nullptr) {
+SFMLPostProcessor::SFMLPostProcessor() 
+    : m_vao(0), m_vbo(0), m_ebo(0), m_shader(nullptr) {
     initializeQuad();
 }
 
-SFMLPostProccessor::~SFMLPostProccessor() {
+SFMLPostProcessor::~SFMLPostProcessor() {
     cleanupQuad();
     cleanupShader();
 }
 
-void SFMLPostProccessor::initializeQuad() {
+void SFMLPostProcessor::initializeQuad() {
     constexpr float quadVert[] = {
         // positions   // texCoords (uv)
         -1.0f,  1.0f,  0.0f, 1.0f,
@@ -31,18 +31,18 @@ void SFMLPostProccessor::initializeQuad() {
     };
 
     // Generate and bind VAO
-    GLC(glGenVertexArrays(1, &vao));
-    GLC(glGenBuffers(1, &vbo));
-    GLC(glGenBuffers(1, &ebo));
+    GLC(glGenVertexArrays(1, &m_vao));
+    GLC(glGenBuffers(1, &m_vbo));
+    GLC(glGenBuffers(1, &m_ebo));
 
-    GLC(glBindVertexArray(vao));
+    GLC(glBindVertexArray(m_vao));
 
     // Upload vertex data
-    GLC(glBindBuffer(GL_ARRAY_BUFFER, vbo));
+    GLC(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
     GLC(glBufferData(GL_ARRAY_BUFFER, sizeof(quadVert), quadVert, GL_STATIC_DRAW));
 
     // Upload index data
-    GLC(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo));
+    GLC(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo));
     GLC(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(quadIndices), quadIndices, GL_STATIC_DRAW));
 
     // Position attribute (location = 0)
@@ -55,44 +55,44 @@ void SFMLPostProccessor::initializeQuad() {
 
     GLC(glBindVertexArray(0));
 
-    if (vao == 0) {
+    if (m_vao == 0) {
         throw std::runtime_error("Failed to create VAO for post-processing quad");
     }
 }
 
-void SFMLPostProccessor::cleanupQuad() {
-    if (vao != 0) {
-        GLC(glDeleteVertexArrays(1, &vao));
-        vao = 0;
+void SFMLPostProcessor::cleanupQuad() {
+    if (m_vao != 0) {
+        GLC(glDeleteVertexArrays(1, &m_vao));
+        m_vao = 0;
     }
-    if (vbo != 0) {
-        GLC(glDeleteBuffers(1, &vbo));
-        vbo = 0;
+    if (m_vbo != 0) {
+        GLC(glDeleteBuffers(1, &m_vbo));
+        m_vbo = 0;
     }
-    if (ebo != 0) {
-        GLC(glDeleteBuffers(1, &ebo));
-        ebo = 0;
+    if (m_ebo != 0) {
+        GLC(glDeleteBuffers(1, &m_ebo));
+        m_ebo = 0;
     }
 }
 
-void SFMLPostProccessor::cleanupShader() {
-    shader.reset();
+void SFMLPostProcessor::cleanupShader() {
+    m_shader.reset();
 }
 
-void SFMLPostProccessor::setShader(const std::string& vert, const std::string& frag) {
+void SFMLPostProcessor::setShader(const std::string& vert, const std::string& frag) {
     auto newShader = std::make_unique<SFMLShader>();
     
     try {
         newShader->loadFromFiles(vert, frag);
-        shader = std::move(newShader);
+        m_shader = std::move(newShader);
     } catch (const std::exception& e) {
         std::cerr << "Failed to load shader: " << e.what() << std::endl;
         throw;
     }
 }
 
-void SFMLPostProccessor::render(ITexture& texture) {
-    if (!shader) {
+void SFMLPostProcessor::render(ITexture& texture) {
+    if (!m_shader) {
         std::cerr << "Error: No shader loaded for post-processing!" << std::endl;
         return;
     }
@@ -100,8 +100,8 @@ void SFMLPostProccessor::render(ITexture& texture) {
     // Disable SFML's internal vertex array to avoid conflicts
     GLC(glBindVertexArray(0));
 
-    shader->bind();
-    GLC(glBindVertexArray(vao));
+    m_shader->bind();
+    GLC(glBindVertexArray(m_vao));
 
     GLC(glActiveTexture(GL_TEXTURE0));
     GLC(glBindTexture(GL_TEXTURE_2D, texture.getNativeHandle()));
@@ -109,31 +109,31 @@ void SFMLPostProccessor::render(ITexture& texture) {
     GLC(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
     GLC(glBindVertexArray(0));
-    shader->unbind();
+    m_shader->unbind();
 }
 
-void SFMLPostProccessor::setUniform(const std::string& name, const UniformValue& value) {
-    if (!shader) {
+void SFMLPostProcessor::setUniform(const std::string& name, const UniformValue& value) {
+    if (!m_shader) {
         std::cerr << "Error: No shader loaded, cannot set uniform!" << std::endl;
         return;
     }
     
-    shader->setUniform(name, value);
+    m_shader->setUniform(name, value);
 }
 
-IShader& SFMLPostProccessor::getShader() {
-    if (!shader) {
+IShader& SFMLPostProcessor::getShader() {
+    if (!m_shader) {
         throw std::runtime_error("No shader loaded!");
     }
-    return *shader;
+    return *m_shader;
 }
 
-void SFMLPostProccessor::bindShader() {
-    if (!shader) {
+void SFMLPostProcessor::bindShader() {
+    if (!m_shader) {
         std::cerr << "Error: No shader loaded, cannot bind!" << std::endl;
         return;
     }
-    shader->bind();
+    m_shader->bind();
 }
 
 

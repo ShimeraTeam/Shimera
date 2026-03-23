@@ -6,10 +6,10 @@
 
 class SHIMERA_API DistortionEffect final : public ShaderEffect<DistortionEffect> {
     public:
-        float time = 0.0f;
-        float noiseScale = 3.0f;
-        float distortionStrength = 0.13f;
-        float timeScale = 0.1f;
+        float m_uTime = 0.0f;
+        float m_uNoiseScale = 3.0f;
+        float m_uDistortionStrength = 0.13f;
+        float m_uTimeScale = 0.1f;
 
         explicit DistortionEffect(IBackend *backend);
 

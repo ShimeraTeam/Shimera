@@ -8,6 +8,6 @@ bool ShaderEffectBase::isEnabled() const {
     return m_enabled;
 }
 
-IPostProccessor* ShaderEffectBase::getPostProcessor() const {
+IPostProcessor* ShaderEffectBase::getPostProcessor() const {
     return m_processor.get();
 }

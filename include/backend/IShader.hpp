@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <string>
 
-#include "uniform/Uniform.hpp"
+#include "uniform/Uniform.inl"
 
 class SHIMERA_API IShader {
     public:

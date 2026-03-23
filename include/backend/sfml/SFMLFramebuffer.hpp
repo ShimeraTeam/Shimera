@@ -25,8 +25,8 @@ public:
     void* getNativeRenderTarget() override;
 
 private:
-    sf::RenderTexture renderTexture;
-    std::unique_ptr<SFMLTexture> texture;
+    sf::RenderTexture m_renderTexture;
+    std::unique_ptr<SFMLTexture> m_texture;
     int m_width, m_height;
 };
 

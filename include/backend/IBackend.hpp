@@ -3,7 +3,7 @@
 
 #include <shimera_api.h>
 #include "IFrameBuffer.hpp"
-#include "IPostProccessor.hpp"
+#include "IPostProcessor.hpp"
 
 /**
  * Backend interface
@@ -14,7 +14,7 @@ class SHIMERA_API IBackend {
         virtual ~IBackend() = default;
 
         virtual IFrameBuffer* createFrameBuffer(int width, int height) = 0;
-        virtual IPostProccessor* createPostProcessor(const std::string& vert,
+        virtual IPostProcessor* createPostProcessor(const std::string& vert,
                                                         const std::string& frag) = 0;
         virtual ITexture* createTexture(int width, int height) = 0;
         virtual IShader* createShader(const std::string& vert,

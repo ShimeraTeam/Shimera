@@ -9,37 +9,37 @@ SFMLFramebuffer::SFMLFramebuffer(const int width, const int height)
 }
 
 void SFMLFramebuffer::bind() {
-    renderTexture.setActive(true);
+    m_renderTexture.setActive(true);
 }
 
 void SFMLFramebuffer::unbind() {
-    renderTexture.display();
-    renderTexture.setActive(false);
+    m_renderTexture.display();
+    m_renderTexture.setActive(false);
 }
 
 void SFMLFramebuffer::clear(shimera::Color color) {
     sf::Color sfmlColor(
-        static_cast<std::uint8_t>(color.r * 255),
-        static_cast<std::uint8_t>(color.g * 255),
-        static_cast<std::uint8_t>(color.b * 255),
-        static_cast<std::uint8_t>(color.a * 255)
+        static_cast<std::uint8_t>(color.m_r * 255),
+        static_cast<std::uint8_t>(color.m_g * 255),
+        static_cast<std::uint8_t>(color.m_b * 255),
+        static_cast<std::uint8_t>(color.m_a * 255)
     );
-    renderTexture.clear(sfmlColor);
+    m_renderTexture.clear(sfmlColor);
 }
 
 ITexture& SFMLFramebuffer::getTexture() {
-    return *texture;
+    return *m_texture;
 }
 
 void SFMLFramebuffer::resize(int width, int height) {
     m_width = width;
     m_height = height;
     
-    if (!renderTexture.resize({static_cast<unsigned>(width), static_cast<unsigned>(height)})) {
+    if (!m_renderTexture.resize({static_cast<unsigned>(width), static_cast<unsigned>(height)})) {
         throw std::runtime_error("Failed to resize SFML framebuffer to " + 
                                  std::to_string(width) + "x" + std::to_string(height));
     }
-    texture = std::make_unique<SFMLTexture>(renderTexture.getTexture());
+    m_texture = std::make_unique<SFMLTexture>(m_renderTexture.getTexture());
 }
 
 int SFMLFramebuffer::getWidth() const {
@@ -51,5 +51,5 @@ int SFMLFramebuffer::getHeight() const {
 }
 
 void* SFMLFramebuffer::getNativeRenderTarget() {
-    return &renderTexture;
+    return &m_renderTexture;
 }

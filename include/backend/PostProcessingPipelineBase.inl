@@ -9,7 +9,7 @@
 #include <map>
 #include <string>
 
-#include "uniform/Uniform.hpp"
+#include "uniform/Uniform.inl"
 
 template<typename C>
 class PostProcessingPipelineBase {

@@ -20,7 +20,7 @@ public:
     [[nodiscard]] int getHeight() const override;
 
 private:
-    const Texture& texture;
+    const Texture& m_texture;
 };
 
 #endif //SHIMERA_RAYLIBTEXTURE_HPP

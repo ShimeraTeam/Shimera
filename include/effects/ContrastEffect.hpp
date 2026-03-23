@@ -6,7 +6,7 @@
 
 class SHIMERA_API ContrastEffect final : public ShaderEffect<ContrastEffect> {
     public:
-        float u_contrastFactor = 1.0f;
+        float m_uContrastFactor = 1.0f;
 
         explicit ContrastEffect(IBackend *backend);
 

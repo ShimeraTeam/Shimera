@@ -6,8 +6,8 @@ DistortionEffect::DistortionEffect(IBackend* backend)
 
 DistortionEffect::DistortionEffect(IBackend* backend, const float time, const float noiseScale,
     const float distortionStrength, const float timeScale)
-    : time(time), noiseScale(noiseScale), distortionStrength(distortionStrength), timeScale(timeScale) {
-     m_processor = std::unique_ptr<IPostProccessor>(
+    : m_uTime(time), m_uNoiseScale(noiseScale), m_uDistortionStrength(distortionStrength), m_uTimeScale(timeScale) {
+     m_processor = std::unique_ptr<IPostProcessor>(
         backend->createPostProcessor(
             "../../../../res/shader/postprocessing/postprocess.vert",
             "../../../../res/shader/postprocessing/distortion.frag"
@@ -17,28 +17,28 @@ DistortionEffect::DistortionEffect(IBackend* backend, const float time, const fl
 }
 
 void DistortionEffect::updateUniforms() {
-    m_processor->setUniform("time", time);
-    m_processor->setUniform("noiseScale", noiseScale);
-    m_processor->setUniform("distortionStrength", distortionStrength);
-    m_processor->setUniform("timeScale", timeScale);
+    m_processor->setUniform("time", m_uTime);
+    m_processor->setUniform("noiseScale", m_uNoiseScale);
+    m_processor->setUniform("distortionStrength", m_uDistortionStrength);
+    m_processor->setUniform("timeScale", m_uTimeScale);
 }
 
 DistortionEffect& DistortionEffect::withTime(float t) {
-    time = t;
+    m_uTime = t;
     return *this;
 }
 
 DistortionEffect& DistortionEffect::withNoiseScale(float s) {
-    noiseScale = s;
+    m_uNoiseScale = s;
     return *this;
 }
 
 DistortionEffect& DistortionEffect::withDistortionStrength(float s) {
-    distortionStrength = s;
+    m_uDistortionStrength = s;
     return *this;
 }
 
 DistortionEffect& DistortionEffect::withTimeScale(float s) {
-    timeScale = s;
+    m_uTimeScale = s;
     return *this;
 }

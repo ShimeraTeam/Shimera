@@ -25,8 +25,8 @@ public:
     void* getNativeRenderTarget() override;
 
 private:
-    RenderTexture2D renderTexture;
-    std::unique_ptr<RaylibTexture> texture;
+    RenderTexture2D m_renderTexture;
+    std::unique_ptr<RaylibTexture> m_texture;
     int m_width, m_height;
 };
 

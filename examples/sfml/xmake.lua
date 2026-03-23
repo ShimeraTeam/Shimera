@@ -27,4 +27,3 @@ target("sfml-example")
     else
         add_syslinks("GL")
     end
-

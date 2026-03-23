@@ -13,8 +13,8 @@ class SHIMERA_API Framebuffer
         unsigned int getTexture() const;
 
     private:
-        unsigned int fbo, texture, rbo;
-        int width, height;
+        unsigned int m_fbo, m_texture, m_rbo;
+        int m_width, m_height;
 };
 
 
