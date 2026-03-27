@@ -4,6 +4,8 @@
 #include "ShaderEffect.inl"
 #include "backend/IBackend.hpp"
 
+namespace shimera {
+
 class SHIMERA_API DistortionEffect final : public ShaderEffect<DistortionEffect> {
     public:
         float m_uTime = 0.0f;
@@ -26,5 +28,7 @@ class SHIMERA_API DistortionEffect final : public ShaderEffect<DistortionEffect>
         DistortionEffect &withDistortionStrength(float distortionStrength);
         DistortionEffect &withTimeScale(float timeScale);
 };
+
+}
 
 #endif //SHIMERA_DISTORTIONEFFECT_HPP

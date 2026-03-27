@@ -5,6 +5,8 @@
 #include <string>
 #include <unordered_map>
 
+namespace shimera {
+
 /**
  * SFML Shader implementation using OpenGL
  * Since SFML uses OpenGL underneath, we use raw OpenGL shader management
@@ -33,5 +35,7 @@ class SFMLShader final : public IShader {
         // Uniform cache to lower the CPU and GPU communications
         std::unordered_map<std::string, int> m_uniformCache;
 };
+
+}
 
 #endif //SHIMERA_SFML_SFMLSHADER_HPP

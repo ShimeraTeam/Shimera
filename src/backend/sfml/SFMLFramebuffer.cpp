@@ -3,6 +3,10 @@
 #include <string>
 #include <cstdint>
 
+using shimera::ITexture;
+using shimera::SFMLFramebuffer;
+using shimera::SFMLTexture;
+
 SFMLFramebuffer::SFMLFramebuffer(const int width, const int height)
     : m_width(width), m_height(height) {
     SFMLFramebuffer::resize(width, height);

@@ -6,6 +6,8 @@
 #include "backend/IFrameBuffer.hpp"
 #include "RaylibTexture.hpp"
 
+namespace shimera {
+
 /**
  * Raylib Framebuffer implementation
  * Wraps around Raylib RenderTexture to provide framebuffer functionality
@@ -29,5 +31,7 @@ private:
     std::unique_ptr<RaylibTexture> m_texture;
     int m_width, m_height;
 };
+
+}
 
 #endif //SHIMERA_RAYLIBFRAMEBUFFER_HPP

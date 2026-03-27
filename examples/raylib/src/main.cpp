@@ -26,20 +26,20 @@ int main() {
 
     Vector3 cubePosition = { 0.0f, 0.0f, 0.0f };
 
-    IBackend *backend = BackendFactory::create();
+    shimera::IBackend *backend = shimera::BackendFactory::create();
     if (!backend) {
         std::cerr << "Failed to create backend!" << std::endl;
         return -1;
     }
 
-    IFrameBuffer *sceneFramebuffer = backend->createFrameBuffer(800, 400);
-    IFrameBuffer *tempFramebuffer = backend->createFrameBuffer(800, 400);
+    shimera::IFrameBuffer *sceneFramebuffer = backend->createFrameBuffer(800, 400);
+    shimera::IFrameBuffer *tempFramebuffer = backend->createFrameBuffer(800, 400);
 
-    DistortionEffect distortionEffect(backend);
+    shimera::DistortionEffect distortionEffect(backend);
     distortionEffect.withDistortionStrength(0.2f)
                     .withNoiseScale(4.0f);
 
-    IPostProcessor *grayscaleEffect = backend->createPostProcessor(
+    shimera::IPostProcessor *grayscaleEffect = backend->createPostProcessor(
         "../../../../res/shader/postprocessing/postprocess.vert",
         "../../../../res/shader/postprocessing/grayscale.frag"
     );

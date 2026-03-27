@@ -3,6 +3,8 @@
 #include <SFML/Graphics/Texture.hpp>
 #include "backend/sfml/SFMLTexture.hpp"
 
+using shimera::SFMLTexture;
+
 SFMLTexture::SFMLTexture(const sf::Texture& texture) : m_texture(texture) {}
 
 void SFMLTexture::bind(const int slot) {

@@ -5,6 +5,8 @@
 #include "ShaderEffect.inl"
 #include "backend/IBackend.hpp"
 
+namespace shimera {
+
 class SHIMERA_API ChromaticAberrationEffect final : public ShaderEffect<ChromaticAberrationEffect> {
     public:
         float m_uStrength = 1.0f;
@@ -28,5 +30,7 @@ class SHIMERA_API ChromaticAberrationEffect final : public ShaderEffect<Chromati
         ChromaticAberrationEffect &withContrast(float c);
         ChromaticAberrationEffect &withSamples(int s);
 };
+
+}
 
 #endif //SHIMERA_SFML_CHROMATICABERRATION_HPP

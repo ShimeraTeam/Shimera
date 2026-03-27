@@ -4,6 +4,8 @@
 #include "ShaderEffect.inl"
 #include "backend/IBackend.hpp"
 
+namespace shimera {
+
 class SHIMERA_API SaturationEffect final : public ShaderEffect<SaturationEffect> {
     public:
         float m_uStrength = 1.0f;
@@ -16,5 +18,7 @@ class SHIMERA_API SaturationEffect final : public ShaderEffect<SaturationEffect>
 
         SaturationEffect &withStrength(float u_strength);
 };
+
+}
 
 #endif //SHIMERA_SATURATIONEFFECT_HPP

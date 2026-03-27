@@ -1,5 +1,9 @@
 #include "effects/ContrastEffect.hpp"
 
+using shimera::ContrastEffect;
+using shimera::IBackend;
+using shimera::IPostProcessor;
+
 ContrastEffect::ContrastEffect(IBackend *backend)
     : ContrastEffect(backend, 1.0f) {}
 

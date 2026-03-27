@@ -5,6 +5,15 @@
 #include "backend/sfml/SFMLTexture.hpp"
 #include <stdexcept>
 
+using shimera::IFrameBuffer;
+using shimera::IPostProcessor;
+using shimera::IShader;
+using shimera::ITexture;
+using shimera::SFMLBackend;
+using shimera::SFMLFramebuffer;
+using shimera::SFMLPostProcessor;
+using shimera::SFMLShader;
+
 IFrameBuffer* SFMLBackend::createFrameBuffer(int width, int height) {
     return new SFMLFramebuffer(width, height);
 }

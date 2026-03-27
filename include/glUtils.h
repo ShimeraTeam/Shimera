@@ -20,11 +20,16 @@
     x;\
     ASSERT(cglLogCall(#x, __FILE__, __LINE__));
 
-    struct ShaderProgramSource
-    {
+    namespace shimera {
+
+    struct ShaderProgramSource {
         std::string vertex;
         std::string fragment;
     };
+
+    }
+
+    using ShaderProgramSource = shimera::ShaderProgramSource;
 
     SHIMERA_API void cglClearError();
     SHIMERA_API bool cglLogCall(const char *function, const char *file, int line);

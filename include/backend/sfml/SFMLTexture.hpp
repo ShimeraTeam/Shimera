@@ -3,6 +3,8 @@
 
 #include "backend/ITexture.hpp"
 
+namespace shimera {
+
 /**
  * SFML Texture wrapper implementing ITexture interface
  * Wraps an existing sf::Texture to help with abstraction
@@ -21,5 +23,7 @@ public:
 private:
     const sf::Texture& m_texture;
 };
+
+}
 
 #endif //SHIMERA_SFML_SFMLTEXTURE_HPP

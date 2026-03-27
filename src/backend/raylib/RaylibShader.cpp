@@ -6,6 +6,12 @@
 #include <variant>
 #include "uniform/Vec4.inl"
 
+using shimera::RaylibShader;
+using shimera::UniformValue;
+using shimera::Vec2;
+using shimera::Vec3;
+using shimera::Vec4;
+
 RaylibShader::RaylibShader() : m_programId(0) {}
 
 RaylibShader::~RaylibShader() {

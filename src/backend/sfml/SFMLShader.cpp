@@ -7,6 +7,12 @@
 #include "uniform/Vec3.inl"
 #include "uniform/Vec4.inl"
 
+using shimera::SFMLShader;
+using shimera::UniformValue;
+using shimera::Vec2;
+using shimera::Vec3;
+using shimera::Vec4;
+
 SFMLShader::SFMLShader() : m_programId(0) {}
 
 SFMLShader::~SFMLShader() {

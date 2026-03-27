@@ -2,6 +2,8 @@
 #include <glUtils.h>
 #include "backend/raylib/RaylibTexture.hpp"
 
+using shimera::RaylibTexture;
+
 RaylibTexture::RaylibTexture(const Texture& texture) : m_texture(texture) {}
 
 void RaylibTexture::bind(const int slot) {

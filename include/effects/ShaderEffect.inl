@@ -2,6 +2,8 @@
 #define SHIMERA_SHADEREFFECT_INL
 #include "ShaderEffectBase.hpp"
 
+namespace shimera {
+
 /*
  * Templated shader effect class
  * Inherits from ShaderEffectBase and provides a convenient interface for creating specific shader effects
@@ -31,5 +33,7 @@ class ShaderEffect : public ShaderEffectBase {
     protected:
         ShaderEffect() = default;
 };
+
+}
 
 #endif //SHIMERA_SHADEREFFECT_INL

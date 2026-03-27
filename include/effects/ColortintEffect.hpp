@@ -5,6 +5,8 @@
 #include "backend/IBackend.hpp"
 #include "uniform/Vec3.inl"
 
+namespace shimera {
+
 class SHIMERA_API ColortintEffect final : public ShaderEffect<ColortintEffect> {
     public:
         Vec3<float> m_uTint = Vec3(0.0f);
@@ -17,5 +19,7 @@ class SHIMERA_API ColortintEffect final : public ShaderEffect<ColortintEffect> {
 
         ColortintEffect &withTint(const Vec3<float> &tint);
 };
+
+}
 
 #endif //SHIMERA_COLORTINTEFFECT_HPP

@@ -1,5 +1,8 @@
 #include "effects/ChromaticAberration.hpp"
 
+using shimera::ChromaticAberrationEffect;
+using shimera::IBackend;
+using shimera::IPostProcessor;
 
 ChromaticAberrationEffect::ChromaticAberrationEffect(IBackend* backend)
     : ChromaticAberrationEffect(backend, 1.0f, false, 2.0f, 20) {}

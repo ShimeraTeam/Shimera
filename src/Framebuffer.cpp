@@ -6,6 +6,8 @@
 
 #include <glUtils.h>
 
+using shimera::Framebuffer;
+
 
 Framebuffer::Framebuffer(int w, int h)
     : m_width(w), m_height(h),m_fbo(0), m_texture(0), m_rbo(0) {

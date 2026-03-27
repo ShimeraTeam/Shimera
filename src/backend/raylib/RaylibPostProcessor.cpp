@@ -6,7 +6,13 @@
 #include <iostream>
 #include <stdexcept>
 
-RaylibPostProcessor::RaylibPostProcessor() 
+using shimera::IShader;
+using shimera::ITexture;
+using shimera::RaylibPostProcessor;
+using shimera::RaylibShader;
+using shimera::UniformValue;
+
+RaylibPostProcessor::RaylibPostProcessor()
     : m_vao(0), m_vbo(0), m_ebo(0), m_shader(nullptr) {
     initializeQuad();
 }

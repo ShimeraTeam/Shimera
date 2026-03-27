@@ -1,5 +1,8 @@
 #include "effects/ColortintEffect.hpp"
 
+using shimera::ColortintEffect;
+using shimera::Vec3;
+
 ColortintEffect::ColortintEffect(IBackend *backend)
     : ColortintEffect(backend, Vec3<float>(0.0f)) {}
 

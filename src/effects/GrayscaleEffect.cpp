@@ -1,5 +1,9 @@
 #include "effects/GrayscaleEffect.hpp"
 
+using shimera::GrayscaleEffect;
+using shimera::IBackend;
+using shimera::IPostProcessor;
+
 GrayscaleEffect::GrayscaleEffect(IBackend *backend) {
     m_processor = std::unique_ptr<IPostProcessor>(
         backend->createPostProcessor(

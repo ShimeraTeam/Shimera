@@ -5,6 +5,8 @@
 #include "ITexture.hpp"
 #include "../Color.inl"
 
+namespace shimera {
+
 /**
  * Framebuffer interface
  * Defines methods for framebuffer operations across different backends
@@ -30,5 +32,7 @@ class SHIMERA_API IFrameBuffer {
          */
         virtual void* getNativeRenderTarget() = 0;
 };
+
+}
 
 #endif //SHIMERA_IFRAMEBUFFER_HPP

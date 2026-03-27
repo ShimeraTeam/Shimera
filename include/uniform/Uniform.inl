@@ -12,6 +12,8 @@
 #include "Vec4.inl"
 #include <stdexcept>
 
+namespace shimera {
+
 using UniformValue = std::variant<float, int, Vec2<float>, Vec3<float>, Vec4<float>>;
 
 template <typename T>
@@ -67,6 +69,8 @@ class Uniform {
             }
         }
 };
+
+}
 
 
 #endif //OPENGL_LEARNING_UNIFORM_H

@@ -4,6 +4,8 @@
 #include "backend/ITexture.hpp"
 #include "raylib.h"
 
+namespace shimera {
+
 /**
  * Raylib Texture wrapper implementing ITexture interface
  * Wraps an existing Texture to help with abstraction
@@ -22,5 +24,7 @@ public:
 private:
     const Texture& m_texture;
 };
+
+}
 
 #endif //SHIMERA_RAYLIBTEXTURE_HPP

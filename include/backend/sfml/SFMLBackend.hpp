@@ -3,6 +3,8 @@
 
 #include "backend/IBackend.hpp"
 
+namespace shimera {
+
 /**
  * SFML backend implementation
  * Creates SFML-specific implementations of framework interfaces
@@ -17,5 +19,7 @@ public:
     ITexture* createTexture(int width, int height) override;
     IShader* createShader(const std::string& vert, const std::string& frag) override;
 };
+
+}
 
 #endif //SHIMERA_SFMLBACKEND_HPP

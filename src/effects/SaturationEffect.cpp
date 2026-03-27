@@ -1,5 +1,9 @@
 #include "effects/SaturationEffect.hpp"
 
+using shimera::IBackend;
+using shimera::IPostProcessor;
+using shimera::SaturationEffect;
+
 SaturationEffect::SaturationEffect(IBackend *backend)
     : SaturationEffect(backend, 1.0f) {}
 

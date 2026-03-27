@@ -8,6 +8,8 @@
 #include "backend/IPostProcessor.hpp"
 #include "backend/ITexture.hpp"
 
+namespace shimera {
+
 /**
  * Abstract class for shader effects
  * Provides common functionality for all shader effects
@@ -32,5 +34,7 @@ class SHIMERA_API ShaderEffectBase {
         std::unique_ptr<IPostProcessor> m_processor;
         bool m_enabled = true;
 };
+
+}
 
 #endif //SHIMERA_SHADEREFFECTBASE_HPP

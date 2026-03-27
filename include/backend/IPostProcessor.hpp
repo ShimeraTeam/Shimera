@@ -6,6 +6,8 @@
 #include "ITexture.hpp"
 #include "uniform/Uniform.inl"
 
+namespace shimera {
+
 class SHIMERA_API IPostProcessor {
     public:
         virtual ~IPostProcessor() = default;
@@ -16,5 +18,7 @@ class SHIMERA_API IPostProcessor {
         virtual IShader& getShader() = 0;
         virtual void bindShader() = 0;
 };
+
+}
 
 #endif //SHIMERA_IPOSTPROCESSOR_HPP

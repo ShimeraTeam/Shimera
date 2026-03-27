@@ -3,6 +3,7 @@
 #include <shimera_api.h>
 #include <string>
 
+namespace shimera {
 
 class SHIMERA_API PostProcessingQuad {
     public:
@@ -16,6 +17,8 @@ class SHIMERA_API PostProcessingQuad {
         unsigned int m_vao, m_vbo, m_ebo;
         unsigned int m_shader;
 };
+
+}
 
 
 #endif //OPENGL_LEARNING_POSTPROCESSINGQUAD_H

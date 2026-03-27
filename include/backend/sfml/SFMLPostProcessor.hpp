@@ -5,6 +5,8 @@
 #include "backend/IShader.hpp"
 #include <memory>
 
+namespace shimera {
+
 class SFMLPostProcessor final : public IPostProcessor {
     public:
         SFMLPostProcessor();
@@ -31,5 +33,7 @@ class SFMLPostProcessor final : public IPostProcessor {
 
         std::unique_ptr<IShader> m_shader;
 };
+
+}
 
 #endif //SHIMERA_SFML_SFMLPOSTPROCESSOR_HPP

@@ -1,5 +1,9 @@
 #include "effects/DistortionEffect.hpp"
 
+using shimera::DistortionEffect;
+using shimera::IBackend;
+using shimera::IPostProcessor;
+
 
 DistortionEffect::DistortionEffect(IBackend* backend)
     : DistortionEffect(backend, 0.0f, 3.0f, 0.13f, 0.1f) {}

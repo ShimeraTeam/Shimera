@@ -5,6 +5,8 @@
 #include "backend/IShader.hpp"
 #include <memory>
 
+namespace shimera {
+
 class RaylibPostProcessor final : public IPostProcessor {
     public:
         RaylibPostProcessor();
@@ -31,5 +33,7 @@ class RaylibPostProcessor final : public IPostProcessor {
 
         std::unique_ptr<IShader> m_shader;
 };
+
+}
 
 #endif //SHIMERA_RAYLIBPOSTPROCESSOR_HPP

@@ -1,5 +1,11 @@
 #include "effects/VignetteEffect.hpp"
 
+using shimera::IBackend;
+using shimera::IPostProcessor;
+using shimera::Vec2;
+using shimera::Vec4;
+using shimera::VignetteEffect;
+
 
 VignetteEffect::VignetteEffect(IBackend* backend)
     : VignetteEffect(backend, 1.0f, 0.5f, 0.3f, Vec4<float>(0.0f, 0.0f, 0.0f, 1.0f), false, Vec2<float>(1920.0f, 1080.0f)) {}

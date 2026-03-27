@@ -6,6 +6,8 @@
 #include "backend/IFrameBuffer.hpp"
 #include "SFMLTexture.hpp"
 
+namespace shimera {
+
 /**
  * SFML Framebuffer implementation
  * Wraps around SFML RenderTexture to provide framebuffer functionality
@@ -29,5 +31,7 @@ private:
     std::unique_ptr<SFMLTexture> m_texture;
     int m_width, m_height;
 };
+
+}
 
 #endif //SHIMERA_SFMLFRAMEBUFFER_HPP

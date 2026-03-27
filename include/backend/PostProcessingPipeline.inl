@@ -14,6 +14,8 @@
 #include "sfml/SFMLPostProcessor.hpp"
 #include "sfml/SFMLTexture.hpp"
 
+namespace shimera {
+
 class PostProcessingPipeline : public PostProcessingPipelineBase<PostProcessingPipeline>{
     sf::RenderTexture renderTexture;
     std::unique_ptr<SFMLPostProcessor> postProcessor;
@@ -50,6 +52,8 @@ class PostProcessingPipeline : public PostProcessingPipelineBase<PostProcessingP
             }
         }
 };
+
+}
 #endif
 
 #endif //SHIMERA_SFML_POSTPROCESSINGPIPELINE_INL

@@ -5,6 +5,8 @@
 #include "IFrameBuffer.hpp"
 #include "IPostProcessor.hpp"
 
+namespace shimera {
+
 /**
  * Backend interface
  * Defines methods that should be implemented by any rendering backend and serves as a bridge
@@ -20,5 +22,7 @@ class SHIMERA_API IBackend {
         virtual IShader* createShader(const std::string& vert,
                                         const std::string& frag) = 0;
 };
+
+}
 
 #endif //SHIMERA_IBACKEND_HPP

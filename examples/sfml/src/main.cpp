@@ -17,6 +17,8 @@
 #include "effects/BrightnessEffect.hpp"
 #include "effects/ContrastEffect.hpp"
 
+using namespace shimera;
+
 
 int main()
 {

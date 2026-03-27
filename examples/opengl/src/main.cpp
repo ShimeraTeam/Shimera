@@ -4,6 +4,8 @@
 
 #include <shimera.h>
 
+using namespace shimera;
+
 int main(void)
 {
     GLFWwindow* window;

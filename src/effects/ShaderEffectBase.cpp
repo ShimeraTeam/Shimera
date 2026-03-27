@@ -1,5 +1,8 @@
 #include "effects/ShaderEffectBase.hpp"
 
+using shimera::IPostProcessor;
+using shimera::ShaderEffectBase;
+
 void ShaderEffectBase::setEnabled(bool enabled) {
     m_enabled = enabled;
 }

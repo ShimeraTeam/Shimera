@@ -4,6 +4,8 @@
 #include "ShaderEffect.inl"
 #include "backend/IBackend.hpp"
 
+namespace shimera {
+
 class SHIMERA_API VignetteEffect final : public ShaderEffect<VignetteEffect> {
     public:
         float m_uStrength = 1.0f;
@@ -32,5 +34,7 @@ class SHIMERA_API VignetteEffect final : public ShaderEffect<VignetteEffect> {
         VignetteEffect &withIsRounded(bool isRounded);
         VignetteEffect &withResolution(Vec2<float> resolution);
 };
+
+}
 
 #endif //SHIMERA_VIGNETTEEFFECT_HPP

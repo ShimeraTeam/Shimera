@@ -4,11 +4,15 @@
 #include "ShaderEffect.inl"
 #include "backend/IBackend.hpp"
 
+namespace shimera {
+
 class SHIMERA_API GrayscaleEffect final : public ShaderEffect<GrayscaleEffect> {
     public:
         explicit GrayscaleEffect(IBackend *backend);
 
         void updateUniforms() override;
 };
+
+}
 
 #endif //SHIMERA_GRAYSCALEEFFECT_HPP

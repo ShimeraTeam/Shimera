@@ -9,6 +9,8 @@
 
 #include <glUtils.h>
 
+using shimera::PostProcessingQuad;
+
 
 PostProcessingQuad::PostProcessingQuad(const std::string& vertPath,
                                        const std::string& fragPath) {

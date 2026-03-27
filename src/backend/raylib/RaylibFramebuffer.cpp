@@ -4,6 +4,10 @@
 #include <cstdint>
 #include <rlgl.h>
 
+using shimera::ITexture;
+using shimera::RaylibFramebuffer;
+using shimera::RaylibTexture;
+
 RaylibFramebuffer::RaylibFramebuffer(const int width, const int height) : m_width(width), m_height(height), m_renderTexture({0}) {
     RaylibFramebuffer::resize(width, height);
 }
@@ -17,7 +21,7 @@ void RaylibFramebuffer::unbind() {
 }
 
 void RaylibFramebuffer::clear(shimera::Color color) {
-    Color raylibColor = {
+    ::Color raylibColor = {
         static_cast<unsigned char>(color.m_r * 255),
         static_cast<unsigned char>(color.m_g * 255),
         static_cast<unsigned char>(color.m_b * 255),

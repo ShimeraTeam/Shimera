@@ -6,7 +6,13 @@
 #include <iostream>
 #include <stdexcept>
 
-SFMLPostProcessor::SFMLPostProcessor() 
+using shimera::IShader;
+using shimera::ITexture;
+using shimera::SFMLPostProcessor;
+using shimera::SFMLShader;
+using shimera::UniformValue;
+
+SFMLPostProcessor::SFMLPostProcessor()
     : m_vao(0), m_vbo(0), m_ebo(0), m_shader(nullptr) {
     initializeQuad();
 }
