@@ -21,7 +21,7 @@ OpenGLTexture::~OpenGLTexture() {
     }
 }
 
-void OpenGLTexture::bind(const int slot) {
+void OpenGLTexture::bind(int slot) {
     GLC(glActiveTexture(GL_TEXTURE0 + slot));
     GLC(glBindTexture(GL_TEXTURE_2D, textureId));
 }

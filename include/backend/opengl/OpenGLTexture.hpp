@@ -17,7 +17,7 @@ public:
     OpenGLTexture(OpenGLTexture&&) = delete;
     OpenGLTexture& operator=(OpenGLTexture&&) = delete;
 
-    void bind(const int slot = 0) override;
+    void bind(int slot = 0) override;
     void unbind() override;
     [[nodiscard]] unsigned int getNativeHandle() const override;
     [[nodiscard]] int getWidth() const override;
