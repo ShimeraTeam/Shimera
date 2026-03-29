@@ -1,5 +1,6 @@
 #include "backend/opengl/OpenGLBackend.hpp"
 #include "backend/opengl/OpenGLFramebuffer.hpp"
+#include "backend/opengl/OpenGLShader.hpp"
 #include "backend/opengl/OpenGLTexture.hpp"
 
 #include <stdexcept>
@@ -19,7 +20,7 @@ ITexture* OpenGLBackend::createTexture(const int width, const int height) {
 }
 
 IShader* OpenGLBackend::createShader(const std::string& vert, const std::string& frag) {
-    (void)vert;
-    (void)frag;
-    throw std::runtime_error("OpenGL shader creation is not implemented yet");
+    auto shader = new OpenGLShader();
+    shader->loadFromFiles(vert, frag);
+    return shader;
 }
