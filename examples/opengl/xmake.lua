@@ -12,7 +12,6 @@ target("opengl-example")
     set_default(false)
     set_group("examples")
     set_targetdir("$(builddir)/$(plat)/$(arch)/$(mode)")
-    set_rundir("$(projectdir)")
     add_files("src/*.cpp")
 
     add_deps("shimera-opengl")
