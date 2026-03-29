@@ -1,5 +1,6 @@
 #include "backend/opengl/OpenGLBackend.hpp"
 #include "backend/opengl/OpenGLFramebuffer.hpp"
+#include "backend/opengl/OpenGLPostProcessor.hpp"
 #include "backend/opengl/OpenGLShader.hpp"
 #include "backend/opengl/OpenGLTexture.hpp"
 
@@ -10,9 +11,9 @@ IFrameBuffer* OpenGLBackend::createFrameBuffer(int width, int height) {
 }
 
 IPostProccessor* OpenGLBackend::createPostProcessor(const std::string& vert, const std::string& frag) {
-    (void)vert;
-    (void)frag;
-    throw std::runtime_error("OpenGL post-processor creation is not implemented yet");
+    auto processor = new OpenGLPostProcessor();
+    processor->setShader(vert, frag);
+    return processor;
 }
 
 ITexture* OpenGLBackend::createTexture(const int width, const int height) {
