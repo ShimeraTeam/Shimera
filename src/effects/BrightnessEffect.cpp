@@ -1,5 +1,7 @@
 #include "effects/BrightnessEffect.hpp"
 
+using shimera::IBackend;
+using shimera::IPostProcessor;
 using shimera::BrightnessEffect;
 
 BrightnessEffect::BrightnessEffect(IBackend *backend)

@@ -1,6 +1,7 @@
 #ifndef SHIMERA_SFML_SFMLTEXTURE_HPP
 #define SHIMERA_SFML_SFMLTEXTURE_HPP
 
+#include <SFML/Graphics/Texture.hpp>
 #include "backend/ITexture.hpp"
 
 namespace shimera {

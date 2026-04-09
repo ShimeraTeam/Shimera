@@ -1,5 +1,7 @@
 #include "effects/ColortintEffect.hpp"
 
+using shimera::IBackend;
+using shimera::IPostProcessor;
 using shimera::ColortintEffect;
 using shimera::Vec3;
 
