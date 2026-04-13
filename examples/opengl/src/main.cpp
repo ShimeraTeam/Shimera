@@ -3,6 +3,8 @@
 #include <GL/glew.h>
 
 #include <shimera.h>
+#include "backend/BackendFactory.hpp"
+#include "effects/DistortionEffect.hpp"
 
 int main(void)
 {
@@ -56,8 +58,8 @@ int main(void)
     GLC(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW));
 
     ShaderProgramSource source = parseShader(
-        "res/shader/basic.vert",
-        "res/shader/basic.frag"
+        "../../../../res/shader/basic.vert",
+        "../../../../res/shader/basic.frag"
         );
 
     unsigned int shader = createShader(source.vertex, source.fragment);
@@ -78,25 +80,33 @@ int main(void)
     // Unbind for now
     GLC(glBindVertexArray(0));
 
-    Framebuffer framebuffer(640, 480);
-    PostProcessingQuad postQuad(
-        "res/shader/postprocessing/postprocess.vert",
-        "res/shader/postprocessing/distortion.frag"
-    );
+    IBackend *backend = BackendFactory::create();
+    if (!backend) {
+        std::cerr << "Failed to create backend!" << std::endl;
+        GLC(glDeleteProgram(shader));
+        GLC(glDeleteVertexArrays(1, &vao));
+        GLC(glDeleteBuffers(1, &buffer));
+        GLC(glDeleteBuffers(1, &ibo));
+        glfwTerminate();
+        return -1;
+    }
 
-    Uniform uf_time(postQuad.getShader(), "time", 0.0f);
-    Uniform uf_noiseScale(postQuad.getShader(), "noiseScale", 3.0f);
-    Uniform uf_distortionStrength(postQuad.getShader(), "distortionStrength", 0.13f);
-    Uniform uf_timeScale(postQuad.getShader(), "timeScale", 0.1f);
+    IFrameBuffer *sceneFramebuffer = backend->createFrameBuffer(640, 480);
+
+    DistortionEffect distortionEffect(backend);
+    distortionEffect.withDistortionStrength(0.13f)
+                    .withNoiseScale(3.0f)
+                    .withTimeScale(0.1f);
+
+    float time = 0.0f;
 
     float r = 0.0f;
     float increment = 0.05f;
     while (!glfwWindowShouldClose(window))
     {
         /// Render into our framebuffer
-        framebuffer.bind();
-        GLC(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
-        GLC(glClear(GL_COLOR_BUFFER_BIT));
+        sceneFramebuffer->bind();
+        sceneFramebuffer->clear(shimera::Color(0.0f, 0.0f, 0.0f, 1.0f));
 
         // Use the basic shader and bind VAO
         GLC(glUseProgram(shader));
@@ -109,12 +119,13 @@ int main(void)
         r += increment;
 
         // Render to screen
-        framebuffer.unbind();
-        postQuad.bindShader();
-        uf_time += 0.06f;
+        sceneFramebuffer->unbind();
+        distortionEffect.time = time;
         GLC(glClearColor(0.1f, 0.1f, 0.1f, 1.0f));
         GLC(glClear(GL_COLOR_BUFFER_BIT));
-        postQuad.render(framebuffer.getTexture());
+        distortionEffect.render(sceneFramebuffer->getTexture());
+
+        time += 0.06f;
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -124,6 +135,8 @@ int main(void)
     GLC(glDeleteVertexArrays(1, &vao));
     GLC(glDeleteBuffers(1, &buffer));
     GLC(glDeleteBuffers(1, &ibo));
+    delete sceneFramebuffer;
+    delete backend;
     glfwTerminate();
     return 0;
 }
