@@ -23,6 +23,12 @@ option("examples")
     set_description("Build example projects")
 option_end()
 
+option("tests")
+    set_default(true)
+    set_showmenu(true)
+    set_description("Build test projects")
+option_end()
+
 target("shimera-opengl")
     set_kind("$(kind)")
     set_default(true)
@@ -149,6 +155,10 @@ target("shimera-raylib")
     else
         add_syslinks("GL")
     end
+
+if has_config("tests") then
+    includes("tests/xmake.lua")
+end
 
 if has_config("examples") then
     includes("examples/opengl/xmake.lua")

@@ -1,0 +1,3 @@
+leak:libGL
+leak:libGLX
+leak:libGLX_mesa

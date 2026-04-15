@@ -1,0 +1,5 @@
+target("bench-sfml")
+    set_kind("binary")
+    set_default(false)
+    add_files("bench_sfml.cpp")
+    add_deps("shimera-sfml")

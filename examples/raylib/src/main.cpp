@@ -33,16 +33,11 @@ int main() {
     }
 
     IFrameBuffer *sceneFramebuffer = backend->createFrameBuffer(800, 400);
-    IFrameBuffer *tempFramebuffer = backend->createFrameBuffer(800, 400);
 
     DistortionEffect distortionEffect(backend);
     distortionEffect.withDistortionStrength(0.2f)
                     .withNoiseScale(4.0f);
 
-    IPostProccessor *grayscaleEffect = backend->createPostProcessor(
-        "../../../../res/shader/postprocessing/postprocess.vert",
-        "../../../../res/shader/postprocessing/grayscale.frag"
-    );
     SetTargetFPS(60);
     float time = 0.0f;
 
@@ -69,21 +64,13 @@ int main() {
         BeginDrawing();
             ClearBackground(BLACK);
             distortionEffect.time = time;
-
-            tempFramebuffer->bind();
-            tempFramebuffer->clear(shimera::Color{0, 0, 0, 1});
             distortionEffect.render(sceneFramebuffer->getTexture());
-            tempFramebuffer->unbind();
-
-            grayscaleEffect->render(tempFramebuffer->getTexture());
             time += 0.006f;
             
         EndDrawing();
     }
 
     CloseWindow();
-    delete grayscaleEffect;
-    delete tempFramebuffer;
     delete sceneFramebuffer;
     delete backend;
     return 0;
