@@ -1,9 +1,18 @@
 #ifndef OPENGL_LEARNING_UNIFORM_H
 #define OPENGL_LEARNING_UNIFORM_H
-#include <string>
 
+#include <GL/glew.h>
+#include <string>
 #include <glUtils.h>
-#include <uniform/Vec4.hpp>
+#include <variant>
+#include <stdexcept>
+
+#include "Vec2.inl"
+#include <uniform/Vec3.hpp>
+#include "Vec4.hpp"
+#include <stdexcept>
+
+using UniformValue = std::variant<float, int, Vec2<float>, Vec3<float>, Vec4<float>>;
 
 template <typename T>
 class Uniform {
@@ -47,6 +56,10 @@ class Uniform {
                 GLC(glUniform1f(location, newValue));
             } else if constexpr (std::is_same_v<T, int>) {
                 GLC(glUniform1i(location, newValue));
+            } else if constexpr (std::is_same_v<T, Vec2<float>>) {
+                GLC(glUniform2f(location, newValue.x, newValue.y));
+            } else if constexpr (std::is_same_v<T, Vec3<float>>) {
+                GLC(glUniform3f(location, newValue.x, newValue.y, newValue.z));
             } else if constexpr (std::is_same_v<T, Vec4<float>>) {
                 GLC(glUniform4f(location, newValue.x, newValue.y, newValue.z, newValue.w));
             } else {

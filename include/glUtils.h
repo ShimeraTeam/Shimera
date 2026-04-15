@@ -1,6 +1,7 @@
 #ifndef OPENGL_LEARNING_UTILS_H
     #define OPENGL_LEARNING_UTILS_H
 
+    #include <shimera_api.h>
     #include <string>
 
     // Cross-platform debug break
@@ -25,12 +26,12 @@
         std::string fragment;
     };
 
-    void cglClearError();
-    bool cglLogCall(const char *function, const char *file, int line);
+    SHIMERA_API void cglClearError();
+    SHIMERA_API bool cglLogCall(const char *function, const char *file, int line);
 
-    std::string readFile(const std::string &filePath);
-    ShaderProgramSource parseShader(const std::string &vertexFilePath, const std::string &fragmentFilePath);
-    unsigned int compileShader(unsigned int type, const std::string &source);
-    unsigned int createShader(const std::string &vertexSource, const std::string &fragmentSource);
+    SHIMERA_API std::string readFile(const std::string &filePath);
+    SHIMERA_API ShaderProgramSource parseShader(const std::string &vertexFilePath, const std::string &fragmentFilePath);
+    SHIMERA_API unsigned int compileShader(unsigned int type, const std::string &source);
+    SHIMERA_API unsigned int createShader(const std::string &vertexSource, const std::string &fragmentSource);
 
 #endif //OPENGL_LEARNING_UTILS_H

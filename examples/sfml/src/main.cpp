@@ -4,55 +4,78 @@
 #include <GL/glew.h>
 #include <SFML/OpenGL.hpp>
 
+// Here the shimera header is outdated and should be used to include all necessary shimera components
+//TODO: Update `shimera.h` to include all necessary headers
 #include <shimera.h>
+#include "backend/BackendFactory.hpp"
+#include "backend/sfml/SFMLFramebuffer.hpp"
+#include "effects/ChromaticAberration.hpp"
+#include "effects/DistortionEffect.hpp"
+#include "effects/ColorshiftEffect.hpp"
+#include "effects/GrayscaleEffect.hpp"
+#include "effects/SaturationEffect.hpp"
+#include "effects/BrightnessEffect.hpp"
+#include "effects/ContrastEffect.hpp"
 
 
 int main()
 {
-    sf::VideoMode videoMode({960, 540});
-    sf::RenderWindow window(videoMode, "SFML3 - Post-Processing with OpenGL");
+    const sf::VideoMode videoMode({960, 540});
+    sf::RenderWindow window(videoMode, "SFML3 - Multi-Pass Post-Processing");
     window.setActive(true);
 
-    if (glewInit() != GLEW_OK)
+    //TODO: Try to embed that in the backend so the user doesn't have to worry about it (or at least make it optional)
+    if (glewInit() != GLEW_OK) {
         std::cerr << "[GLEW] initialization failed!" << std::endl;
+        return -1;
+    }
 
     std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
 
-    sf::RenderTexture renderTexture(videoMode.size);
+    IBackend *backend = BackendFactory::create();
+    if (!backend) {
+        std::cerr << "Failed to create backend!" << std::endl;
+        return -1;
+    }
 
-    Framebuffer framebuffer(videoMode.size.x, videoMode.size.y);
-    // May need to change the path manually for now
-    PostProcessingQuad postQuad(
-    "res/shader/postprocessing/postprocess.vert",
-    "res/shader/postprocessing/distortion.frag"
-    );
+    // Create framebuffers for ping-pong rendering
+    IFrameBuffer *sceneFramebuffer = backend->createFrameBuffer(960, 540);
+    IFrameBuffer *tempFramebuffer = backend->createFrameBuffer(960, 540);  // Intermediate pass
+    IFrameBuffer *finalFramebuffer = backend->createFrameBuffer(960, 540); // Final pass (optional, can render directly to screen)
 
-    Uniform uf_time(postQuad.getShader(), "time", 0.0f);
-    Uniform uf_noiseScale(postQuad.getShader(), "noiseScale", 3.0f);
-    Uniform uf_distortionStrength(postQuad.getShader(), "distortionStrength", 0.13f);
-    Uniform uf_timeScale(postQuad.getShader(), "timeScale", 0.1f);
+    DistortionEffect distortionEffect(backend);
+    distortionEffect.withDistortionStrength(0.2f)
+                    .withNoiseScale(4.0f);
+
+    ChromaticAberrationEffect chromaticAberrationEffect(backend);
+    chromaticAberrationEffect.withStrength(0.4f)
+                            .withRadius(true)
+                            .withContrast(1.5f)
+                            .withSamples(30);
+
 
     sf::CircleShape circle(80.f);
-    circle.setFillColor(sf::Color::Red);
+    circle.setFillColor(sf::Color::Magenta);
     circle.setPosition(sf::Vector2f(210.f - 80.f, 270.f - 80.f));
 
     sf::RectangleShape rectangle(sf::Vector2f(160.f, 160.f));
-    rectangle.setFillColor(sf::Color::Green);
+    rectangle.setFillColor(sf::Color::White);
     rectangle.setPosition(sf::Vector2f(480.f - 80.f, 270.f - 80.f));
 
     sf::CircleShape triangle(105.f, 3);
-    triangle.setFillColor(sf::Color::Blue);
+    triangle.setFillColor(sf::Color::Yellow);
     triangle.setPosition(sf::Vector2f(750.f - 105.f, 270.f - 80.f));
 
     // To draw a picture, uncomment the line below
     // sf::Texture texture;
-    // if (!texture.loadFromFile("examples/res/test.jpg")) {
+    // if (!texture.loadFromFile("../../../../examples/res/test.jpg")) {
     //     std::cerr << "Error loading image" << std::endl;
     // }
     // sf::Sprite sprite(texture);
     // sprite.setPosition(sf::Vector2f(0.f, 0.f));
     // sprite.setScale(sf::Vector2f(0.5f, 0.5f)); // 50% de la taille originale (1920x1080 -> 960x540)
 
+    float time = 0.0f;
     while (window.isOpen())
     {
         while (const std::optional event = window.pollEvent())
@@ -61,32 +84,47 @@ int main()
                 window.close();
         }
 
-        // render what SFML rendered to our --opengl framebuffer-- nope juste the renderTexture for now...
-        // (change our context to the framebuffer)
-        // framebuffer.bind();
+        if (!window.setActive(true))
+            break;
 
-        renderTexture.clear(sf::Color::Black);
+        // Render scene to the first framebuffer ("scene"Framebuffer)
+        auto *sfmlRenderTexture = static_cast<sf::RenderTexture*>(sceneFramebuffer->getNativeRenderTarget());
 
-        // To draw a picture, uncomment the line below
-        // renderTexture.draw(sprite);
+        sfmlRenderTexture->clear(sf::Color::Black);
+        // sfmlRenderTexture->draw(sprite);
+        sfmlRenderTexture->draw(circle);
+        sfmlRenderTexture->draw(rectangle);
+        sfmlRenderTexture->draw(triangle);
+        sceneFramebuffer->unbind(); // Calls display() internally
 
-        renderTexture.draw(circle);
-        renderTexture.draw(rectangle);
-        renderTexture.draw(triangle);
-        renderTexture.display(); // push the SFML rendered content to the framebuffer
+        // Ensure window context is active for post-processing
+        window.setActive(true);
 
-        // apply post-processing effect
-        framebuffer.unbind();
-        postQuad.bindShader();
-        uf_time += 0.006f;
+        // Multi-pass rendering chain:
+        // 1. sceneFramebuffer (original) -> distortion -> tempFramebuffer
+        // 2. tempFramebuffer -> grayscale (saturation=0.0) -> screen
+        // Update the necessary uniforms for the distortion effect
+        distortionEffect.time = time;
+        // Pass 1: Apply distortion -> tempFramebuffer
+        tempFramebuffer->bind();
         glClear(GL_COLOR_BUFFER_BIT);
-        // TODO: use framebuffer.getTexture() instead of renderTexture.getTexture().getNativeHandle()
-        postQuad.render(renderTexture.getTexture().getNativeHandle());
+        distortionEffect.render(sceneFramebuffer->getTexture());
+        tempFramebuffer->unbind();
 
-        // reset OpenGL states for SFML (else it won't display correctly)
-        // window.resetGLStates();
-        window.display(); // display the post-processed result (so display the current OpenGL buffer)
+        window.setActive(true);
+        glClear(GL_COLOR_BUFFER_BIT);
+        chromaticAberrationEffect.render(tempFramebuffer->getTexture());
+
+        time += 0.006f;
+
+        window.display();
     }
+
+    // Cleanup
+    //TODO: Maybe try to auto clean this (do that in the destructor of the respective classes)
+    delete tempFramebuffer;
+    delete sceneFramebuffer;
+    delete backend;
 
     return 0;
 }

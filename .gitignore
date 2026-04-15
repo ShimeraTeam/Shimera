@@ -26,5 +26,5 @@ cmake-build-*
 .xmake
 
 # Generated files by Xmake
-CMakeLists.txt
+*CMakeLists.txt
 compile_commands.json

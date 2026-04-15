@@ -1,0 +1,126 @@
+name: CD - Build & Publish pre-releases / releases
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build-Shimera:
+      strategy:
+        matrix:
+          plateform: [ubuntu-latest, windows-latest]
+      runs-on: ${{ matrix.plateform }}
+      name: Build Shimera
+      steps:
+        - uses: actions/checkout@v6
+
+        - name: Install system dependencies
+          if: runner.os == 'Linux'
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y \
+            build-essential cmake \
+            libx11-dev libxrandr-dev libxi-dev libxinerama-dev libxcursor-dev \
+            libgl1-mesa-dev libglu1-mesa-dev libpng-dev libfreetype6-dev \
+            libxkbcommon-dev libxcb1-dev libxcb-image0-dev libxcb-keysyms1-dev \
+            libxcb-shm0-dev libxcb-randr0-dev
+
+        - name: Setup xmake
+          uses: xmake-io/github-action-setup-xmake@v1
+          with:
+            xmake-version: latest
+            actions-cache-folder: ".xmake-cache"
+
+        - name: Build Shimera
+          run: xmake -y
+
+        - name: Extract version
+          id: get_version
+          shell: bash
+          run: echo "version=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
+
+        - name: Tar Linux build
+          if: runner.os == 'Linux'
+          run: tar -cvf shimera-${{ env.version }}-linux.tar build/
+
+        - name: Zip Windows build
+          if: runner.os == 'Windows'
+          shell: bash
+          run: powershell Compress-Archive -Path build\* -DestinationPath shimera-${{ env.version }}-windows.zip
+
+        - name: Upload Linux artifact
+          if: runner.os == 'Linux'
+          uses: actions/upload-artifact@v6
+          with:
+            name: shimera-build-Linux
+            path: shimera-${{ env.version }}-linux.tar
+
+        - name: Upload Windows artifact
+          if: runner.os == 'Windows'
+          uses: actions/upload-artifact@v6
+          with:
+            name: shimera-build-Windows
+            path: shimera-${{ env.version }}-windows.zip
+
+  publish:
+    needs: [build-Shimera]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Linux build
+        uses: actions/download-artifact@v7
+        with:
+          name: shimera-build-Linux
+
+      - name: Download Windows build
+        uses: actions/download-artifact@v7
+        with:
+          name: shimera-build-Windows
+
+      - name: Check if prerelease
+        id: check_prerelease
+        run: |
+          if [[ "${{ github.ref_name }}" == *"-"* ]]; then
+            echo "prerelease=true" >> $GITHUB_ENV
+          else
+            echo "prerelease=false" >> $GITHUB_ENV
+          fi
+
+      - name: Extract version
+        id: get_version
+        run: echo "version=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref_type == 'tag'
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Shimera ${{ env.version }}
+          prerelease: ${{ env.prerelease }}
+          files: |
+            shimera-${{ env.version }}-linux.tar
+            shimera-${{ env.version }}-windows.zip
+
+  check-tag:
+    needs: [publish]
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Extract tag name
+        id: get_tag
+        run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Delete tag
+        run: |
+          git fetch --tags
+          git tag -d $TAG_NAME
+          git push origin --delete $TAG_NAME
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
