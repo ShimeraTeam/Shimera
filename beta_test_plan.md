@@ -42,8 +42,8 @@ All of the listed features will be demonstrated during the beta presentation
 | F17 | Developer | Configure Gaussian Blur shader effect | The user can configure the Gaussian blur effect via its function call. |
 | F18 | Developer | Add Pixelation shader effect | The user can call a function to add a pixelation effect to his project. Pixelation allows the user to pixelate the screen. |
 | F19 | Developer | Configure Pixelation shader effect | The user can configure the pixelation effect via its function call. |
-| F20 | Developer | Add HDR bloom shader effect | The user can call a function to add a HDR bloom effect to his project. HDR bloom allows the user to make surfaces with a certain light amount to glow. |
-| F21 | Developer | Configure HDR bloom shader effect | The user can configure the HDR bloom effect via its function call. |
+| F20 | Developer | Add HDR Bloom shader effect | The user can call a function to add a HDR bloom effect to his project. HDR bloom allows the user to make surfaces with a certain light amount to glow. |
+| F21 | Developer | Configure HDR Bloom shader effect | The user can configure the HDR bloom effect via its function call. |
 | F22 | Developer | Add Atmospheric Scattering shader effect | The user can call a function to add a atmospheric scattering effect to his project. Atmospheric Scattering adds an atmosphere sphere that react to a light source, changing the colors of the atmosphere, which gives natural effects like sunsets and blue sky durring the day. |
 | F23 | Developer | Configure Atmospheric Scattering shader effect | The user can configure the atmospheric scattering effect via its function call. |
 | F24 | Developer | Add Fresnel Effect shader | The user can call a function to add a Fresnel Effect to an object. |
@@ -54,19 +54,28 @@ Define the metrics and conditions that determine if the beta version is successf
 
 | **Feature ID** | **Key success criteria** | **Indicator/metric** | **Result** |
 |--------------|---------------------------------------|-----------------------|----------------|
-| F1 | A user can use the Shimera library on OpenGL | 2 differents projects, without critical errors | — |
-| F2 | A user can use the Shimera library on SFML | 2 differents projects, without critical errors | — |
-| F3 | A user can use the Shimera library on Raylib | 2 differents projects, without critical errors | — |
-| F4 | A user can implement and configure a shader using a function | 12 shaders linked to its own function | — |
-| F5 | A user can use the color shift postprocessing shader | VRAM tests or rendering tests or Framerate tests, tested on computer with fixed specifications | — |
-| F6 | A user can use the distortion postprocessing shader | VRAM tests or rendering tests or Framerate tests, tested on computer with fixed specifications | — |
-| F7 | A user can use the contrast postprocessing shader | VRAM tests or rendering tests or Framerate tests, tested on computer with fixed specifications | — |
-| F8 | A user can use the saturation postprocessing shader | VRAM tests or rendering tests or Framerate tests, tested on computer with fixed specifications | — |
-| F9 | A user can use brightness postprocessing shader | VRAM tests or rendering tests or Framerate tests, tested on computer with fixed specifications | — |
-| F10 | A user can use the vignette postprocessing shader | VRAM tests or rendering tests or Framerate tests, tested on computer with fixed specifications | — |
-| F11 | A user can use the chromatic aberration postprocessing shader | VRAM tests or rendering tests or Framerate tests, tested on computer with fixed specifications | — |
-| F12 | A user can use the Gaussian blur postprocessing shader | VRAM tests or rendering tests or Framerate tests, tested on computer with fixed specifications | — |
-| F13 | A user can use the pixelation postprocessing shader | VRAM tests or rendering tests or Framerate tests, tested on computer with fixed specifications | — |
-| F14 | A user can use HDR bloom postprocessing shader | VRAM tests or rendering tests or Framerate tests, tested on computer with fixed specifications | — |
-| F15 | A user can use the atmospheric scattering shader | VRAM tests or rendering tests or Framerate tests, tested on computer with fixed specifications | — |
-| F16 | A user can use Fresnel Effect spatial shader | VRAM tests or rendering tests or Framerate tests, tested on computer with fixed specifications | — |
+| F1 | A user can import OpenGL, Raylib or SFML versions of Shimera. | 3 libraries - All fonctionnal on Windows and Linux | Achieved (3/3) |
+| F2 | A user can use the Color Tint shader effect | Shader is correctly applied to the screen | Achieved |
+| F3 | A user can configure the Color Tint shader effect | 1 configurable variables | Achieved (1/1) |
+| F4 | A user can use the Distortion shader effect | Shader is correctly applied to the screen | Achieved |
+| F5 | A user can configure the Distortion shader effect | 4 configurable variables | Achieved (4/4) |
+| F6 | A user can use the Contrast shader effect | Shader is correctly applied to the screen | Achieved |
+| F7 | A user can configure the Contrast shader effect | 1 configurable variable | Achieved (1/1) |
+| F8 | A user can use the Saturation shader effect | Shader is correctly applied to the screen | Achieved |
+| F9 | A user can configure the Saturation shader effect | 1 configurable variable | Achieved (1/1) |
+| F10 | A user can use the Brightness shader effect | Shader is correctly applied to the screen | Achieved |
+| F11 | A user can configure the Brightness shader effect | 1 configurable variable | Achieved (1/1) |
+| F12 | A user can use the Vignette shader effect | Shader is correctly applied to the screen | Achieved |
+| F13 | A user can configure the Vignette shader effect | 6 configurable variables | Achieved (6/6) |
+| F14 | A user can use the Chromatic Aberration shader effect | Shader is correctly applied to the screen | Achieved |
+| F15 | A user can configure the Chromatic Aberration shader effect | 4 configurable variables | Achieved (4/4) |
+| F16 | A user can use the Gaussian Blur shader effect | Shader is correctly applied to the screen | - |
+| F17 | A user can configure the Gaussian Blur shader effect | 1 configurable variable | - |
+| F18 | A user can use the Pixelation shader effect | Shader is correctly applied to the screen | - |
+| F19 | A user can configure the Pixelation shader effect | 1 configurable variable | - |
+| F20 | A user can use the HDR Bloom shader effect | Shader is correctly applied to the screen | - |
+| F21 | A user can configure the HDR Bloom shader effect | 1 configurable variable | - |
+| F22 | A user can use the Atmospheric Scattering shader effect | Shader is correctly applied to the screen | - |
+| F23 | A user can configure the Atmospheric Scattering shader effect | 7 configurable variables | - |
+| F24 | A user can use the Fresnel Effect shader | Shader is correctly applied to the object | - |
+| F25 | A user can configure the Fresnel Effect shader | 3 configurable variables | - |
