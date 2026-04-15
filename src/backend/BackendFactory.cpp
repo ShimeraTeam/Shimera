@@ -1,5 +1,9 @@
 #include "backend/BackendFactory.hpp"
 
+#ifdef SHIMERA_BACKEND_OPENGL
+    #include "backend/opengl/OpenGLBackend.hpp"
+#endif
+
 #ifdef SHIMERA_BACKEND_SFML
     #include "backend/sfml/SFMLBackend.hpp"
 #endif
@@ -10,8 +14,7 @@
 
 IBackend* BackendFactory::create() {
 #ifdef SHIMERA_BACKEND_OPENGL
-    // return new OpenGLBackend();
-    return nullptr;
+    return new OpenGLBackend();
 #elif defined(SHIMERA_BACKEND_SFML)
     return new SFMLBackend();
 #elif defined(SHIMERA_BACKEND_SDL)
