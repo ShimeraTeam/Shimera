@@ -7,8 +7,8 @@
 #include <stdexcept>
 #include <variant>
 
-#include "uniform/Vec3.hpp"
-#include "uniform/Vec4.hpp"
+#include "uniform/Vec3.inl"
+#include "uniform/Vec4.inl"
 
 using shimera::OpenGLShader;
 

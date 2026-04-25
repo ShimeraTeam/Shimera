@@ -8,7 +8,7 @@
 
 #include "backend/opengl/OpenGLShader.hpp"
 
-using shimera::IPostProccessor;
+using shimera::IPostProcessor;
 using shimera::IShader;
 using shimera::ITexture;
 using shimera::OpenGLPostProcessor;

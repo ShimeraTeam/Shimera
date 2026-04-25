@@ -5,6 +5,7 @@
 
 #include "backend/opengl/OpenGLFramebuffer.hpp"
 
+using shimera::ITexture;
 using shimera::OpenGLFramebuffer;
 
 OpenGLFramebuffer::OpenGLFramebuffer(const int width, const int height)
@@ -30,7 +31,7 @@ void OpenGLFramebuffer::unbind() {
 }
 
 void OpenGLFramebuffer::clear(const shimera::Color color) {
-    GLC(glClearColor(color.r, color.g, color.b, color.a));
+    GLC(glClearColor(color.m_r, color.m_g, color.m_b, color.m_a));
     GLC(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT));
 }
 
