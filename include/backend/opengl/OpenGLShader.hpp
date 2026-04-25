@@ -6,6 +6,8 @@
 
 #include "backend/IShader.hpp"
 
+namespace shimera {
+
 /**
  * OpenGL Shader implementation using raw OpenGL shader management
  */
@@ -30,5 +32,7 @@ class OpenGLShader final : public IShader {
         uint32_t programId;
         std::unordered_map<std::string, int> uniformCache;
 };
+
+}
 
 #endif //SHIMERA_OPENGL_OPENGLSHADER_HPP

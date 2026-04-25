@@ -2,6 +2,8 @@
 #include <glUtils.h>
 #include "backend/opengl/OpenGLTexture.hpp"
 
+using shimera::OpenGLTexture;
+
 OpenGLTexture::OpenGLTexture(const int width, const int height)
     : textureId(0), width(width), height(height) {
     GLC(glGenTextures(1, &textureId));

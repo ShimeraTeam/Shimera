@@ -3,6 +3,8 @@
 
 #include "backend/IBackend.hpp"
 
+namespace shimera {
+
 /**
  * OpenGL backend implementation
  * Creates OpenGL-specific implementations of framework interfaces
@@ -17,5 +19,7 @@ class OpenGLBackend final : public IBackend {
         ITexture* createTexture(int width, int height) override;
         IShader* createShader(const std::string& vert, const std::string& frag) override;
 };
+
+}
 
 #endif //SHIMERA_OPENGL_OPENGLBACKEND_HPP

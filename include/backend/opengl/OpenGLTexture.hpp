@@ -3,6 +3,8 @@
 
 #include "backend/ITexture.hpp"
 
+namespace shimera {
+
 /**
  * OpenGL Texture implementation owning ITexture interface
  * Creates and manages an OpenGL texture resource with automatic cleanup
@@ -28,5 +30,7 @@ class OpenGLTexture final : public ITexture {
         int width;
         int height;
 };
+
+}
 
 #endif //SHIMERA_OPENGL_OPENGLTEXTURE_HPP

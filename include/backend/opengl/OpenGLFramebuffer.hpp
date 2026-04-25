@@ -6,6 +6,8 @@
 #include "backend/IFrameBuffer.hpp"
 #include "backend/opengl/OpenGLTexture.hpp"
 
+namespace shimera {
+
 /**
  * OpenGL Framebuffer implementation
  * Wraps an OpenGL framebuffer object with an attached color texture
@@ -36,5 +38,7 @@ class OpenGLFramebuffer final : public IFrameBuffer {
         int m_width;
         int m_height;
 };
+
+}
 
 #endif //SHIMERA_OPENGL_OPENGLFRAMEBUFFER_HPP

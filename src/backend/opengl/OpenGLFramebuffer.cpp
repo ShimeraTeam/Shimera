@@ -5,6 +5,8 @@
 
 #include "backend/opengl/OpenGLFramebuffer.hpp"
 
+using shimera::OpenGLFramebuffer;
+
 OpenGLFramebuffer::OpenGLFramebuffer(const int width, const int height)
     : fbo(0), rbo(0), texture(nullptr), m_width(width), m_height(height) {
     OpenGLFramebuffer::resize(width, height);

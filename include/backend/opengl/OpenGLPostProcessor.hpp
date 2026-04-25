@@ -5,6 +5,8 @@
 
 #include "backend/IPostProccessor.hpp"
 
+namespace shimera {
+
 /**
  * OpenGL Post-Processor implementation
  * Renders a full-screen quad with a post-processing shader and input texture
@@ -34,5 +36,7 @@ class OpenGLPostProcessor final : public IPostProccessor {
 
         std::unique_ptr<IShader> shader;
 };
+
+}
 
 #endif //SHIMERA_OPENGL_OPENGLPOSTPROCESSOR_HPP

@@ -8,6 +8,12 @@
 
 #include "backend/opengl/OpenGLShader.hpp"
 
+using shimera::IPostProccessor;
+using shimera::IShader;
+using shimera::ITexture;
+using shimera::OpenGLPostProcessor;
+using shimera::OpenGLShader;
+
 OpenGLPostProcessor::OpenGLPostProcessor()
     : vao(0), vbo(0), ebo(0), shader(nullptr) {
     initializeQuad();

@@ -6,6 +6,16 @@
 
 #include <stdexcept>
 
+using shimera::IFrameBuffer;
+using shimera::IPostProccessor;
+using shimera::IShader;
+using shimera::ITexture;
+using shimera::OpenGLBackend;
+using shimera::OpenGLFramebuffer;
+using shimera::OpenGLPostProcessor;
+using shimera::OpenGLShader;
+using shimera::OpenGLTexture;
+
 IFrameBuffer* OpenGLBackend::createFrameBuffer(int width, int height) {
     return new OpenGLFramebuffer(width, height);
 }

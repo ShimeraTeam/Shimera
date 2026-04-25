@@ -10,6 +10,8 @@
 #include "uniform/Vec3.hpp"
 #include "uniform/Vec4.hpp"
 
+using shimera::OpenGLShader;
+
 OpenGLShader::OpenGLShader() : programId(0) {}
 
 OpenGLShader::~OpenGLShader() {
