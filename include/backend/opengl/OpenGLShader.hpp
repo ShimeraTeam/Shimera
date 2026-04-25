@@ -29,8 +29,8 @@ class OpenGLShader final : public IShader {
     private:
         int getUniformLocation(const std::string& name);
 
-        uint32_t programId;
-        std::unordered_map<std::string, int> uniformCache;
+        uint32_t m_programId;
+        std::unordered_map<std::string, int> m_uniformCache;
 };
 
 }

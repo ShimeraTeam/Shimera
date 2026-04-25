@@ -8,21 +8,21 @@
 using shimera::OpenGLFramebuffer;
 
 OpenGLFramebuffer::OpenGLFramebuffer(const int width, const int height)
-    : fbo(0), rbo(0), texture(nullptr), m_width(width), m_height(height) {
+    : m_fbo(0), m_rbo(0), m_texture(nullptr), m_width(width), m_height(height) {
     OpenGLFramebuffer::resize(width, height);
 }
 
 OpenGLFramebuffer::~OpenGLFramebuffer() {
-    if (rbo != 0) {
-        GLC(glDeleteRenderbuffers(1, &rbo));
+    if (m_rbo != 0) {
+        GLC(glDeleteRenderbuffers(1, &m_rbo));
     }
-    if (fbo != 0) {
-        GLC(glDeleteFramebuffers(1, &fbo));
+    if (m_fbo != 0) {
+        GLC(glDeleteFramebuffers(1, &m_fbo));
     }
 }
 
 void OpenGLFramebuffer::bind() {
-    GLC(glBindFramebuffer(GL_FRAMEBUFFER, fbo));
+    GLC(glBindFramebuffer(GL_FRAMEBUFFER, m_fbo));
 }
 
 void OpenGLFramebuffer::unbind() {
@@ -35,30 +35,30 @@ void OpenGLFramebuffer::clear(const shimera::Color color) {
 }
 
 ITexture& OpenGLFramebuffer::getTexture() {
-    return *texture;
+    return *m_texture;
 }
 
 void OpenGLFramebuffer::resize(const int width, const int height) {
     m_width = width;
     m_height = height;
 
-    if (fbo == 0) {
-        GLC(glGenFramebuffers(1, &fbo));
+    if (m_fbo == 0) {
+        GLC(glGenFramebuffers(1, &m_fbo));
     }
-    if (rbo == 0) {
-        GLC(glGenRenderbuffers(1, &rbo));
+    if (m_rbo == 0) {
+        GLC(glGenRenderbuffers(1, &m_rbo));
     }
 
-    texture = std::make_unique<OpenGLTexture>(width, height);
+    m_texture = std::make_unique<OpenGLTexture>(width, height);
 
-    GLC(glBindFramebuffer(GL_FRAMEBUFFER, fbo));
+    GLC(glBindFramebuffer(GL_FRAMEBUFFER, m_fbo));
     GLC(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-        GL_TEXTURE_2D, texture->getNativeHandle(), 0));
+        GL_TEXTURE_2D, m_texture->getNativeHandle(), 0));
 
-    GLC(glBindRenderbuffer(GL_RENDERBUFFER, rbo));
+    GLC(glBindRenderbuffer(GL_RENDERBUFFER, m_rbo));
     GLC(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height));
     GLC(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
-        GL_RENDERBUFFER, rbo));
+        GL_RENDERBUFFER, m_rbo));
 
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         GLC(glBindFramebuffer(GL_FRAMEBUFFER, 0));

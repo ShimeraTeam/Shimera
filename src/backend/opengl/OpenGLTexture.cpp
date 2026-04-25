@@ -5,9 +5,9 @@
 using shimera::OpenGLTexture;
 
 OpenGLTexture::OpenGLTexture(const int width, const int height)
-    : textureId(0), width(width), height(height) {
-    GLC(glGenTextures(1, &textureId));
-    GLC(glBindTexture(GL_TEXTURE_2D, textureId));
+    : m_textureId(0), m_width(width), m_height(height) {
+    GLC(glGenTextures(1, &m_textureId));
+    GLC(glBindTexture(GL_TEXTURE_2D, m_textureId));
     GLC(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height,
         0, GL_RGB, GL_UNSIGNED_BYTE, nullptr));
     GLC(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
@@ -18,14 +18,14 @@ OpenGLTexture::OpenGLTexture(const int width, const int height)
 }
 
 OpenGLTexture::~OpenGLTexture() {
-    if (textureId != 0) {
-        GLC(glDeleteTextures(1, &textureId));
+    if (m_textureId != 0) {
+        GLC(glDeleteTextures(1, &m_textureId));
     }
 }
 
 void OpenGLTexture::bind(int slot) {
     GLC(glActiveTexture(GL_TEXTURE0 + slot));
-    GLC(glBindTexture(GL_TEXTURE_2D, textureId));
+    GLC(glBindTexture(GL_TEXTURE_2D, m_textureId));
 }
 
 void OpenGLTexture::unbind() {
@@ -33,13 +33,13 @@ void OpenGLTexture::unbind() {
 }
 
 unsigned int OpenGLTexture::getNativeHandle() const {
-    return textureId;
+    return m_textureId;
 }
 
 int OpenGLTexture::getWidth() const {
-    return width;
+    return m_width;
 }
 
 int OpenGLTexture::getHeight() const {
-    return height;
+    return m_height;
 }

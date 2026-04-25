@@ -26,9 +26,9 @@ class OpenGLTexture final : public ITexture {
         [[nodiscard]] int getHeight() const override;
 
     private:
-        unsigned int textureId;
-        int width;
-        int height;
+        unsigned int m_textureId;
+        int m_width;
+        int m_height;
 };
 
 }

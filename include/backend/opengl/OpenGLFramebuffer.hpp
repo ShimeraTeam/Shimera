@@ -32,9 +32,9 @@ class OpenGLFramebuffer final : public IFrameBuffer {
         void* getNativeRenderTarget() override;
 
     private:
-        unsigned int fbo;
-        unsigned int rbo;
-        std::unique_ptr<OpenGLTexture> texture;
+        unsigned int m_fbo;
+        unsigned int m_rbo;
+        std::unique_ptr<OpenGLTexture> m_texture;
         int m_width;
         int m_height;
 };

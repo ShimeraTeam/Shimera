@@ -30,11 +30,11 @@ class OpenGLPostProcessor final : public IPostProccessor {
         void cleanupQuad();
         void cleanupShader();
 
-        unsigned int vao;
-        unsigned int vbo;
-        unsigned int ebo;
+        unsigned int m_vao;
+        unsigned int m_vbo;
+        unsigned int m_ebo;
 
-        std::unique_ptr<IShader> shader;
+        std::unique_ptr<IShader> m_shader;
 };
 
 }

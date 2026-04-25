@@ -12,20 +12,20 @@
 
 using shimera::OpenGLShader;
 
-OpenGLShader::OpenGLShader() : programId(0) {}
+OpenGLShader::OpenGLShader() : m_programId(0) {}
 
 OpenGLShader::~OpenGLShader() {
-    if (programId != 0) {
-        GLC(glDeleteProgram(programId));
+    if (m_programId != 0) {
+        GLC(glDeleteProgram(m_programId));
     }
 }
 
 void OpenGLShader::loadFromFiles(const std::string& vertPath, const std::string& fragPath) {
     ShaderProgramSource source = parseShader(vertPath, fragPath);
 
-    programId = createShader(source.vertex, source.fragment);
+    m_programId = createShader(source.vertex, source.fragment);
 
-    if (programId == 0) {
+    if (m_programId == 0) {
         throw std::runtime_error("Failed to create shader program from files: " + vertPath + ", " + fragPath);
     }
 
@@ -38,7 +38,7 @@ void OpenGLShader::loadFromFiles(const std::string& vertPath, const std::string&
 }
 
 void OpenGLShader::bind() const {
-    GLC(glUseProgram(programId));
+    GLC(glUseProgram(m_programId));
 }
 
 void OpenGLShader::unbind() const {
@@ -71,17 +71,17 @@ void OpenGLShader::setUniform(const std::string& name, const UniformValue& value
 }
 
 uint32_t OpenGLShader::getNativeHandle() const {
-    return programId;
+    return m_programId;
 }
 
 int OpenGLShader::getUniformLocation(const std::string& name) {
-    const auto it = uniformCache.find(name);
-    if (it != uniformCache.end()) {
+    const auto it = m_uniformCache.find(name);
+    if (it != m_uniformCache.end()) {
         return it->second;
     }
 
-    GLC(int location = glGetUniformLocation(programId, name.c_str()));
-    uniformCache[name] = location;
+    GLC(int location = glGetUniformLocation(m_programId, name.c_str()));
+    m_uniformCache[name] = location;
 
     return location;
 }
