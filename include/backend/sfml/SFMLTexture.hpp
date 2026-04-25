@@ -1,5 +1,5 @@
-#ifndef SHIMERA_SFML_SFMLTEXTURE_HPP
-#define SHIMERA_SFML_SFMLTEXTURE_HPP
+#ifndef SHIMERA_SFMLTEXTURE_HPP
+#define SHIMERA_SFMLTEXTURE_HPP
 
 #include <SFML/Graphics/Texture.hpp>
 #include "backend/ITexture.hpp"
@@ -27,4 +27,4 @@ private:
 
 }
 
-#endif //SHIMERA_SFML_SFMLTEXTURE_HPP
+#endif //SHIMERA_SFMLTEXTURE_HPP

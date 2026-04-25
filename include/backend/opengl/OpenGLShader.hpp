@@ -1,5 +1,5 @@
-#ifndef SHIMERA_OPENGL_OPENGLSHADER_HPP
-#define SHIMERA_OPENGL_OPENGLSHADER_HPP
+#ifndef SHIMERA_OPENGLSHADER_HPP
+#define SHIMERA_OPENGLSHADER_HPP
 
 #include <string>
 #include <unordered_map>
@@ -35,4 +35,4 @@ class OpenGLShader final : public IShader {
 
 }
 
-#endif //SHIMERA_OPENGL_OPENGLSHADER_HPP
+#endif //SHIMERA_OPENGLSHADER_HPP

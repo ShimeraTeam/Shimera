@@ -1,5 +1,5 @@
-#ifndef SHIMERA_OPENGL_OPENGLTEXTURE_HPP
-#define SHIMERA_OPENGL_OPENGLTEXTURE_HPP
+#ifndef SHIMERA_OPENGLTEXTURE_HPP
+#define SHIMERA_OPENGLTEXTURE_HPP
 
 #include "backend/ITexture.hpp"
 
@@ -33,4 +33,4 @@ class OpenGLTexture final : public ITexture {
 
 }
 
-#endif //SHIMERA_OPENGL_OPENGLTEXTURE_HPP
+#endif //SHIMERA_OPENGLTEXTURE_HPP

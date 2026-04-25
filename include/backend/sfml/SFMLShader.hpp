@@ -1,5 +1,5 @@
-#ifndef SHIMERA_SFML_SFMLSHADER_HPP
-#define SHIMERA_SFML_SFMLSHADER_HPP
+#ifndef SHIMERA_SFMLSHADER_HPP
+#define SHIMERA_SFMLSHADER_HPP
 
 #include "backend/IShader.hpp"
 #include <string>
@@ -38,4 +38,4 @@ class SFMLShader final : public IShader {
 
 }
 
-#endif //SHIMERA_SFML_SFMLSHADER_HPP
+#endif //SHIMERA_SFMLSHADER_HPP

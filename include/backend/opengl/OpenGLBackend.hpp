@@ -1,5 +1,5 @@
-#ifndef SHIMERA_OPENGL_OPENGLBACKEND_HPP
-#define SHIMERA_OPENGL_OPENGLBACKEND_HPP
+#ifndef SHIMERA_OPENGLBACKEND_HPP
+#define SHIMERA_OPENGLBACKEND_HPP
 
 #include "backend/IBackend.hpp"
 
@@ -22,4 +22,4 @@ class OpenGLBackend final : public IBackend {
 
 }
 
-#endif //SHIMERA_OPENGL_OPENGLBACKEND_HPP
+#endif //SHIMERA_OPENGLBACKEND_HPP

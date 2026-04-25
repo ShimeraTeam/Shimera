@@ -1,5 +1,5 @@
-#ifndef SHIMERA_SFML_SFMLPOSTPROCESSOR_HPP
-#define SHIMERA_SFML_SFMLPOSTPROCESSOR_HPP
+#ifndef SHIMERA_SFMLPOSTPROCESSOR_HPP
+#define SHIMERA_SFMLPOSTPROCESSOR_HPP
 
 #include "backend/IPostProcessor.hpp"
 #include "backend/IShader.hpp"
@@ -36,4 +36,4 @@ class SFMLPostProcessor final : public IPostProcessor {
 
 }
 
-#endif //SHIMERA_SFML_SFMLPOSTPROCESSOR_HPP
+#endif //SHIMERA_SFMLPOSTPROCESSOR_HPP
