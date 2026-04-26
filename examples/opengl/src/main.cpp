@@ -122,7 +122,7 @@ int main(void)
 
         // Render to screen
         sceneFramebuffer->unbind();
-        distortionEffect.time = time;
+        distortionEffect.withTime(time);
         GLC(glClearColor(0.1f, 0.1f, 0.1f, 1.0f));
         GLC(glClear(GL_COLOR_BUFFER_BIT));
         distortionEffect.render(sceneFramebuffer->getTexture());
