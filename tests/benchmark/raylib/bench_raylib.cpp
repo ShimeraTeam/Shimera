@@ -19,6 +19,7 @@ static constexpr int FRAMES = 5000;
 int main() {
     InitWindow(960, 540, "shimera bench - raylib");
     glewInit();
+    glFinish();
 
     // check vram
     GLint vramBefore = 0;
@@ -29,7 +30,6 @@ int main() {
     DistortionEffect distortionEffect(backend);
     distortionEffect.withDistortionStrength(0.2f)
                     .withNoiseScale(4.0f);
-
     glFinish();
 
     GLint vramAfter = 0;
@@ -37,10 +37,8 @@ int main() {
 
     if (vramBefore >= 0 && vramAfter >= 0) {
         GLint usedKb = vramBefore - vramAfter;
-        std::cout << "[VRAM BENCH] Renderer     : " << glGetString(GL_RENDERER) << "\n";
-        std::cout << "[VRAM BENCH] Before alloc : " << vramBefore / 1024 << " MB\n";
-        std::cout << "[VRAM BENCH] After alloc  : " << vramAfter / 1024 << " MB\n";
-        std::cout << "[VRAM BENCH] Used         : " << usedKb / 1024 << " MB" << " (" << usedKb << " KB)\n";
+        std::cout << "[VRAM BENCH] GPU  : " << glGetString(GL_RENDERER) << "\n";
+        std::cout << "[VRAM BENCH] Used : " << usedKb / 1024 << " MB" << " (" << usedKb << " KB)\n";
     }
 
     Camera camera = { 0 };

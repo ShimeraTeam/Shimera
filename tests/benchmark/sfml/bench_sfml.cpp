@@ -39,10 +39,8 @@ int main() {
 
     if (vramBefore >= 0 && vramAfter >= 0) {
         GLint usedKb = vramBefore - vramAfter;
-        std::cout << "[VRAM BENCH] Renderer     : " << glGetString(GL_RENDERER) << "\n";
-        std::cout << "[VRAM BENCH] Before alloc : " << vramBefore / 1024 << " MB\n";
-        std::cout << "[VRAM BENCH] After alloc  : " << vramAfter / 1024 << " MB\n";
-        std::cout << "[VRAM BENCH] Used         : " << usedKb / 1024 << " MB" << " (" << usedKb << " KB)\n";
+        std::cout << "[VRAM BENCH] GPU  : " << glGetString(GL_RENDERER) << "\n";
+        std::cout << "[VRAM BENCH] Used : " << usedKb / 1024 << " MB" << " (" << usedKb << " KB)\n";
     }
 
     sf::CircleShape circle(80.f);
