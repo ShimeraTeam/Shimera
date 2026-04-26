@@ -1,10 +1,10 @@
 name: CI - Tests Linux
 on:
+  workflow_dispatch:
   pull_request:
   push:
     branches:
       - master
-      - feat/143-setup-tests
       - dev
 
 jobs:
