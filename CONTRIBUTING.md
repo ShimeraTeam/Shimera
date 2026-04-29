@@ -26,9 +26,8 @@ When you contribute, ask yourself: *Does this change make it easier for users to
 #### Some interesting reads before you start:
 - [Shimera's README](README.md) - for an overview of the project and its goals.
 - [Shimera's License](LICENSE) - to understand the terms under which you are contributing.
-- [Shimera Architecture](https://shimerateam.github.io/ShimeraDocs/devdoc/architecture/technical_architecture/) - developer architecture and technical overview.
-- [Git Workflow](https://shimerateam.github.io/ShimeraDocs/devdoc/git_workflow/) - branch, commit and hook guidance.
-- [Full Documentation Site](https://shimerateam.github.io/ShimeraDocs/) - user and developer docs.
+- [Shimera developer documentation](https://shimerateam.github.io/ShimeraDocs/devdoc/) - for in-depth technical details and guidelines.
+- [Shimera user documentation](https://shimerateam.github.io/ShimeraDocs/userdoc/) - for examples and user-facing documentation.
 
 If you prefer to read the docs locally, see the `ShimeraDocs/public/docs` folder for the source content.
 
@@ -39,6 +38,8 @@ If you prefer to read the docs locally, see the `ShimeraDocs/public/docs` folder
 - Keep public headers minimal and stable.
 - Avoid unrelated formatting changes.
 - If a change affects multiple backends, keep the behavior consistent across them.
+
+For more information on code standards and practices, see the [Coding Standards](https://shimerateam.github.io/ShimeraDocs/devdoc/code_standards/) and the [Git Workflow](https://shimerateam.github.io/ShimeraDocs/devdoc/git_workflow/) documentation.
 
 ## Testing
 
