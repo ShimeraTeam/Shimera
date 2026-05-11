@@ -1,0 +1,5 @@
+target("demo-sfml")
+    set_kind("binary")
+    set_default(false)
+    add_files("demo_sfml.cpp")
+    add_deps("shimera-sfml")

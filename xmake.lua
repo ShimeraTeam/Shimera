@@ -23,6 +23,12 @@ option("examples")
     set_description("Build example projects")
 option_end()
 
+option("demo")
+    set_default(true)
+    set_showmenu(true)
+    set_description("Build demo")
+option_end()
+
 option("tests")
     set_default(true)
     set_showmenu(true)
@@ -158,6 +164,10 @@ target("shimera-raylib")
 
 if has_config("tests") then
     includes("tests/xmake.lua")
+end
+
+if has_config("demo") then
+    includes("demo/xmake.lua")
 end
 
 if has_config("examples") then
