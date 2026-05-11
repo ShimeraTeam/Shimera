@@ -1,0 +1,6 @@
+includes("memory/raylib/xmake.lua")
+includes("memory/sfml/xmake.lua")
+includes("memory/opengl/xmake.lua")
+includes("benchmark/raylib/xmake.lua")
+includes("benchmark/sfml/xmake.lua")
+includes("benchmark/opengl/xmake.lua")

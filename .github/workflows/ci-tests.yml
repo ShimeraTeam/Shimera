@@ -1,0 +1,26 @@
+name: CI - Tests Linux
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - master
+      - dev
+
+jobs:
+  run-shimera-tests:
+    runs-on: self-hosted
+    name: Run Tests
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set xmake path
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Set permissions
+        run: chmod +x run-tests.sh
+
+      - name: Run
+        run: ./run-tests.sh
+        env:
+          DISPLAY: :0
