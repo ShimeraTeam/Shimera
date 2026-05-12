@@ -1,9 +1,11 @@
-#ifndef SHIMERA_SFML_SFMLSHADER_HPP
-#define SHIMERA_SFML_SFMLSHADER_HPP
+#ifndef SHIMERA_SFMLSHADER_HPP
+#define SHIMERA_SFMLSHADER_HPP
 
 #include "backend/IShader.hpp"
 #include <string>
 #include <unordered_map>
+
+namespace shimera {
 
 /**
  * SFML Shader implementation using OpenGL
@@ -29,9 +31,11 @@ class SFMLShader final : public IShader {
     private:
         int getUniformLocation(const std::string& name);
     
-        uint32_t programId;
+        uint32_t m_programId;
         // Uniform cache to lower the CPU and GPU communications
-        std::unordered_map<std::string, int> uniformCache;
+        std::unordered_map<std::string, int> m_uniformCache;
 };
 
-#endif //SHIMERA_SFML_SFMLSHADER_HPP
+}
+
+#endif //SHIMERA_SFMLSHADER_HPP

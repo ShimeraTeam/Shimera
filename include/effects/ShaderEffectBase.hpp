@@ -5,8 +5,10 @@
 #include <memory>
 
 #include "backend/IFrameBuffer.hpp"
-#include "backend/IPostProccessor.hpp"
+#include "backend/IPostProcessor.hpp"
 #include "backend/ITexture.hpp"
+
+namespace shimera {
 
 /**
  * Abstract class for shader effects
@@ -26,11 +28,13 @@ class SHIMERA_API ShaderEffectBase {
         void setEnabled(bool enabled);
         bool isEnabled() const;
 
-        IPostProccessor *getPostProcessor() const;
+        IPostProcessor *getPostProcessor() const;
 
     protected:
-        std::unique_ptr<IPostProccessor> m_processor;
+        std::unique_ptr<IPostProcessor> m_processor;
         bool m_enabled = true;
 };
+
+}
 
 #endif //SHIMERA_SHADEREFFECTBASE_HPP

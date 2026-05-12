@@ -1,11 +1,13 @@
 #ifndef SHIMERA_RAYLIBPOSTPROCESSOR_HPP
 #define SHIMERA_RAYLIBPOSTPROCESSOR_HPP
 
-#include "backend/IPostProccessor.hpp"
+#include "backend/IPostProcessor.hpp"
 #include "backend/IShader.hpp"
 #include <memory>
 
-class RaylibPostProcessor final : public IPostProccessor {
+namespace shimera {
+
+class RaylibPostProcessor final : public IPostProcessor {
     public:
         RaylibPostProcessor();
         ~RaylibPostProcessor() override;
@@ -25,11 +27,13 @@ class RaylibPostProcessor final : public IPostProccessor {
         void cleanupQuad();
         void cleanupShader();
 
-        unsigned int vao;
-        unsigned int vbo;
-        unsigned int ebo;
+        unsigned int m_vao;
+        unsigned int m_vbo;
+        unsigned int m_ebo;
 
-        std::unique_ptr<IShader> shader;
+        std::unique_ptr<IShader> m_shader;
 };
+
+}
 
 #endif //SHIMERA_RAYLIBPOSTPROCESSOR_HPP

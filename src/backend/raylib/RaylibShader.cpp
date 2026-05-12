@@ -4,22 +4,28 @@
 #include <iostream>
 #include <stdexcept>
 #include <variant>
-#include "uniform/Vec4.hpp"
+#include "uniform/Vec4.inl"
 
-RaylibShader::RaylibShader() : programId(0) {}
+using shimera::RaylibShader;
+using shimera::UniformValue;
+using shimera::Vec2;
+using shimera::Vec3;
+using shimera::Vec4;
+
+RaylibShader::RaylibShader() : m_programId(0) {}
 
 RaylibShader::~RaylibShader() {
-    if (programId != 0) {
-        GLC(glDeleteProgram(programId));
+    if (m_programId != 0) {
+        GLC(glDeleteProgram(m_programId));
     }
 }
 
 void RaylibShader::loadFromFiles(const std::string& vertPath, const std::string& fragPath) {
     ShaderProgramSource source = parseShader(vertPath, fragPath);
     
-    programId = createShader(source.vertex, source.fragment);
+    m_programId = createShader(source.vertex, source.fragment);
     
-    if (programId == 0) {
+    if (m_programId == 0) {
         throw std::runtime_error("Failed to create shader program from files: " + vertPath + ", " + fragPath);
     }
     
@@ -33,7 +39,7 @@ void RaylibShader::loadFromFiles(const std::string& vertPath, const std::string&
 }
 
 void RaylibShader::bind() const {
-    GLC(glUseProgram(programId));
+    GLC(glUseProgram(m_programId));
 }
 
 void RaylibShader::unbind() const {
@@ -66,18 +72,18 @@ void RaylibShader::setUniform(const std::string& name, const UniformValue& value
 }
 
 uint32_t RaylibShader::getNativeHandle() const {
-    return programId;
+    return m_programId;
 }
 
 int RaylibShader::getUniformLocation(const std::string& name) {
     // Cache checking
-    auto it = uniformCache.find(name);
-    if (it != uniformCache.end()) {
+    auto it = m_uniformCache.find(name);
+    if (it != m_uniformCache.end()) {
         return it->second;
     }
 
-    GLC(int location = glGetUniformLocation(programId, name.c_str()));
-    uniformCache[name] = location;
+    GLC(int location = glGetUniformLocation(m_programId, name.c_str()));
+    m_uniformCache[name] = location;
     
     return location;
 }

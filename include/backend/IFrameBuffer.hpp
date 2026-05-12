@@ -3,7 +3,9 @@
 
 #include <shimera_api.h>
 #include "ITexture.hpp"
-#include "../Color.hpp"
+#include "../Color.inl"
+
+namespace shimera {
 
 /**
  * Framebuffer interface
@@ -30,5 +32,7 @@ class SHIMERA_API IFrameBuffer {
          */
         virtual void* getNativeRenderTarget() = 0;
 };
+
+}
 
 #endif //SHIMERA_IFRAMEBUFFER_HPP

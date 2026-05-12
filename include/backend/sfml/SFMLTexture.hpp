@@ -1,7 +1,10 @@
-#ifndef SHIMERA_SFML_SFMLTEXTURE_HPP
-#define SHIMERA_SFML_SFMLTEXTURE_HPP
+#ifndef SHIMERA_SFMLTEXTURE_HPP
+#define SHIMERA_SFMLTEXTURE_HPP
 
+#include <SFML/Graphics/Texture.hpp>
 #include "backend/ITexture.hpp"
+
+namespace shimera {
 
 /**
  * SFML Texture wrapper implementing ITexture interface
@@ -19,7 +22,9 @@ public:
     [[nodiscard]] int getHeight() const override;
 
 private:
-    const sf::Texture& texture;
+    const sf::Texture& m_texture;
 };
 
-#endif //SHIMERA_SFML_SFMLTEXTURE_HPP
+}
+
+#endif //SHIMERA_SFMLTEXTURE_HPP

@@ -9,7 +9,9 @@
 #include <map>
 #include <string>
 
-#include "uniform/Uniform.hpp"
+#include "uniform/Uniform.inl"
+
+namespace shimera {
 
 template<typename C>
 class PostProcessingPipelineBase {
@@ -30,5 +32,7 @@ class PostProcessingPipelineBase {
         int width = 0;
         int height = 0;
 };
+
+}
 
 #endif //SHIMERA_POSTPROCESSINGPIPELINE_INL

@@ -4,9 +4,11 @@
 #include "ShaderEffect.inl"
 #include "backend/IBackend.hpp"
 
+namespace shimera {
+
 class SHIMERA_API BrightnessEffect final : public ShaderEffect<BrightnessEffect> {
     public:
-        float u_strength = 0.0f;
+        float m_uStrength = 0.0f;
 
         explicit BrightnessEffect(IBackend *backend);
 
@@ -16,5 +18,7 @@ class SHIMERA_API BrightnessEffect final : public ShaderEffect<BrightnessEffect>
 
         BrightnessEffect &withStrength(float u_strength);
 };
+
+}
 
 #endif //SHIMERA_BRIGHTNESSEFFECT_HPP

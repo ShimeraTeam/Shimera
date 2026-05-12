@@ -1,10 +1,12 @@
-#ifndef SHIMERA_OPENGL_OPENGLFRAMEBUFFER_HPP
-#define SHIMERA_OPENGL_OPENGLFRAMEBUFFER_HPP
+#ifndef SHIMERA_OPENGLFRAMEBUFFER_HPP
+#define SHIMERA_OPENGLFRAMEBUFFER_HPP
 
 #include <memory>
 
 #include "backend/IFrameBuffer.hpp"
 #include "backend/opengl/OpenGLTexture.hpp"
+
+namespace shimera {
 
 /**
  * OpenGL Framebuffer implementation
@@ -30,11 +32,13 @@ class OpenGLFramebuffer final : public IFrameBuffer {
         void* getNativeRenderTarget() override;
 
     private:
-        unsigned int fbo;
-        unsigned int rbo;
-        std::unique_ptr<OpenGLTexture> texture;
+        unsigned int m_fbo;
+        unsigned int m_rbo;
+        std::unique_ptr<OpenGLTexture> m_texture;
         int m_width;
         int m_height;
 };
 
-#endif //SHIMERA_OPENGL_OPENGLFRAMEBUFFER_HPP
+}
+
+#endif //SHIMERA_OPENGLFRAMEBUFFER_HPP

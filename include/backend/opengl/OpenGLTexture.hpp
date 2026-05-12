@@ -1,7 +1,9 @@
-#ifndef SHIMERA_OPENGL_OPENGLTEXTURE_HPP
-#define SHIMERA_OPENGL_OPENGLTEXTURE_HPP
+#ifndef SHIMERA_OPENGLTEXTURE_HPP
+#define SHIMERA_OPENGLTEXTURE_HPP
 
 #include "backend/ITexture.hpp"
+
+namespace shimera {
 
 /**
  * OpenGL Texture implementation owning ITexture interface
@@ -24,9 +26,11 @@ class OpenGLTexture final : public ITexture {
         [[nodiscard]] int getHeight() const override;
 
     private:
-        unsigned int textureId;
-        int width;
-        int height;
+        unsigned int m_textureId;
+        int m_width;
+        int m_height;
 };
 
-#endif //SHIMERA_OPENGL_OPENGLTEXTURE_HPP
+}
+
+#endif //SHIMERA_OPENGLTEXTURE_HPP

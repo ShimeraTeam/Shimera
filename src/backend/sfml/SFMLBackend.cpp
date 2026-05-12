@@ -1,16 +1,25 @@
 #include "backend/sfml/SFMLBackend.hpp"
 #include "backend/sfml/SFMLFramebuffer.hpp"
-#include "backend/sfml/SFMLPostProccessor.hpp"
+#include "backend/sfml/SFMLPostProcessor.hpp"
 #include "backend/sfml/SFMLShader.hpp"
 #include "backend/sfml/SFMLTexture.hpp"
 #include <stdexcept>
+
+using shimera::IFrameBuffer;
+using shimera::IPostProcessor;
+using shimera::IShader;
+using shimera::ITexture;
+using shimera::SFMLBackend;
+using shimera::SFMLFramebuffer;
+using shimera::SFMLPostProcessor;
+using shimera::SFMLShader;
 
 IFrameBuffer* SFMLBackend::createFrameBuffer(int width, int height) {
     return new SFMLFramebuffer(width, height);
 }
 
-IPostProccessor* SFMLBackend::createPostProcessor(const std::string& vert, const std::string& frag) {
-    auto processor = new SFMLPostProccessor();
+IPostProcessor* SFMLBackend::createPostProcessor(const std::string& vert, const std::string& frag) {
+    auto processor = new SFMLPostProcessor();
     processor->setShader(vert, frag);
     return processor;
 }

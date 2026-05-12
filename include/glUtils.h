@@ -2,7 +2,7 @@
     #define OPENGL_LEARNING_UTILS_H
 
     #include <shimera_api.h>
-    #include <string>
+#include <string>
 
     // Cross-platform debug break
     #if defined(_WIN32) || defined(_MSC_VER)
@@ -20,11 +20,16 @@
     x;\
     ASSERT(cglLogCall(#x, __FILE__, __LINE__));
 
-    struct ShaderProgramSource
-    {
+    namespace shimera {
+
+    struct ShaderProgramSource {
         std::string vertex;
         std::string fragment;
     };
+
+    }
+
+    using ShaderProgramSource = shimera::ShaderProgramSource;
 
     SHIMERA_API void cglClearError();
     SHIMERA_API bool cglLogCall(const char *function, const char *file, int line);

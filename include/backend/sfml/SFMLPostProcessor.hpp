@@ -1,23 +1,20 @@
-#ifndef SHIMERA_OPENGLPOSTPROCESSOR_HPP
-#define SHIMERA_OPENGLPOSTPROCESSOR_HPP
-
-#include <memory>
+#ifndef SHIMERA_SFMLPOSTPROCESSOR_HPP
+#define SHIMERA_SFMLPOSTPROCESSOR_HPP
 
 #include "backend/IPostProcessor.hpp"
+#include "backend/IShader.hpp"
+#include <memory>
 
 namespace shimera {
 
-/**
- * OpenGL Post-Processor implementation
- * Renders a full-screen quad with a post-processing shader and input texture
- */
-class OpenGLPostProcessor final : public IPostProcessor {
+class SFMLPostProcessor final : public IPostProcessor {
     public:
-        OpenGLPostProcessor();
-        ~OpenGLPostProcessor() override;
+        SFMLPostProcessor();
+        ~SFMLPostProcessor() override;
 
-        OpenGLPostProcessor(const OpenGLPostProcessor&) = delete;
-        OpenGLPostProcessor& operator=(const OpenGLPostProcessor&) = delete;
+        // Prevent copying
+        SFMLPostProcessor(const SFMLPostProcessor&) = delete;
+        SFMLPostProcessor& operator=(const SFMLPostProcessor&) = delete;
 
         void setShader(const std::string& vert, const std::string& frag) override;
         void render(ITexture& texture) override;
@@ -39,4 +36,4 @@ class OpenGLPostProcessor final : public IPostProcessor {
 
 }
 
-#endif //SHIMERA_OPENGLPOSTPROCESSOR_HPP
+#endif //SHIMERA_SFMLPOSTPROCESSOR_HPP

@@ -11,11 +11,13 @@
 #include "backend/sfml/SFMLFramebuffer.hpp"
 #include "effects/ChromaticAberration.hpp"
 #include "effects/DistortionEffect.hpp"
-#include "effects/ColorshiftEffect.hpp"
+#include "effects/ColortintEffect.hpp"
 #include "effects/GrayscaleEffect.hpp"
 #include "effects/SaturationEffect.hpp"
 #include "effects/BrightnessEffect.hpp"
 #include "effects/ContrastEffect.hpp"
+
+using namespace shimera;
 
 
 int main()
@@ -104,7 +106,7 @@ int main()
         // 1. sceneFramebuffer (original) -> distortion -> tempFramebuffer
         // 2. tempFramebuffer -> grayscale (saturation=0.0) -> screen
         // Update the necessary uniforms for the distortion effect
-        distortionEffect.time = time;
+        distortionEffect.m_uTime = time;
         // Pass 1: Apply distortion -> tempFramebuffer
         tempFramebuffer->bind();
         glClear(GL_COLOR_BUFFER_BIT);

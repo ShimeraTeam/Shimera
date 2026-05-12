@@ -5,7 +5,9 @@
 #include <cstdint>
 #include <string>
 
-#include "uniform/Uniform.hpp"
+#include "uniform/Uniform.inl"
+
+namespace shimera {
 
 class SHIMERA_API IShader {
     public:
@@ -16,5 +18,7 @@ class SHIMERA_API IShader {
         virtual void setUniform(const std::string& name, const UniformValue& value) = 0;
         [[nodiscard]] virtual uint32_t getNativeHandle() const = 0;
 };
+
+}
 
 #endif //SHIMERA_ISHADER_HPP

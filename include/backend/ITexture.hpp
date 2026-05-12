@@ -3,6 +3,8 @@
 
 #include <shimera_api.h>
 
+namespace shimera {
+
 class SHIMERA_API ITexture {
     public:
         virtual ~ITexture() = default;
@@ -13,5 +15,7 @@ class SHIMERA_API ITexture {
         [[nodiscard]] virtual int getWidth() const = 0;
         [[nodiscard]] virtual int getHeight() const = 0;
 };
+
+}
 
 #endif //SHIMERA_ITEXTURE_HPP

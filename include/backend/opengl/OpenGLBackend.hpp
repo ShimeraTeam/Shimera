@@ -1,7 +1,9 @@
-#ifndef SHIMERA_OPENGL_OPENGLBACKEND_HPP
-#define SHIMERA_OPENGL_OPENGLBACKEND_HPP
+#ifndef SHIMERA_OPENGLBACKEND_HPP
+#define SHIMERA_OPENGLBACKEND_HPP
 
 #include "backend/IBackend.hpp"
+
+namespace shimera {
 
 /**
  * OpenGL backend implementation
@@ -13,9 +15,11 @@ class OpenGLBackend final : public IBackend {
         ~OpenGLBackend() override = default;
 
         IFrameBuffer* createFrameBuffer(int width, int height) override;
-        IPostProccessor* createPostProcessor(const std::string& vert, const std::string& frag) override;
+        IPostProcessor* createPostProcessor(const std::string& vert, const std::string& frag) override;
         ITexture* createTexture(int width, int height) override;
         IShader* createShader(const std::string& vert, const std::string& frag) override;
 };
 
-#endif //SHIMERA_OPENGL_OPENGLBACKEND_HPP
+}
+
+#endif //SHIMERA_OPENGLBACKEND_HPP

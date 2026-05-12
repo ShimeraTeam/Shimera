@@ -6,11 +6,21 @@
 
 #include <stdexcept>
 
+using shimera::IFrameBuffer;
+using shimera::IPostProcessor;
+using shimera::IShader;
+using shimera::ITexture;
+using shimera::OpenGLBackend;
+using shimera::OpenGLFramebuffer;
+using shimera::OpenGLPostProcessor;
+using shimera::OpenGLShader;
+using shimera::OpenGLTexture;
+
 IFrameBuffer* OpenGLBackend::createFrameBuffer(int width, int height) {
     return new OpenGLFramebuffer(width, height);
 }
 
-IPostProccessor* OpenGLBackend::createPostProcessor(const std::string& vert, const std::string& frag) {
+IPostProcessor* OpenGLBackend::createPostProcessor(const std::string& vert, const std::string& frag) {
     auto processor = new OpenGLPostProcessor();
     processor->setShader(vert, frag);
     return processor;

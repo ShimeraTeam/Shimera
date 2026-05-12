@@ -5,6 +5,8 @@
 #include <string>
 #include <unordered_map>
 
+namespace shimera {
+
 /**
  * Raylib Shader implementation using OpenGL
  * Since Raylib uses OpenGL underneath, we use raw OpenGL shader management
@@ -29,9 +31,11 @@ class RaylibShader final : public IShader {
     private:
         int getUniformLocation(const std::string& name);
     
-        uint32_t programId;
+        uint32_t m_programId;
         // Uniform cache to lower the CPU and GPU communications
-        std::unordered_map<std::string, int> uniformCache;
+        std::unordered_map<std::string, int> m_uniformCache;
 };
+
+}
 
 #endif //SHIMERA_RAYLIBSHADER_HPP

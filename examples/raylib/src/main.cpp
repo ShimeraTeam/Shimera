@@ -26,18 +26,23 @@ int main() {
 
     Vector3 cubePosition = { 0.0f, 0.0f, 0.0f };
 
-    IBackend *backend = BackendFactory::create();
+    shimera::IBackend *backend = shimera::BackendFactory::create();
     if (!backend) {
         std::cerr << "Failed to create backend!" << std::endl;
         return -1;
     }
 
-    IFrameBuffer *sceneFramebuffer = backend->createFrameBuffer(800, 400);
+    shimera::IFrameBuffer *sceneFramebuffer = backend->createFrameBuffer(800, 400);
+    shimera::IFrameBuffer *tempFramebuffer = backend->createFrameBuffer(800, 400);
 
-    DistortionEffect distortionEffect(backend);
+    shimera::DistortionEffect distortionEffect(backend);
     distortionEffect.withDistortionStrength(0.2f)
                     .withNoiseScale(4.0f);
 
+    shimera::IPostProcessor *grayscaleEffect = backend->createPostProcessor(
+        "../../../../res/shader/postprocessing/postprocess.vert",
+        "../../../../res/shader/postprocessing/grayscale.frag"
+    );
     SetTargetFPS(60);
     float time = 0.0f;
 
@@ -63,14 +68,22 @@ int main() {
 
         BeginDrawing();
             ClearBackground(BLACK);
-            distortionEffect.time = time;
+            distortionEffect.m_uTime = time;
+
+            tempFramebuffer->bind();
+            tempFramebuffer->clear(shimera::Color{0, 0, 0, 1});
             distortionEffect.render(sceneFramebuffer->getTexture());
+            tempFramebuffer->unbind();
+
+            grayscaleEffect->render(tempFramebuffer->getTexture());
             time += 0.006f;
             
         EndDrawing();
     }
 
     CloseWindow();
+    delete grayscaleEffect;
+    delete tempFramebuffer;
     delete sceneFramebuffer;
     delete backend;
     return 0;
