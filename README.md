@@ -1,6 +1,10 @@
 # Shimera
 
-A C++ library for Shaders, designed to work with SFML, Raylib, or pure OpenGL projects.
+Shimera is a C++ library designed to allow its users (mainly developers) to implement visual effects on top of their graphical projects without using any GPU knowledge. The library provides a set of shaders that can be easily integrated into OpenGL, SFML, and Raylib projects. Each shader comes with a callable function that allows users to implement and modify the shader's parameters according to their needs.
+
+Our goal is to provide a simple and efficient way for developers to add visual effects to their projects without even touching shader code.
+
+![Example](./res/assets/Distorsion-AberrationChromatic.gif)
 
 ## Requirements
 
