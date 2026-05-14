@@ -9,13 +9,7 @@
 #include <shimera.h>
 #include "backend/BackendFactory.hpp"
 #include "backend/sfml/SFMLFramebuffer.hpp"
-#include "effects/ChromaticAberration.hpp"
-#include "effects/DistortionEffect.hpp"
-#include "effects/ColortintEffect.hpp"
-#include "effects/GrayscaleEffect.hpp"
-#include "effects/SaturationEffect.hpp"
-#include "effects/BrightnessEffect.hpp"
-#include "effects/ContrastEffect.hpp"
+#include "effects/PixelisationEffect.hpp"
 
 using namespace shimera;
 
@@ -40,44 +34,37 @@ int main()
         return -1;
     }
 
-    // Create framebuffers for ping-pong rendering
+    // Create framebuffer for the scene
     IFrameBuffer *sceneFramebuffer = backend->createFrameBuffer(960, 540);
-    IFrameBuffer *tempFramebuffer = backend->createFrameBuffer(960, 540);  // Intermediate pass
-    IFrameBuffer *finalFramebuffer = backend->createFrameBuffer(960, 540); // Final pass (optional, can render directly to screen)
 
-    DistortionEffect distortionEffect(backend);
-    distortionEffect.withDistortionStrength(0.2f)
-                    .withNoiseScale(4.0f);
-
-    ChromaticAberrationEffect chromaticAberrationEffect(backend);
-    chromaticAberrationEffect.withStrength(0.4f)
-                            .withRadius(true)
-                            .withContrast(1.5f)
-                            .withSamples(30);
+    PixelisationEffect pixelisationEffect(backend);
+    pixelisationEffect.withPixelSizeX(8.0f)
+                      .withPixelSizeY(8.0f)
+                      .withResolution(Vec2(960.0f, 540.0f))
+                      .withOffset(Vec2(0.5f, 0.5f));
 
 
-    sf::CircleShape circle(80.f);
-    circle.setFillColor(sf::Color::Magenta);
-    circle.setPosition(sf::Vector2f(210.f - 80.f, 270.f - 80.f));
+    // sf::CircleShape circle(80.f);
+    // circle.setFillColor(sf::Color::Magenta);
+    // circle.setPosition(sf::Vector2f(210.f - 80.f, 270.f - 80.f));
 
-    sf::RectangleShape rectangle(sf::Vector2f(160.f, 160.f));
-    rectangle.setFillColor(sf::Color::White);
-    rectangle.setPosition(sf::Vector2f(480.f - 80.f, 270.f - 80.f));
+    // sf::RectangleShape rectangle(sf::Vector2f(160.f, 160.f));
+    // rectangle.setFillColor(sf::Color::White);
+    // rectangle.setPosition(sf::Vector2f(480.f - 80.f, 270.f - 80.f));
 
-    sf::CircleShape triangle(105.f, 3);
-    triangle.setFillColor(sf::Color::Yellow);
-    triangle.setPosition(sf::Vector2f(750.f - 105.f, 270.f - 80.f));
+    // sf::CircleShape triangle(105.f, 3);
+    // triangle.setFillColor(sf::Color::Yellow);
+    // triangle.setPosition(sf::Vector2f(750.f - 105.f, 270.f - 80.f));
 
-    // To draw a picture, uncomment the line below
-    // sf::Texture texture;
-    // if (!texture.loadFromFile("../../../../examples/res/test.jpg")) {
-    //     std::cerr << "Error loading image" << std::endl;
-    // }
-    // sf::Sprite sprite(texture);
-    // sprite.setPosition(sf::Vector2f(0.f, 0.f));
-    // sprite.setScale(sf::Vector2f(0.5f, 0.5f)); // 50% de la taille originale (1920x1080 -> 960x540)
+    sf::Texture texture;
+    if (!texture.loadFromFile("../../../../examples/res/assets/image_test.jpg")) {
+        std::cerr << "Error loading image" << std::endl;
+        return -1;
+    }
+    sf::Sprite sprite(texture);
+    sprite.setPosition(sf::Vector2f(0.f, 0.f));
+    sprite.setScale(sf::Vector2f(0.5f, 0.5f));
 
-    float time = 0.0f;
     while (window.isOpen())
     {
         while (const std::optional event = window.pollEvent())
@@ -89,42 +76,26 @@ int main()
         if (!window.setActive(true))
             break;
 
-        // Render scene to the first framebuffer ("scene"Framebuffer)
+        // Render scene to the framebuffer
         auto *sfmlRenderTexture = static_cast<sf::RenderTexture*>(sceneFramebuffer->getNativeRenderTarget());
 
         sfmlRenderTexture->clear(sf::Color::Black);
-        // sfmlRenderTexture->draw(sprite);
-        sfmlRenderTexture->draw(circle);
-        sfmlRenderTexture->draw(rectangle);
-        sfmlRenderTexture->draw(triangle);
+        sfmlRenderTexture->draw(sprite);
+        // sfmlRenderTexture->draw(circle);
+        // sfmlRenderTexture->draw(rectangle);
+        // sfmlRenderTexture->draw(triangle);
         sceneFramebuffer->unbind(); // Calls display() internally
 
-        // Ensure window context is active for post-processing
-        window.setActive(true);
-
-        // Multi-pass rendering chain:
-        // 1. sceneFramebuffer (original) -> distortion -> tempFramebuffer
-        // 2. tempFramebuffer -> grayscale (saturation=0.0) -> screen
-        // Update the necessary uniforms for the distortion effect
-        distortionEffect.m_uTime = time;
-        // Pass 1: Apply distortion -> tempFramebuffer
-        tempFramebuffer->bind();
-        glClear(GL_COLOR_BUFFER_BIT);
-        distortionEffect.render(sceneFramebuffer->getTexture());
-        tempFramebuffer->unbind();
-
+        // Apply pixelisation and render to screen
         window.setActive(true);
         glClear(GL_COLOR_BUFFER_BIT);
-        chromaticAberrationEffect.render(tempFramebuffer->getTexture());
-
-        time += 0.006f;
+        pixelisationEffect.render(sceneFramebuffer->getTexture());
 
         window.display();
     }
 
     // Cleanup
     //TODO: Maybe try to auto clean this (do that in the destructor of the respective classes)
-    delete tempFramebuffer;
     delete sceneFramebuffer;
     delete backend;
 
