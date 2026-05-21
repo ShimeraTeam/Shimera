@@ -7,14 +7,14 @@ repos:
         entry: .githooks/validate-commit-msg.sh
         language: script
         stages: [commit-msg]
--   repo: local
-    hooks:
+
       - id: compile-commands
         name: Generate compile_commands.json
         entry: xmake project -k compile_commands --outputdir=build
         language: system
         pass_filenames: false
         always_run: true
+        stages: [ commit-msg ]
 
       - id: clang-tidy
         name: clang-tidy
@@ -22,3 +22,4 @@ repos:
         language: system
         args: [ "-p=build" ]
         types: [ c++ ]
+        stages: [ commit-msg ]
