@@ -1,0 +1,30 @@
+Checks: >
+  -*,
+  bugprone-*,
+  modernize-*,
+  -modernize-use-trailing-return-type,
+  -modernize-use-constraints,
+  performance-*,
+  readability-*,
+  -readability-magic-numbers,
+  -readability-identifier-length,
+  -readability-uppercase-literal-suffix,
+  misc-*,
+  -misc-non-private-member-variables-in-classes,
+  clang-analyzer-*,
+  -clang-analyzer-alpha.*,
+  cert-*,
+  -cert-err33-c,
+  -bugprone-easily-swappable-parameters,
+  -misc-include-cleaner
+
+WarningsAsErrors: ''
+HeaderFilterRegex: '.*/Shimera/(include|src|tests|examples)/.*'
+
+CheckOptions:
+  - key: modernize-use-nullptr
+    value: true
+  - key: readability-identifier-naming.ClassCase
+    value: CamelCase
+  - key: readability-identifier-naming.FunctionCase
+    value: camelBack
