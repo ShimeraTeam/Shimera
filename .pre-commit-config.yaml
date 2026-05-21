@@ -9,10 +9,16 @@ repos:
         stages: [commit-msg]
 -   repo: local
     hooks:
+      - id: compile-commands
+        name: Generate compile_commands.json
+        entry: xmake project -k compile_commands --outputdir=build
+        language: system
+        pass_filenames: false
+        always_run: true
+
       - id: clang-tidy
         name: clang-tidy
         entry: clang-tidy
         language: system
         args: [ "-p=build" ]
         types: [ c++ ]
-        stages: [manual]
