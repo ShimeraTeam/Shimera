@@ -14,7 +14,7 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
-        stages: [ commit-msg ]
+        stages: [ pre-commit ]
 
       - id: clang-tidy
         name: clang-tidy
@@ -22,4 +22,4 @@ repos:
         language: system
         args: [ "-p=build" ]
         types: [ c++ ]
-        stages: [ commit-msg ]
+        stages: [ pre-commit ]
