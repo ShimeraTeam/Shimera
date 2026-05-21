@@ -7,3 +7,12 @@ repos:
         entry: .githooks/validate-commit-msg.sh
         language: script
         stages: [commit-msg]
+-   repo: local
+    hooks:
+      - id: clang-tidy
+        name: clang-tidy
+        entry: clang-tidy
+        language: system
+        args: [ "-p=build" ]
+        types: [ c++ ]
+        stages: [manual]
