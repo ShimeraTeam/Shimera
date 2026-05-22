@@ -20,15 +20,15 @@ int main() {
 
     // Test 1 : backend
     {
-        const IBackend *backend = BackendFactory::create();
+        const shimera::IBackend *backend = shimera::BackendFactory::create();
         delete backend;
     }
 
     // Test 2 : framebuffers
     {
-        IBackend *backend = BackendFactory::create();
-        const IFrameBuffer *fb1 = backend->createFrameBuffer(960, 540);
-        const IFrameBuffer *fb2 = backend->createFrameBuffer(960, 540);
+        shimera::IBackend *backend = shimera::BackendFactory::create();
+        const shimera::IFrameBuffer *fb1 = backend->createFrameBuffer(960, 540);
+        const shimera::IFrameBuffer *fb2 = backend->createFrameBuffer(960, 540);
         delete fb1;
         delete fb2;
         delete backend;
@@ -36,8 +36,8 @@ int main() {
 
     // Test 3 : post processor
     {
-        IBackend *backend = BackendFactory::create();
-        const IPostProccessor *pp = backend->createPostProcessor(
+        shimera::IBackend *backend = shimera::BackendFactory::create();
+        const shimera::IPostProcessor *pp = backend->createPostProcessor(
             "../../../../res/shader/postprocessing/postprocess.vert",
             "../../../../res/shader/postprocessing/normal.frag"
         );
@@ -47,17 +47,17 @@ int main() {
 
     // Test 4 : effects
     {
-        IBackend *backend = BackendFactory::create();
-        const DistortionEffect *effect = new DistortionEffect(backend);
+        shimera::IBackend *backend = shimera::BackendFactory::create();
+        const shimera::DistortionEffect *effect = new shimera::DistortionEffect(backend);
         delete effect;
         delete backend;
     }
 
     // Test 5 : create framebuffer in a loop
     {
-        IBackend *backend = BackendFactory::create();
+        shimera::IBackend *backend = shimera::BackendFactory::create();
         for (int i = 0; i < 100; i++) {
-            const IFrameBuffer *fb = backend->createFrameBuffer(960, 540);
+            const shimera::IFrameBuffer *fb = backend->createFrameBuffer(960, 540);
             delete fb;
         }
         delete backend;
