@@ -25,10 +25,10 @@ int main() {
     GLint vramBefore = 0;
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
 
-    IBackend *backend = BackendFactory::create();
-    IFrameBuffer *sceneFramebuffer = backend->createFrameBuffer(960, 540);
+    shimera::IBackend *backend = shimera::BackendFactory::create();
+    shimera::IFrameBuffer *sceneFramebuffer = backend->createFrameBuffer(960, 540);
 
-    DistortionEffect distortionEffect(backend);
+    shimera::DistortionEffect distortionEffect(backend);
     distortionEffect.withDistortionStrength(0.2f)
                     .withNoiseScale(4.0f);
 
@@ -65,7 +65,7 @@ int main() {
         sfmlRenderTexture->draw(triangle);
         sceneFramebuffer->unbind();
         window.setActive(true);
-        distortionEffect.time = time;
+        distortionEffect.m_uTime = time;
         distortionEffect.render(sceneFramebuffer->getTexture());
         time += 0.006f;
         window.display();
@@ -81,7 +81,7 @@ int main() {
         sfmlRenderTexture->draw(triangle);
         sceneFramebuffer->unbind();
         window.setActive(true);
-        distortionEffect.time = time;
+        distortionEffect.m_uTime = time;
         distortionEffect.render(sceneFramebuffer->getTexture());
         time += 0.006f;
         window.display();

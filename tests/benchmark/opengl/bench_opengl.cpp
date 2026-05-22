@@ -64,7 +64,7 @@ int main() {
     GLC(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
     GLC(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW));
 
-    ShaderProgramSource source = parseShader(
+    shimera::ShaderProgramSource source = parseShader(
         "../../../../res/shader/basic.vert",
         "../../../../res/shader/basic.frag"
         );
@@ -72,7 +72,7 @@ int main() {
     unsigned int shader = createShader(source.vertex, source.fragment);
     GLC(glUseProgram(shader));
 
-    Uniform colorUniform(shader, "u_Color", Vec4(0.3f, 0.3f, 0.8f, 1.0f));
+    shimera::Uniform colorUniform(shader, "u_Color", shimera::Vec4(0.3f, 0.3f, 0.8f, 1.0f));
 
     unsigned int vao;
     GLC(glGenVertexArrays(1, &vao));
@@ -91,10 +91,10 @@ int main() {
     GLint vramBefore = 0;
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
 
-    IBackend *backend = BackendFactory::create();
-    IFrameBuffer *sceneFramebuffer = backend->createFrameBuffer(960, 540);
+    shimera::IBackend *backend = shimera::BackendFactory::create();
+    shimera::IFrameBuffer *sceneFramebuffer = backend->createFrameBuffer(960, 540);
 
-    DistortionEffect distortionEffect(backend);
+    shimera::DistortionEffect distortionEffect(backend);
     distortionEffect.withDistortionStrength(0.2f)
                     .withNoiseScale(4.0f);
 
@@ -120,7 +120,7 @@ int main() {
 
         // Use the basic shader and bind VAO
         GLC(glUseProgram(shader));
-        colorUniform = Vec4(r, 0.3f, 0.8f, 1.0f);
+        colorUniform = shimera::Vec4(r, 0.3f, 0.8f, 1.0f);
         GLC(glBindVertexArray(vao));
         GLC(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
@@ -130,7 +130,7 @@ int main() {
 
         // Render to screen
         sceneFramebuffer->unbind();
-        distortionEffect.time = time;
+        distortionEffect.m_uTime = time;
         GLC(glClearColor(0.1f, 0.1f, 0.1f, 1.0f));
         GLC(glClear(GL_COLOR_BUFFER_BIT));
         distortionEffect.render(sceneFramebuffer->getTexture());
@@ -148,7 +148,7 @@ int main() {
 
         // Use the basic shader and bind VAO
         GLC(glUseProgram(shader));
-        colorUniform = Vec4(r, 0.3f, 0.8f, 1.0f);
+        colorUniform = shimera::Vec4(r, 0.3f, 0.8f, 1.0f);
         GLC(glBindVertexArray(vao));
         GLC(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
@@ -158,7 +158,7 @@ int main() {
 
         // Render to screen
         sceneFramebuffer->unbind();
-        distortionEffect.time = time;
+        distortionEffect.m_uTime = time;
         GLC(glClearColor(0.1f, 0.1f, 0.1f, 1.0f));
         GLC(glClear(GL_COLOR_BUFFER_BIT));
         distortionEffect.render(sceneFramebuffer->getTexture());
