@@ -19,12 +19,12 @@ IFrameBuffer* SFMLBackend::createFrameBuffer(int width, int height) {
 }
 
 IPostProcessor* SFMLBackend::createPostProcessor(const std::string& vert, const std::string& frag) {
-    auto processor = new SFMLPostProcessor();
+    auto *processor = new SFMLPostProcessor();
     processor->setShader(vert, frag);
     return processor;
 }
 
-ITexture* SFMLBackend::createTexture(int width, int height) {
+ITexture* SFMLBackend::createTexture(int /*width*/, int /*height*/) {
     /** For SFML, we need to create an sf::Texture, but ITexture interface expects
     to wrap an existing texture. This would need a separate SFMLOwnedTexture class
     that owns its sf::Texture. For now it only throw an error because we don't have
@@ -34,7 +34,7 @@ ITexture* SFMLBackend::createTexture(int width, int height) {
 }
 
 IShader* SFMLBackend::createShader(const std::string& vert, const std::string& frag) {
-    auto shader = new SFMLShader();
+    auto *shader = new SFMLShader();
     shader->loadFromFiles(vert, frag);
     return shader;
 }

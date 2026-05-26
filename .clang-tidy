@@ -16,7 +16,13 @@ Checks: >
   cert-*,
   -cert-err33-c,
   -bugprone-easily-swappable-parameters,
-  -misc-include-cleaner
+  -misc-include-cleaner,
+  -readability-implicit-bool-conversion,
+  -readability-isolate-declaration,
+  -modernize-macro-to-enum,
+  -readability-convert-member-functions-to-static,
+  -modernize-use-designated-initializers,
+  -readability-math-missing-parentheses
 
 WarningsAsErrors: ''
 HeaderFilterRegex: '.*/Shimera/(include|src|tests|examples)/.*'

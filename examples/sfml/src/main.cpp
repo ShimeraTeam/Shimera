@@ -22,15 +22,15 @@ int main()
 
     //TODO: Try to embed that in the backend so the user doesn't have to worry about it (or at least make it optional)
     if (glewInit() != GLEW_OK) {
-        std::cerr << "[GLEW] initialization failed!" << std::endl;
+        std::cerr << "[GLEW] initialization failed!" << '\n';
         return -1;
     }
 
-    std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
+    std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << '\n';
 
     IBackend *backend = BackendFactory::create();
     if (!backend) {
-        std::cerr << "Failed to create backend!" << std::endl;
+        std::cerr << "Failed to create backend!" << '\n';
         return -1;
     }
 
@@ -58,7 +58,7 @@ int main()
 
     sf::Texture texture;
     if (!texture.loadFromFile("../../../../examples/res/assets/image_test.jpg")) {
-        std::cerr << "Error loading image" << std::endl;
+        std::cerr << "Error loading image" << '\n';
         return -1;
     }
     sf::Sprite sprite(texture);
@@ -69,12 +69,14 @@ int main()
     {
         while (const std::optional event = window.pollEvent())
         {
-            if (event->is<sf::Event::Closed>())
+            if (event->is<sf::Event::Closed>()) {
                 window.close();
+            }
         }
 
-        if (!window.setActive(true))
+        if (!window.setActive(true)) {
             break;
+        }
 
         // Render scene to the framebuffer
         auto *sfmlRenderTexture = static_cast<sf::RenderTexture*>(sceneFramebuffer->getNativeRenderTarget());

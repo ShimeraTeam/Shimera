@@ -36,7 +36,7 @@ int main() {
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramAfter);
 
     if (vramBefore >= 0 && vramAfter >= 0) {
-        GLint usedKb = vramBefore - vramAfter;
+        const GLint usedKb = vramBefore - vramAfter;
         std::cout << "[VRAM BENCH] GPU  : " << glGetString(GL_RENDERER) << "\n";
         std::cout << "[VRAM BENCH] Used : " << usedKb / 1024 << " MB" << " (" << usedKb << " KB)\n";
     }
@@ -48,7 +48,7 @@ int main() {
     camera.fovy       = 25.0f;
     camera.projection = CAMERA_PERSPECTIVE;
 
-    Vector3 cubePosition = { 0.0f, 0.0f, 0.0f };
+    const Vector3 cubePosition = { 0.0f, 0.0f, 0.0f };
 
     float time = 0.0f;
 
@@ -85,11 +85,11 @@ int main() {
     }
 
     auto end = std::chrono::high_resolution_clock::now();
-    double totalMs = std::chrono::duration<double, std::milli>(end - start).count();
-    double avgFps  = FRAMES / (totalMs / 1000.0);
+    const double totalMs = std::chrono::duration<double, std::milli>(end - start).count();
+    const double avgFps  = FRAMES / (totalMs / 1000.0);
 
-    std::cout << "[FPS RAYLIB BENCH] Frames    : " << FRAMES   << std::endl;
-    std::cout << "[FPS RAYLIB BENCH] Avg FPS   : " << avgFps   << std::endl;
+    std::cout << "[FPS RAYLIB BENCH] Frames    : " << FRAMES   << '\n';
+    std::cout << "[FPS RAYLIB BENCH] Avg FPS   : " << avgFps   << '\n';
 
     delete sceneFramebuffer;
     delete backend;
