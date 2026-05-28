@@ -71,6 +71,16 @@ void setShapes(unsigned int& buffer, unsigned int& ibo, unsigned int& vao) {
     GLC(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
     GLC(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW));
 
+    shimera::ShaderProgramSource source = parseShader(
+        "../../../../res/shader/basic.vert",
+        "../../../../res/shader/basic.frag"
+        );
+
+    unsigned int shader = createShader(source.vertex, source.fragment);
+    GLC(glUseProgram(shader));
+
+    shimera::Uniform colorUniform(shader, "u_Color", shimera::Vec4(0.3f, 0.3f, 0.8f, 1.0f));
+
     GLC(glGenVertexArrays(1, &vao));
     GLC(glBindVertexArray(vao));
 
