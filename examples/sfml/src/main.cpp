@@ -9,7 +9,7 @@
 #include <shimera.h>
 #include "backend/BackendFactory.hpp"
 #include "backend/sfml/SFMLFramebuffer.hpp"
-#include "effects/PixelisationEffect.hpp"
+#include "effects/GaussianBlurEffect.hpp"
 
 using namespace shimera;
 
@@ -17,7 +17,7 @@ using namespace shimera;
 int main()
 {
     const sf::VideoMode videoMode({960, 540});
-    sf::RenderWindow window(videoMode, "SFML3 - Multi-Pass Post-Processing");
+    sf::RenderWindow window(videoMode, "SFML3 - Gaussian Blur");
     window.setActive(true);
 
     //TODO: Try to embed that in the backend so the user doesn't have to worry about it (or at least make it optional)
@@ -37,11 +37,10 @@ int main()
     // Create framebuffer for the scene
     IFrameBuffer *sceneFramebuffer = backend->createFrameBuffer(960, 540);
 
-    PixelisationEffect pixelisationEffect(backend);
-    pixelisationEffect.withPixelSizeX(8.0f)
-                      .withPixelSizeY(8.0f)
-                      .withResolution(Vec2(960.0f, 540.0f))
-                      .withOffset(Vec2(0.5f, 0.5f));
+    GaussianBlurEffect gaussianBlurEffect(backend);
+    gaussianBlurEffect.withSigma(5.0f)
+                      .withSamples(15)
+                      .withResolution(Vec2(960.0f, 540.0f));
 
 
     // sf::CircleShape circle(80.f);
@@ -86,10 +85,10 @@ int main()
         // sfmlRenderTexture->draw(triangle);
         sceneFramebuffer->unbind(); // Calls display() internally
 
-        // Apply pixelisation and render to screen
+        // Apply gaussian blur and render to screen
         window.setActive(true);
         glClear(GL_COLOR_BUFFER_BIT);
-        pixelisationEffect.render(sceneFramebuffer->getTexture());
+        gaussianBlurEffect.render(sceneFramebuffer->getTexture());
 
         window.display();
     }

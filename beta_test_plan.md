@@ -69,10 +69,10 @@ Define the metrics and conditions that determine if the beta version is successf
 | F13 | A user can configure the Vignette shader effect | 6 configurable variables | Achieved (6/6) |
 | F14 | A user can use the Chromatic Aberration shader effect | Shader is correctly applied to the screen | Achieved |
 | F15 | A user can configure the Chromatic Aberration shader effect | 4 configurable variables | Achieved (4/4) |
-| F16 | A user can use the Gaussian Blur shader effect | Shader is correctly applied to the screen | - |
-| F17 | A user can configure the Gaussian Blur shader effect | 1 configurable variable | - |
-| F18 | A user can use the Pixelation shader effect | Shader is correctly applied to the screen | - |
-| F19 | A user can configure the Pixelation shader effect | 1 configurable variable | - |
+| F16 | A user can use the Gaussian Blur shader effect | Shader is correctly applied to the screen | Achieved |
+| F17 | A user can configure the Gaussian Blur shader effect | 3 configurable variables | Achieved (3/3) |
+| F18 | A user can use the Pixelation shader effect | Shader is correctly applied to the screen | Achieved |
+| F19 | A user can configure the Pixelation shader effect | 5 configurable variable | Achieved (5/5) |
 | F20 | A user can use the HDR Bloom shader effect | Shader is correctly applied to the screen | - |
 | F21 | A user can configure the HDR Bloom shader effect | 1 configurable variable | - |
 | F22 | A user can use the Atmospheric Scattering shader effect | Shader is correctly applied to the screen | - |
