@@ -1,0 +1,5 @@
+target("bench-raylib")
+    set_kind("binary")
+    set_default(false)
+    add_files("bench_raylib.cpp")
+    add_deps("shimera-raylib")

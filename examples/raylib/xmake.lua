@@ -19,7 +19,7 @@ target("raylib-example")
     add_includedirs("../../include")
 
     add_packages("raylib", "glew")
-    
+
     if is_plat("windows") then
         add_syslinks("opengl32")
     elseif is_plat("macosx") then
@@ -27,3 +27,4 @@ target("raylib-example")
     else
         add_syslinks("GL")
     end
+

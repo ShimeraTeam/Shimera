@@ -3,11 +3,13 @@
 #include <SFML/Graphics/Texture.hpp>
 #include "backend/sfml/SFMLTexture.hpp"
 
-SFMLTexture::SFMLTexture(const sf::Texture& texture) : texture(texture) {}
+using shimera::SFMLTexture;
+
+SFMLTexture::SFMLTexture(const sf::Texture& texture) : m_texture(texture) {}
 
 void SFMLTexture::bind(const int slot) {
     GLC(glActiveTexture(GL_TEXTURE0 + slot));
-    GLC(glBindTexture(GL_TEXTURE_2D, texture.getNativeHandle()));
+    GLC(glBindTexture(GL_TEXTURE_2D, m_texture.getNativeHandle()));
 }
 
 void SFMLTexture::unbind() {
@@ -15,13 +17,13 @@ void SFMLTexture::unbind() {
 }
 
 unsigned int SFMLTexture::getNativeHandle() const {
-    return texture.getNativeHandle();
+    return m_texture.getNativeHandle();
 }
 
 int SFMLTexture::getWidth() const {
-    return static_cast<int>(texture.getSize().x);
+    return static_cast<int>(m_texture.getSize().x);
 }
 
 int SFMLTexture::getHeight() const {
-    return static_cast<int>(texture.getSize().y);
+    return static_cast<int>(m_texture.getSize().y);
 }

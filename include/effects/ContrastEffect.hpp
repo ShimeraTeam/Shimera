@@ -4,9 +4,11 @@
 #include "ShaderEffect.inl"
 #include "backend/IBackend.hpp"
 
+namespace shimera {
+
 class SHIMERA_API ContrastEffect final : public ShaderEffect<ContrastEffect> {
     public:
-        float u_contrastFactor = 1.0f;
+        float m_uContrastFactor = 1.0f;
 
         explicit ContrastEffect(IBackend *backend);
 
@@ -16,5 +18,7 @@ class SHIMERA_API ContrastEffect final : public ShaderEffect<ContrastEffect> {
 
         ContrastEffect &withContrastFactor(float u_contrastFactor);
 };
+
+}
 
 #endif //SHIMERA_CONTRASTEFFECT_HPP

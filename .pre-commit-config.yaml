@@ -7,3 +7,19 @@ repos:
         entry: .githooks/validate-commit-msg.sh
         language: script
         stages: [commit-msg]
+
+      - id: compile-commands
+        name: Generate compile_commands.json
+        entry: xmake project -k compile_commands --outputdir=build
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [ pre-commit ]
+
+      - id: clang-tidy
+        name: clang-tidy
+        entry: clang-tidy
+        language: system
+        args: [ "-p=build" ]
+        types: [ c++ ]
+        stages: [ pre-commit ]

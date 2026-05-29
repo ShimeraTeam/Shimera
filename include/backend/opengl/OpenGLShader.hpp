@@ -1,10 +1,12 @@
-#ifndef SHIMERA_OPENGL_OPENGLSHADER_HPP
-#define SHIMERA_OPENGL_OPENGLSHADER_HPP
+#ifndef SHIMERA_OPENGLSHADER_HPP
+#define SHIMERA_OPENGLSHADER_HPP
 
 #include <string>
 #include <unordered_map>
 
 #include "backend/IShader.hpp"
+
+namespace shimera {
 
 /**
  * OpenGL Shader implementation using raw OpenGL shader management
@@ -27,8 +29,10 @@ class OpenGLShader final : public IShader {
     private:
         int getUniformLocation(const std::string& name);
 
-        uint32_t programId;
-        std::unordered_map<std::string, int> uniformCache;
+        uint32_t m_programId;
+        std::unordered_map<std::string, int> m_uniformCache;
 };
 
-#endif //SHIMERA_OPENGL_OPENGLSHADER_HPP
+}
+
+#endif //SHIMERA_OPENGLSHADER_HPP

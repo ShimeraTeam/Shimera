@@ -3,11 +3,20 @@
 #include "backend/raylib/RaylibPostProcessor.hpp"
 #include "backend/raylib/RaylibShader.hpp"
 
+using shimera::IFrameBuffer;
+using shimera::IPostProcessor;
+using shimera::IShader;
+using shimera::ITexture;
+using shimera::RaylibBackend;
+using shimera::RaylibFramebuffer;
+using shimera::RaylibPostProcessor;
+using shimera::RaylibShader;
+
 IFrameBuffer* RaylibBackend::createFrameBuffer(int width, int height) {
     return new RaylibFramebuffer(width, height);
 }
 
-IPostProccessor* RaylibBackend::createPostProcessor(const std::string& vert, const std::string& frag) {
+IPostProcessor* RaylibBackend::createPostProcessor(const std::string& vert, const std::string& frag) {
     auto processor = new RaylibPostProcessor();
     processor->setShader(vert, frag);
     return processor;

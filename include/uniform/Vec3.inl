@@ -1,6 +1,8 @@
 #ifndef SHIMERA_VEC3_HPP
 #define SHIMERA_VEC3_HPP
 
+namespace shimera {
+
 template <typename T>
 class Vec3 {
     public:
@@ -12,5 +14,7 @@ class Vec3 {
             return x == other.x && y == other.y && z == other.z;
         }
 };
+
+}
 
 #endif //SHIMERA_VEC3_HPP

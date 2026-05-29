@@ -11,12 +11,14 @@
 
 #ifdef SHIMERA_BACKEND_SFML
 #include <SFML/Graphics.hpp>
-#include "sfml/SFMLPostProccessor.hpp"
+#include "sfml/SFMLPostProcessor.hpp"
 #include "sfml/SFMLTexture.hpp"
+
+namespace shimera {
 
 class PostProcessingPipeline : public PostProcessingPipelineBase<PostProcessingPipeline>{
     sf::RenderTexture renderTexture;
-    std::unique_ptr<SFMLPostProccessor> postProcessor;
+    std::unique_ptr<SFMLPostProcessor> postProcessor;
 
     public:
         PostProcessingPipeline(const int w, const int h, const std::string& vertPath, const std::string& fragPath) {
@@ -27,7 +29,7 @@ class PostProcessingPipeline : public PostProcessingPipelineBase<PostProcessingP
                 throw std::runtime_error("Failed to create render texture");
             }
 
-            postProcessor = std::make_unique<SFMLPostProccessor>();
+            postProcessor = std::make_unique<SFMLPostProcessor>();
             postProcessor->setShader(vertPath, fragPath);
         }
 
@@ -50,6 +52,8 @@ class PostProcessingPipeline : public PostProcessingPipelineBase<PostProcessingP
             }
         }
 };
+
+}
 #endif
 
 #endif //SHIMERA_SFML_POSTPROCESSINGPIPELINE_INL

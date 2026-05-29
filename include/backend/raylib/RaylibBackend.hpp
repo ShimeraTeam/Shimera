@@ -3,6 +3,8 @@
 
 #include "backend/IBackend.hpp"
 
+namespace shimera {
+
 /**
  * Raylib backend implementation
  * Creates Raylib-specific implementations of framework interfaces
@@ -13,9 +15,11 @@ public:
     ~RaylibBackend() override = default;
 
     IFrameBuffer* createFrameBuffer(int width, int height) override;
-    IPostProccessor* createPostProcessor(const std::string& vert, const std::string& frag) override;
+    IPostProcessor* createPostProcessor(const std::string& vert, const std::string& frag) override;
     ITexture* createTexture(int width, int height) override;
     IShader* createShader(const std::string& vert, const std::string& frag) override;
 };
+
+}
 
 #endif //SHIMERA_RAYLIBBACKEND_HPP

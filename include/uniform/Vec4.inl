@@ -1,6 +1,8 @@
 #ifndef OPENGL_EXEMPLE_VEC4_H
 #define OPENGL_EXEMPLE_VEC4_H
 
+namespace shimera {
+
 template <typename T>
 class Vec4 {
     public:
@@ -11,6 +13,8 @@ class Vec4 {
             return x == other.x && y == other.y && z == other.z && w == other.w;
         }
 };
+
+}
 
 
 #endif //OPENGL_EXEMPLE_VEC4_H

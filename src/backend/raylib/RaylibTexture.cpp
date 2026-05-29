@@ -2,11 +2,13 @@
 #include <glUtils.h>
 #include "backend/raylib/RaylibTexture.hpp"
 
-RaylibTexture::RaylibTexture(const Texture& texture) : texture(texture) {}
+using shimera::RaylibTexture;
+
+RaylibTexture::RaylibTexture(const Texture& texture) : m_texture(texture) {}
 
 void RaylibTexture::bind(const int slot) {
     GLC(glActiveTexture(GL_TEXTURE0 + slot));
-    GLC(glBindTexture(GL_TEXTURE_2D, texture.id));
+    GLC(glBindTexture(GL_TEXTURE_2D, m_texture.id));
 }
 
 void RaylibTexture::unbind() {
@@ -14,13 +16,13 @@ void RaylibTexture::unbind() {
 }
 
 unsigned int RaylibTexture::getNativeHandle() const {
-    return texture.id;
+    return m_texture.id;
 }
 
 int RaylibTexture::getWidth() const {
-    return texture.width;
+    return m_texture.width;
 }
 
 int RaylibTexture::getHeight() const {
-    return texture.height;
+    return m_texture.height;
 }
