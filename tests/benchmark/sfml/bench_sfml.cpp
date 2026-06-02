@@ -4,6 +4,7 @@
 #include <chrono>
 #include "backend/BackendFactory.hpp"
 #include "effects/DistortionEffect.hpp"
+#include "../BenchmarkReport.hpp"
 
 #define GL_GPU_MEM_INFO_TOTAL_AVAILABLE_MEM_NVX 0x9048
 #define GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX 0x9049
@@ -17,6 +18,7 @@ __declspec(dllexport) unsigned long NvOptimusEnablement = 1;
 static constexpr int FRAMES = 5000;
 
 int main() {
+    BenchmarkReport report;
     sf::RenderWindow window(sf::VideoMode({960, 540}), "shimera bench - sfml");
     window.setActive(true);
     glewInit();
@@ -37,8 +39,9 @@ int main() {
     GLint vramAfter = 0;
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramAfter);
 
+    GLint usedKb;
     if (vramBefore >= 0 && vramAfter >= 0) {
-        GLint usedKb = vramBefore - vramAfter;
+        usedKb = vramBefore - vramAfter;
         std::cout << "[VRAM BENCH] GPU  : " << glGetString(GL_RENDERER) << "\n";
         std::cout << "[VRAM BENCH] Used : " << usedKb / 1024 << " MB" << " (" << usedKb << " KB)\n";
     }
@@ -93,6 +96,14 @@ int main() {
 
     std::cout << "[FPS SFML BENCH] Frames    : " << FRAMES   << std::endl;
     std::cout << "[FPS SFML BENCH] Avg FPS   : " << avgFps   << std::endl;
+
+    report.setGpu(reinterpret_cast<const char*>(glGetString(GL_RENDERER)))
+          .setBackend("Sfml")
+          .setAvgFps(avgFps)
+          .setTotalMs(totalMs)
+          .setFrames(FRAMES)
+          .setVramUsed(usedKb);
+    report.save("../../../../bench.json");
 
     delete sceneFramebuffer;
     delete backend;

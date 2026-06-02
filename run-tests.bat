@@ -3,7 +3,7 @@ Rem run-tests.bat
 
 for /f %%A in ('echo prompt $E ^| cmd') do set "ESC=%%A"
 
-cmd /c "xmake f -m debug -c"
+cmd /c "xmake f -m debug -c -y"
 cmd /c "xmake"
 
 call :run_test "Build Shimera Opengl" "xmake build shimera-opengl"
