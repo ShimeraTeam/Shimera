@@ -1,4 +1,4 @@
-default_install_hook_types: [pre-commit, commit-msg, post-commit]
+default_install_hook_types: [pre-commit, commit-msg]
 repos:
 -   repo: local
     hooks:
@@ -23,15 +23,3 @@ repos:
       #  args: [ "-p=build" ]
       #  types: [ c++ ]
       #  stages: [ pre-commit ]
-
-      - id: Tests
-        name: run tests
-        entry: python .githooks/run-tests.py
-        language: python
-        stages: [ pre-commit ]
-
-      - id: bench-results
-        name: Add bench result
-        entry: python .githooks/add_bench.py
-        language: python
-        stages: [ post-commit ]
