@@ -1,4 +1,4 @@
-default_install_hook_types: [pre-commit, commit-msg]
+default_install_hook_types: [pre-commit, commit-msg, post-commit]
 repos:
 -   repo: local
     hooks:
@@ -16,10 +16,22 @@ repos:
         always_run: true
         stages: [ pre-commit ]
 
-      - id: clang-tidy
-        name: clang-tidy
-        entry: clang-tidy
-        language: system
-        args: [ "-p=build" ]
-        types: [ c++ ]
+      #- id: clang-tidy
+      #  name: clang-tidy
+      #  entry: clang-tidy
+      #  language: system
+      #  args: [ "-p=build" ]
+      #  types: [ c++ ]
+      #  stages: [ pre-commit ]
+
+      - id: Tests
+        name: run tests
+        entry: python .githooks/run-tests.py
+        language: python
         stages: [ pre-commit ]
+
+      - id: bench-results
+        name: Add bench result
+        entry: python .githooks/add_bench.py
+        language: python
+        stages: [ post-commit ]

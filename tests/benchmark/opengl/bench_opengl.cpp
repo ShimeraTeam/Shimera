@@ -6,6 +6,7 @@
 #include <shimera.h>
 #include "backend/BackendFactory.hpp"
 #include "effects/DistortionEffect.hpp"
+#include "../BenchmarkReport.hpp"
 
 #define GL_GPU_MEM_INFO_TOTAL_AVAILABLE_MEM_NVX 0x9048
 #define GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX 0x9049
@@ -202,4 +203,56 @@ int main() {
     } catch (std::exception &e) {
         std::cerr << "ERROR: " << e.what() << '\n';
     }
+
+    auto start = std::chrono::high_resolution_clock::now();
+
+    for (int i = 0; i < FRAMES; i++) {
+        sceneFramebuffer->bind();
+        sceneFramebuffer->clear(shimera::Color(0.0f, 0.0f, 0.0f, 1.0f));
+
+        // Use the basic shader and bind VAO
+        GLC(glUseProgram(shader));
+        colorUniform = shimera::Vec4(r, 0.3f, 0.8f, 1.0f);
+        GLC(glBindVertexArray(vao));
+        GLC(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+
+        if (r > 1.0f) increment = -0.05f;
+        else if (r < 0.0f) increment = 0.05f;
+        r += increment;
+
+        // Render to screen
+        sceneFramebuffer->unbind();
+        distortionEffect.m_uTime = time;
+        GLC(glClearColor(0.1f, 0.1f, 0.1f, 1.0f));
+        GLC(glClear(GL_COLOR_BUFFER_BIT));
+        distortionEffect.render(sceneFramebuffer->getTexture());
+
+        time += 0.06f;
+
+        glfwSwapBuffers(window);
+    }
+
+    auto end = std::chrono::high_resolution_clock::now();
+    double totalMs = std::chrono::duration<double, std::milli>(end - start).count();
+    double avgFps  = FRAMES / (totalMs / 1000.0);
+
+    std::cout << "[FPS OPENGL BENCH] Frames    : " << FRAMES   << std::endl;
+    std::cout << "[FPS OPENGL BENCH] Avg FPS   : " << avgFps   << std::endl;
+
+    report.setGpu(reinterpret_cast<const char*>(glGetString(GL_RENDERER)))
+          .setBackend("OpenGl")
+          .setAvgFps(avgFps)
+          .setTotalMs(totalMs)
+          .setFrames(FRAMES)
+          .setVramUsed(usedKb);
+    report.save("../../../../bench.json");
+
+    GLC(glDeleteProgram(shader));
+    GLC(glDeleteVertexArrays(1, &vao));
+    GLC(glDeleteBuffers(1, &buffer));
+    GLC(glDeleteBuffers(1, &ibo));
+    delete sceneFramebuffer;
+    delete backend;
+    glfwTerminate();
+    exit(0);
 }

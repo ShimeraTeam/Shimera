@@ -1,5 +1,10 @@
+add_requires("nlohmann_json")
+
 target("bench-raylib")
     set_kind("binary")
     set_default(false)
     add_files("bench_raylib.cpp")
+    add_files("../*.cpp")
+    add_headerfiles("../*.hpp")
     add_deps("shimera-raylib")
+    add_packages("nlohmann_json")
