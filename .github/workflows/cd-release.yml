@@ -38,7 +38,7 @@ jobs:
 
         - name: Setup MSVC
           if: runner.os == 'Windows'
-          uses: ilammy/msvc-dev-cmd@v1
+          uses: TheMrMilchmann/setup-msvc-dev@v4
           with:
             arch: ${{ matrix.architecture }}
 
@@ -79,7 +79,9 @@ jobs:
           run: |
             mkdir -p shimera-${{ env.version }}/lib shimera-${{ env.version }}/include/shimera
             mv build/linux/x86_64/{release,debug}/*.{so,a} shimera-${{ env.version }}/lib/
-            mv include shimera-${{ env.version }}/include/shimera
+            mv include/* shimera-${{ env.version }}/include/shimera
+            mv README.md shimera-${{ env.version }}
+            mv CHANGELOG.md shimera-${{ env.version }}
             tar -cvf shimera-${{ env.version }}-${{ matrix.backend }}-linux-${{ matrix.architecture }}.tar shimera-${{ env.version }}
 
         - name: Zip Windows builds
@@ -90,7 +92,9 @@ jobs:
             Move-Item build\windows\${{ matrix.architecture }}\release\*.lib, build\windows\${{ matrix.architecture }}\debug\*.lib shimera-${{ env.version }}\lib\
             Move-Item build\windows\${{ matrix.architecture }}\release\*.dll, build\windows\${{ matrix.architecture }}\debug\*.dll shimera-${{ env.version }}\bin\
             Get-ChildItem build\windows\${{ matrix.architecture }}\release\*.pdb, build\windows\${{ matrix.architecture }}\debug\*.pdb | Where-Object { $_.Name -notlike "compile.*" } | Move-Item -Destination shimera-${{ env.version }}\bin\
-            Move-Item include shimera-${{ env.version }}\include\shimera
+            Move-Item include\* shimera-${{ env.version }}\include\shimera
+            Move-Item README.md shimera-${{ env.version }}
+            Move-Item CHANGELOG.md shimera-${{ env.version }}
             Compress-Archive -Path shimera-${{ env.version }} -DestinationPath shimera-${{ env.version }}-${{ matrix.backend }}-windows-${{ matrix.architecture }}.zip
 
         - name: Upload Linux artifact
@@ -111,6 +115,8 @@ jobs:
     needs: [build-Shimera]
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v6.0.3
+
       - name: Download Linux builds
         uses: actions/download-artifact@v8
         with:
@@ -143,6 +149,7 @@ jobs:
           tag_name: ${{ github.ref_name }}
           name: Shimera ${{ env.version }}
           prerelease: ${{ env.prerelease }}
+          body_path: CHANGELOG.md
           files: |
             *.tar
             *.zip
