@@ -22,9 +22,10 @@ Checks: >
   -modernize-macro-to-enum,
   -readability-convert-member-functions-to-static,
   -modernize-use-designated-initializers,
-  -readability-math-missing-parentheses
+  -readability-math-missing-parentheses,
+  -readability-braces-around-statements
 
-WarningsAsErrors: ''
+WarningsAsErrors: '*'
 HeaderFilterRegex: '.*/Shimera/(include|src|tests|examples)/.*'
 
 CheckOptions:

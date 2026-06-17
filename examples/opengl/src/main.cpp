@@ -12,9 +12,8 @@ using namespace shimera;
 namespace {
 
 GLFWwindow* initWindow(int width, int height) {
-    if (!glfwInit()) {
+    if (!glfwInit())
         return nullptr;
-    }
 
     GLFWwindow* window = glfwCreateWindow(width, height, "Hello World", nullptr, nullptr);
     if (!window) {
@@ -109,9 +108,8 @@ int main()
 {
     try {
         GLFWwindow* window = initWindow(640, 480);
-        if (!window) {
+        if (!window) 
             return -1;
-        }
 
         unsigned int buffer, ibo, vao;
         setShapes(buffer, ibo, vao);
