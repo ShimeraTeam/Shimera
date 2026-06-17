@@ -16,10 +16,10 @@ repos:
         always_run: true
         stages: [ pre-commit ]
 
-      #- id: clang-tidy
-      #  name: clang-tidy
-      #  entry: clang-tidy
-      #  language: system
-      #  args: [ "-p=build" ]
-      #  types: [ c++ ]
-      #  stages: [ pre-commit ]
+      - id: clang-tidy
+        name: clang-tidy
+        entry: clang-tidy
+        language: system
+        args: [ "-p=build" ]
+        types: [ c++ ]
+        stages: [ pre-commit ]

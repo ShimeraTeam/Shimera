@@ -72,15 +72,15 @@ void setShapes(unsigned int& buffer, unsigned int& ibo, unsigned int& vao) {
     GLC(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
     GLC(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW));
 
-    shimera::ShaderProgramSource source = parseShader(
+    const shimera::ShaderProgramSource source = parseShader(
         "../../../../res/shader/basic.vert",
         "../../../../res/shader/basic.frag"
         );
 
-    unsigned int shader = createShader(source.vertex, source.fragment);
+    const unsigned int shader = createShader(source.vertex, source.fragment);
     GLC(glUseProgram(shader));
 
-    shimera::Uniform colorUniform(shader, "u_Color", shimera::Vec4(0.3f, 0.3f, 0.8f, 1.0f));
+    const shimera::Uniform colorUniform(shader, "u_Color", shimera::Vec4(0.3f, 0.3f, 0.8f, 1.0f));
 
     GLC(glGenVertexArrays(1, &vao));
     GLC(glBindVertexArray(vao));
@@ -164,8 +164,9 @@ int main() {
         GLint vramAfter = 0;
         glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramAfter);
 
+        GLint usedKb;
         if (vramBefore >= 0 && vramAfter >= 0) {
-            const GLint usedKb = vramBefore - vramAfter;
+            usedKb = vramBefore - vramAfter;
             std::cout << "[VRAM BENCH] GPU  : " << glGetString(GL_RENDERER) << "\n";
             std::cout << "[VRAM BENCH] Used : " << usedKb / 1024 << " MB" << " (" << usedKb << " KB)\n";
         }
