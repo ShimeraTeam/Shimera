@@ -79,7 +79,7 @@ jobs:
           run: |
             mkdir -p shimera-${{ env.version }}/lib shimera-${{ env.version }}/include/shimera
             mv build/linux/x86_64/{release,debug}/*.{so,a} shimera-${{ env.version }}/lib/
-            mv include/* shimera-${{ env.version }}/include/shimera
+            mv include shimera-${{ env.version }}
             mv README.md shimera-${{ env.version }}
             mv CHANGELOG.md shimera-${{ env.version }}
             tar -cvf shimera-${{ env.version }}-${{ matrix.backend }}-linux-${{ matrix.architecture }}.tar shimera-${{ env.version }}
@@ -92,7 +92,7 @@ jobs:
             Move-Item build\windows\${{ matrix.architecture }}\release\*.lib, build\windows\${{ matrix.architecture }}\debug\*.lib shimera-${{ env.version }}\lib\
             Move-Item build\windows\${{ matrix.architecture }}\release\*.dll, build\windows\${{ matrix.architecture }}\debug\*.dll shimera-${{ env.version }}\bin\
             Get-ChildItem build\windows\${{ matrix.architecture }}\release\*.pdb, build\windows\${{ matrix.architecture }}\debug\*.pdb | Where-Object { $_.Name -notlike "compile.*" } | Move-Item -Destination shimera-${{ env.version }}\bin\
-            Move-Item include\* shimera-${{ env.version }}\include\shimera
+            Move-Item include shimera-${{ env.version }}
             Move-Item README.md shimera-${{ env.version }}
             Move-Item CHANGELOG.md shimera-${{ env.version }}
             Compress-Archive -Path shimera-${{ env.version }} -DestinationPath shimera-${{ env.version }}-${{ matrix.backend }}-windows-${{ matrix.architecture }}.zip
