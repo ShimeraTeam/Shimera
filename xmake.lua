@@ -5,6 +5,7 @@ if is_plat("windows") then
 end
 
 add_requires("glew")
+add_requires("glm")
 add_requires("sfml", {optional = true})
 add_requires("libsdl3", {optional = true})
 add_requires("raylib", {optional = true})
@@ -43,6 +44,7 @@ target("shimera-opengl")
     add_headerfiles("include/effects/(*.hpp)")
     add_includedirs("include", {public = true})
     add_packages("glew", {public = true})
+    add_packages("glm")
     add_defines("SHIMERA_BACKEND_OPENGL", {public = true})
 
     if has_config("shared") then
@@ -124,6 +126,7 @@ target("shimera-sdl")
     add_headerfiles("include/uniform/(*.hpp)")
     add_includedirs("include", {public = true})
     add_packages("glew", {public = true})
+    add_packages("glm")
     add_packages("libsdl3", {public = true})
     add_defines("SHIMERA_BACKEND_SDL", {public = true})
 
@@ -157,6 +160,7 @@ target("shimera-raylib")
     add_headerfiles("include/effects/(*.hpp)")
     add_includedirs("include", {public = true})
     add_packages("glew", {public = true})
+    add_packages("glm")
     add_packages("raylib", {public = true})
     add_defines("SHIMERA_BACKEND_RAYLIB", {public = true})
 

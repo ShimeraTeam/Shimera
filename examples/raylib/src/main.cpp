@@ -4,6 +4,7 @@
 
 #include <shimera.h>
 #include "backend/BackendFactory.hpp"
+#include "effects/AtmosphericScatteringEffect.hpp"
 #include "effects/PixelisationEffect.hpp"
 
 int main() {
@@ -25,7 +26,8 @@ int main() {
     camera.fovy = 25.0f;
     camera.projection = CAMERA_PERSPECTIVE;
 
-    const Vector3 cubePosition = { 0.0f, 0.0f, 0.0f };
+    // Vector3 cubePosition = { 0.0f, 0.0f, 0.0f };
+    auto spherePosition = Vector3(0.0f, 0.0f, 0.0f);
 
     shimera::IBackend *backend = shimera::BackendFactory::create();
     if (!backend) {
@@ -33,11 +35,11 @@ int main() {
         return -1;
     }
 
-    shimera::IFrameBuffer *sceneFramebuffer = backend->createFrameBuffer(screenWidth, screenHeight);
+    shimera::IFrameBuffer *sceneFramebuffer = backend->createFrameBuffer(screenWidth, screenHeight, true);
 
-    shimera::PixelisationEffect pixelisationEffect(backend);
-    pixelisationEffect.withPixelSize(4.0f)
-                      .withResolution(shimera::Vec2(static_cast<float>(screenWidth), static_cast<float>(screenHeight)));
+    shimera::AtmosphericScatteringEffect atmo(backend);
+    atmo.withPlanet({0,0,0}, 15.0f, 23.6f)
+        .withSun({100, 100, 0});
 
     SetTargetFPS(60);
 
@@ -53,26 +55,25 @@ int main() {
             UpdateCamera(&camera, CAMERA_THIRD_PERSON);
         }
 
+        atmo.m_uCameraPos = shimera::Vec3(camera.position.x, camera.position.y, camera.position.z);
+        atmo.m_uCameraTarget = shimera::Vec3(camera.target.x, camera.target.y, camera.target.z);
+        atmo.m_uCameraUp = shimera::Vec3(camera.up.x, camera.up.y, camera.up.z);
+        atmo.m_fovYDegrees = camera.fovy;
+
+        atmo.withDepth(sceneFramebuffer->getDepthTexture());
+
         sceneFramebuffer->bind();
         sceneFramebuffer->clear(shimera::Color{0, 0, 0, 1});
             BeginMode3D(camera);
-                DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, RED);
-                DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, BLACK);
+                // DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, RED);
+                // DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, BLACK);
+                DrawSphere(spherePosition, 20.0f, {.r=53, .g=88, .b=29, .a=255});
             EndMode3D();
         sceneFramebuffer->unbind();
 
-        // Project cube center to screen space and align the pixel grid on it
-        const Vector2 cubeScreen = GetWorldToScreen(cubePosition, camera);
-        const float pixelUVx = pixelisationEffect.m_uPixelSizeX / screenWidth;
-        const float pixelUVy = pixelisationEffect.m_uPixelSizeY / screenHeight;
-        pixelisationEffect.m_uOffset = shimera::Vec2(
-            cubeScreen.x / screenWidth - pixelUVx * 0.5f,
-            cubeScreen.y / screenHeight - pixelUVy * 0.5f
-        );
-
         BeginDrawing();
             ClearBackground(BLACK);
-            pixelisationEffect.render(sceneFramebuffer->getTexture());
+            atmo.render(sceneFramebuffer->getTexture());
         EndDrawing();
     }
 

@@ -16,8 +16,8 @@ using shimera::OpenGLPostProcessor;
 using shimera::OpenGLShader;
 using shimera::OpenGLTexture;
 
-IFrameBuffer* OpenGLBackend::createFrameBuffer(int width, int height) {
-    return new OpenGLFramebuffer(width, height);
+IFrameBuffer* OpenGLBackend::createFrameBuffer(int width, int height, bool samplableDepth) {
+    return new OpenGLFramebuffer(width, height, samplableDepth);
 }
 
 IPostProcessor* OpenGLBackend::createPostProcessor(const std::string& vert, const std::string& frag) {
