@@ -1,53 +1,54 @@
 #include <iostream>
 #include <SDL3/SDL.h>
 #include <cmath>
+namespace {
+	void drawCircle(SDL_Renderer* renderer, int centerX, int centerY, int radius) {
+		for (int w = 0; w < radius * 2; w++) {
+			for (int h = 0; h < radius * 2; h++) {
+				const int dx = radius - w;
+				const int dy = radius - h;
+				if ((dx*dx + dy*dy) <= (radius * radius)) {
+					SDL_RenderPoint(renderer, static_cast<float>(centerX + dx), static_cast<float>(centerY + dy));
+				}
+			}
+		}
+	}
 
-void drawCircle(SDL_Renderer* renderer, int centerX, int centerY, int radius) {
-	for (int w = 0; w < radius * 2; w++) {
-		for (int h = 0; h < radius * 2; h++) {
-			int dx = radius - w;
-			int dy = radius - h;
-			if ((dx*dx + dy*dy) <= (radius * radius)) {
-				SDL_RenderPoint(renderer, centerX + dx, centerY + dy);
+	void drawRectangle(SDL_Renderer* renderer, int x, int y, int width, int height) {
+		const SDL_FRect rect = {static_cast<float>(x), static_cast<float>(y), static_cast<float>(width), static_cast<float>(height)};
+		SDL_RenderFillRect(renderer, &rect);
+	}
+
+	void drawTriangle(SDL_Renderer* renderer, int x, int y, int size) {
+		for (int i = 0; i < size; i++) {
+			const int lineY = y + i;
+			const int leftX = x + size/2 - i/2;
+			const int rightX = x + size/2 + i/2;
+			for (int px = leftX; px <= rightX; px++) {
+				SDL_RenderPoint(renderer, static_cast<float>(px), static_cast<float>(lineY));
 			}
 		}
 	}
 }
 
-void drawRectangle(SDL_Renderer* renderer, int x, int y, int width, int height) {
-	SDL_FRect rect = {(float)x, (float)y, (float)width, (float)height};
-	SDL_RenderFillRect(renderer, &rect);
-}
-
-void drawTriangle(SDL_Renderer* renderer, int x, int y, int size) {
-	for (int i = 0; i < size; i++) {
-		int lineY = y + i;
-		int leftX = x + size/2 - i/2;
-		int rightX = x + size/2 + i/2;
-		for (int px = leftX; px <= rightX; px++) {
-			SDL_RenderPoint(renderer, px, lineY);
-		}
-	}
-}
-
-int main(int argc, char **argv) {
+int main() {
 	if(!SDL_Init(SDL_INIT_VIDEO)) {
-		std::cerr << "Init error : " << SDL_GetError() << std::endl;
+		std::cerr << "Init error : " << SDL_GetError() << '\n';
 		return EXIT_FAILURE;
 	}
-	auto window = SDL_CreateWindow(
+	auto *window = SDL_CreateWindow(
 		"SDL3 - Formes géométriques",
 		800, 400,
 		SDL_WINDOW_OPENGL
 	);
 	if(!window) {
-		std::cerr << "Window creation error : " << SDL_GetError() << std::endl;
+		std::cerr << "Window creation error : " << SDL_GetError() << '\n';
 		SDL_Quit();
 		return EXIT_FAILURE;
 	}
-	auto renderer = SDL_CreateRenderer(window, nullptr);
+	auto *renderer = SDL_CreateRenderer(window, nullptr);
 	if(!renderer) {
-		std::cerr << "Renderer creation error : " << SDL_GetError() << std::endl;
+		std::cerr << "Renderer creation error : " << SDL_GetError() << '\n';
 		SDL_DestroyWindow(window);
 		SDL_Quit();
 		return EXIT_FAILURE;
@@ -59,6 +60,8 @@ int main(int argc, char **argv) {
 			switch(event.type) {
 				case SDL_EVENT_QUIT:
 					isRunning = false;
+					break;
+				default:
 					break;
 			}
 		}

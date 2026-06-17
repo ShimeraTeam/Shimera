@@ -26,9 +26,9 @@ class SHIMERA_API ShaderEffectBase {
         virtual void updateUniforms() = 0;
 
         void setEnabled(bool enabled);
-        bool isEnabled() const;
+        [[nodiscard]] bool isEnabled() const;
 
-        IPostProcessor *getPostProcessor() const;
+        [[nodiscard]] IPostProcessor *getPostProcessor() const;
 
     protected:
         std::unique_ptr<IPostProcessor> m_processor;

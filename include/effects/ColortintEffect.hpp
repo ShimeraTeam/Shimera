@@ -9,7 +9,7 @@ namespace shimera {
 
 class SHIMERA_API ColortintEffect final : public ShaderEffect<ColortintEffect> {
     public:
-        Vec3<float> m_uTint = Vec3(0.0f);
+        Vec3<float> m_uTint = Vec3<float>(0.0f);
 
         explicit ColortintEffect(IBackend *backend);
 
