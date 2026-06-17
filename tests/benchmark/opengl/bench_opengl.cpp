@@ -6,6 +6,7 @@
 #include <shimera.h>
 #include "backend/BackendFactory.hpp"
 #include "effects/DistortionEffect.hpp"
+#include "../BenchmarkReport.hpp"
 
 #define GL_GPU_MEM_INFO_TOTAL_AVAILABLE_MEM_NVX 0x9048
 #define GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX 0x9049
@@ -129,6 +130,7 @@ void render(GLFWwindow* window, unsigned int shader, unsigned int vao,
 
 int main() {
     try {
+        BenchmarkReport report;
         GLFWwindow* window = initWindow(640, 480);
         if (!window) {
             return -1;
@@ -189,7 +191,13 @@ int main() {
 
         std::cout << "[FPS OPENGL BENCH] Frames    : " << FRAMES   << '\n';
         std::cout << "[FPS OPENGL BENCH] Avg FPS   : " << avgFps   << '\n';
-
+        report.setGpu(reinterpret_cast<const char*>(glGetString(GL_RENDERER)))
+              .setBackend("OpenGl")
+              .setAvgFps(avgFps)
+              .setTotalMs(totalMs)
+              .setFrames(FRAMES)
+              .setVramUsed(usedKb);
+        report.save("../../../../bench.json");
         GLC(glDeleteProgram(shader));
         GLC(glDeleteVertexArrays(1, &vao));
         GLC(glDeleteBuffers(1, &buffer));
