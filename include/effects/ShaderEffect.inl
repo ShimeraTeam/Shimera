@@ -13,13 +13,17 @@ template<typename Derived>
 class ShaderEffect : public ShaderEffectBase {
     public:
         void render(ITexture& texture) override {
-            if (!m_enabled) return;
+            if (!m_enabled) {
+                return;
+            }
             static_cast<Derived *>(this)->updateUniforms();
             m_processor->render(texture);
         }
 
         void render(ITexture& texture, IFrameBuffer& target) override {
-            if (!m_enabled) return;
+            if (!m_enabled) {
+                return;
+            }
             static_cast<Derived *>(this)->updateUniforms();
             target.bind();
             m_processor->render(texture);
@@ -30,8 +34,9 @@ class ShaderEffect : public ShaderEffectBase {
             return *static_cast<Derived *>(this);
         }
 
-    protected:
+    private:
         ShaderEffect() = default;
+        friend Derived;
 };
 
 }

@@ -35,7 +35,7 @@ Framebuffer::Framebuffer(int w, int h)
         GL_RENDERBUFFER, m_rbo));
 
     GLC(if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-        std::cerr << "ERROR: Framebuffer is not complete!" << std::endl;)
+        std::cerr << "ERROR: Framebuffer is not complete!" << '\n';)
 
     GLC(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 }

@@ -21,7 +21,7 @@ RaylibShader::~RaylibShader() {
 }
 
 void RaylibShader::loadFromFiles(const std::string& vertPath, const std::string& fragPath) {
-    ShaderProgramSource source = parseShader(vertPath, fragPath);
+    const ShaderProgramSource source = parseShader(vertPath, fragPath);
     
     m_programId = createShader(source.vertex, source.fragment);
     
@@ -31,7 +31,7 @@ void RaylibShader::loadFromFiles(const std::string& vertPath, const std::string&
     
     // Set up the texture sampler uniform (u_screenTexture) which is automatically bound to texture unit 0
     bind();
-    int location = getUniformLocation("u_screenTexture");
+    const int location = getUniformLocation("u_screenTexture");
     if (location != -1) {
         GLC(glUniform1i(location, 0));
     }
@@ -47,9 +47,9 @@ void RaylibShader::unbind() const {
 }
 
 void RaylibShader::setUniform(const std::string& name, const UniformValue& value) {
-    int location = getUniformLocation(name);
+    const int location = getUniformLocation(name);
     if (location == -1) {
-        std::cerr << "Warning: Uniform '" << name << "' not found in shader." << std::endl;
+        std::cerr << "Warning: Uniform '" << name << "' not found in shader." << '\n';
         return;
     }
     
@@ -82,7 +82,7 @@ int RaylibShader::getUniformLocation(const std::string& name) {
         return it->second;
     }
 
-    GLC(int location = glGetUniformLocation(m_programId, name.c_str()));
+    GLC(const int location = glGetUniformLocation(m_programId, name.c_str()));
     m_uniformCache[name] = location;
     
     return location;

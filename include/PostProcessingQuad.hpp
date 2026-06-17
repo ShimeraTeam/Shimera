@@ -10,7 +10,7 @@ class SHIMERA_API PostProcessingQuad {
         PostProcessingQuad(const std::string& vertPath, const std::string& fragPath);
         ~PostProcessingQuad();
         void render(unsigned int texture) const;
-        unsigned int getShader() const;
+        [[nodiscard]] unsigned int getShader() const;
         void bindShader() const;
 
     private:

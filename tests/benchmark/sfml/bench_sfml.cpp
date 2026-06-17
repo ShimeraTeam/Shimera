@@ -91,11 +91,11 @@ int main() {
     }
 
     auto end = std::chrono::high_resolution_clock::now();
-    double totalMs = std::chrono::duration<double, std::milli>(end - start).count();
-    double avgFps  = FRAMES / (totalMs / 1000.0);
+    const double totalMs = std::chrono::duration<double, std::milli>(end - start).count();
+    const double avgFps  = FRAMES / (totalMs / 1000.0);
 
-    std::cout << "[FPS SFML BENCH] Frames    : " << FRAMES   << std::endl;
-    std::cout << "[FPS SFML BENCH] Avg FPS   : " << avgFps   << std::endl;
+    std::cout << "[FPS SFML BENCH] Frames    : " << FRAMES   << '\n';
+    std::cout << "[FPS SFML BENCH] Avg FPS   : " << avgFps   << '\n';
 
     report.setGpu(reinterpret_cast<const char*>(glGetString(GL_RENDERER)))
           .setBackend("Sfml")

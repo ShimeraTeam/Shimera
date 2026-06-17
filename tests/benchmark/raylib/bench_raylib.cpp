@@ -51,7 +51,7 @@ int main() {
     camera.fovy       = 25.0f;
     camera.projection = CAMERA_PERSPECTIVE;
 
-    Vector3 cubePosition = { 0.0f, 0.0f, 0.0f };
+    const Vector3 cubePosition = { 0.0f, 0.0f, 0.0f };
 
     float time = 0.0f;
 
@@ -88,11 +88,11 @@ int main() {
     }
 
     auto end = std::chrono::high_resolution_clock::now();
-    double totalMs = std::chrono::duration<double, std::milli>(end - start).count();
-    double avgFps  = FRAMES / (totalMs / 1000.0);
+    const double totalMs = std::chrono::duration<double, std::milli>(end - start).count();
+    const double avgFps  = FRAMES / (totalMs / 1000.0);
 
-    std::cout << "[FPS RAYLIB BENCH] Frames    : " << FRAMES   << std::endl;
-    std::cout << "[FPS RAYLIB BENCH] Avg FPS   : " << avgFps   << std::endl;
+    std::cout << "[FPS RAYLIB BENCH] Frames    : " << FRAMES   << '\n';
+    std::cout << "[FPS RAYLIB BENCH] Avg FPS   : " << avgFps   << '\n';
 
     report.setGpu(reinterpret_cast<const char*>(glGetString(GL_RENDERER)))
           .setBackend("Raylib")

@@ -49,8 +49,18 @@ target("shimera-opengl")
         set_kind("shared")
         add_defines("SHIMERA_EXPORTS")
         add_defines("SHIMERA_SHARED", {public = true})
+        if is_mode("debug") then
+            set_basename("shimera-opengl-d")
+        else
+            set_basename("shimera-opengl")
+        end
     else
         set_kind("static")
+        if is_mode("debug") then
+            set_basename("shimera-opengl-s-d")
+        else
+            set_basename("shimera-opengl-s")
+        end
     end
 
     if is_plat("windows") then
@@ -82,8 +92,18 @@ target("shimera-sfml")
         set_kind("shared")
         add_defines("SHIMERA_EXPORTS")
         add_defines("SHIMERA_SHARED", {public = true})
+        if is_mode("debug") then
+            set_basename("shimera-sfml-d")
+        else
+            set_basename("shimera-sfml")
+        end
     else
         set_kind("static")
+        if is_mode("debug") then
+            set_basename("shimera-sfml-s-d")
+        else
+            set_basename("shimera-sfml-s")
+        end
     end
 
     if is_plat("windows") then
@@ -144,8 +164,18 @@ target("shimera-raylib")
         set_kind("shared")
         add_defines("SHIMERA_EXPORTS")
         add_defines("SHIMERA_SHARED", {public = true})
+        if is_mode("debug") then
+            set_basename("shimera-raylib-d")
+        else
+            set_basename("shimera-raylib")
+        end
     else
         set_kind("static")
+        if is_mode("debug") then
+            set_basename("shimera-raylib-s-d")
+        else
+            set_basename("shimera-raylib-s")
+        end
     end
 
     if is_plat("windows") then
