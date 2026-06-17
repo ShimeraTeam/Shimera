@@ -1,13 +1,12 @@
 #include "backend/sfml/SFMLFramebuffer.hpp"
 #include <stdexcept>
 #include <string>
-#include <cstdint>
 
 using shimera::ITexture;
 using shimera::SFMLFramebuffer;
 using shimera::SFMLTexture;
 
-SFMLFramebuffer::SFMLFramebuffer(const int width, const int height)
+SFMLFramebuffer::SFMLFramebuffer(const int width, const int height, bool samplableDepth)
     : m_width(width), m_height(height) {
     SFMLFramebuffer::resize(width, height);
 }
@@ -33,6 +32,11 @@ void SFMLFramebuffer::clear(shimera::Color color) {
 
 ITexture& SFMLFramebuffer::getTexture() {
     return *m_texture;
+}
+
+ITexture& SFMLFramebuffer::getDepthTexture() {
+    //TODO: In reality, sfml CAN have a depth buffer, but i don't need it rn, so maybe add it later?
+    throw std::runtime_error("SFML cannot have a depth texture");
 }
 
 void SFMLFramebuffer::resize(int width, int height) {

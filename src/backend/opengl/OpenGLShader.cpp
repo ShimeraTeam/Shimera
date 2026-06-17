@@ -54,6 +54,7 @@ void OpenGLShader::setUniform(const std::string& name, const UniformValue& value
 
     bind();
 
+    // TODO: try to avoid code repetition in the future?
     std::visit([location](auto&& val) {
         using T = std::decay_t<decltype(val)>;
         if constexpr (std::is_same_v<T, float>) {
@@ -66,6 +67,8 @@ void OpenGLShader::setUniform(const std::string& name, const UniformValue& value
             GLC(glUniform3f(location, val.x, val.y, val.z));
         } else if constexpr (std::is_same_v<T, Vec4<float>>) {
             GLC(glUniform4f(location, val.x, val.y, val.z, val.w));
+        } else if constexpr (std::is_same_v<T, Mat4>) {
+            GLC(glUniformMatrix4fv(location, 1, GL_FALSE, val.m));
         }
     }, value);
 }

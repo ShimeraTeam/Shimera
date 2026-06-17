@@ -109,10 +109,31 @@ void OpenGLPostProcessor::render(ITexture& texture) {
     GLC(glActiveTexture(GL_TEXTURE0));
     GLC(glBindTexture(GL_TEXTURE_2D, texture.getNativeHandle()));
 
+    for (const auto& tex : m_extraTextures) {
+        GLC(glActiveTexture(GL_TEXTURE0 + tex.unit));
+        GLC(glBindTexture(GL_TEXTURE_2D, tex.handle));
+    }
+
     GLC(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+
+    for (const auto& tex : m_extraTextures) {
+        GLC(glActiveTexture(GL_TEXTURE0 + tex.unit));
+        GLC(glBindTexture(GL_TEXTURE_2D, 0));
+    }
+
+    GLC(glActiveTexture(GL_TEXTURE0));
+    GLC(glBindTexture(GL_TEXTURE_2D, 0));
 
     GLC(glBindVertexArray(0));
     m_shader->unbind();
+
+    m_extraTextures.clear();
+}
+
+//TODO: This method is exactly the same in every backends, but we don't have a normal parent class to define it for all. Sooo... how do we handle this?
+void OpenGLPostProcessor::addInputTexture(const std::string& uniformName, ITexture& texture, unsigned int unit) {
+    setUniform(uniformName, static_cast<int>(unit));
+    m_extraTextures.push_back({.unit=unit, .handle=texture.getNativeHandle()});
 }
 
 void OpenGLPostProcessor::setUniform(const std::string& name, const UniformValue& value) {

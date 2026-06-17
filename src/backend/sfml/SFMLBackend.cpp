@@ -14,8 +14,8 @@ using shimera::SFMLFramebuffer;
 using shimera::SFMLPostProcessor;
 using shimera::SFMLShader;
 
-IFrameBuffer* SFMLBackend::createFrameBuffer(int width, int height) {
-    return new SFMLFramebuffer(width, height);
+IFrameBuffer* SFMLBackend::createFrameBuffer(int width, int height, bool samplableDepth) {
+    return new SFMLFramebuffer(width, height, samplableDepth);
 }
 
 IPostProcessor* SFMLBackend::createPostProcessor(const std::string& vert, const std::string& frag) {
