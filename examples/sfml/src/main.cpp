@@ -9,7 +9,7 @@
 #include <shimera.h>
 #include "backend/BackendFactory.hpp"
 #include "backend/sfml/SFMLFramebuffer.hpp"
-#include "effects/GaussianBlurEffect.hpp"
+#include "effects/HDRBloomEffect.hpp"
 
 using namespace shimera;
 
@@ -17,7 +17,7 @@ using namespace shimera;
 int main()
 {
     const sf::VideoMode videoMode({960, 540});
-    sf::RenderWindow window(videoMode, "SFML3 - Gaussian Blur");
+    sf::RenderWindow window(videoMode, "SFML3 - HDR Bloom");
     window.setActive(true);
 
     //TODO: Try to embed that in the backend so the user doesn't have to worry about it (or at least make it optional)
@@ -37,10 +37,13 @@ int main()
     // Create framebuffer for the scene
     IFrameBuffer *sceneFramebuffer = backend->createFrameBuffer(960, 540);
 
-    GaussianBlurEffect gaussianBlurEffect(backend);
-    gaussianBlurEffect.withSigma(5.0f)
-                      .withSamples(15)
-                      .withResolution(Vec2(960.0f, 540.0f));
+    HDRBloomEffect hdrBloomEffect(backend);
+    hdrBloomEffect.withThreshold(0.85f)
+                  .withKnee(0.4f)
+                  .withIntensity(0.5f)
+                  .withBlurSigma(6.0f)
+                  .withBlurSamples(18)
+                  .withResolution(Vec2(960.0f, 540.0f));
 
 
     // sf::CircleShape circle(80.f);
@@ -87,10 +90,10 @@ int main()
         // sfmlRenderTexture->draw(triangle);
         sceneFramebuffer->unbind(); // Calls display() internally
 
-        // Apply gaussian blur and render to screen
+        // Apply HDR bloom and render to screen
         window.setActive(true);
         glClear(GL_COLOR_BUFFER_BIT);
-        gaussianBlurEffect.render(sceneFramebuffer->getTexture());
+        hdrBloomEffect.render(sceneFramebuffer->getTexture());
 
         window.display();
     }

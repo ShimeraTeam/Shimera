@@ -4,7 +4,7 @@
 
 #include <shimera.h>
 #include "backend/BackendFactory.hpp"
-#include "effects/PixelisationEffect.hpp"
+#include "effects/HDRBloomEffect.hpp"
 
 int main() {
     const int screenWidth = 960;
@@ -35,9 +35,12 @@ int main() {
 
     shimera::IFrameBuffer *sceneFramebuffer = backend->createFrameBuffer(screenWidth, screenHeight);
 
-    shimera::PixelisationEffect pixelisationEffect(backend);
-    pixelisationEffect.withPixelSize(4.0f)
-                      .withResolution(shimera::Vec2(static_cast<float>(screenWidth), static_cast<float>(screenHeight)));
+    shimera::HDRBloomEffect hdrBloomEffect(backend);
+    hdrBloomEffect.withThreshold(0.5f)
+                  .withIntensity(1.5f)
+                  .withBlurSigma(20.0f)
+                  .withBlurSamples(60)
+                  .withResolution(shimera::Vec2(static_cast<float>(screenWidth), static_cast<float>(screenHeight)));
 
     SetTargetFPS(60);
 
@@ -56,23 +59,14 @@ int main() {
         sceneFramebuffer->bind();
         sceneFramebuffer->clear(shimera::Color{0, 0, 0, 1});
             BeginMode3D(camera);
-                DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, RED);
+                DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, YELLOW);
                 DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, BLACK);
             EndMode3D();
         sceneFramebuffer->unbind();
 
-        // Project cube center to screen space and align the pixel grid on it
-        const Vector2 cubeScreen = GetWorldToScreen(cubePosition, camera);
-        const float pixelUVx = pixelisationEffect.m_uPixelSizeX / screenWidth;
-        const float pixelUVy = pixelisationEffect.m_uPixelSizeY / screenHeight;
-        pixelisationEffect.m_uOffset = shimera::Vec2(
-            cubeScreen.x / screenWidth - pixelUVx * 0.5f,
-            cubeScreen.y / screenHeight - pixelUVy * 0.5f
-        );
-
         BeginDrawing();
             ClearBackground(BLACK);
-            pixelisationEffect.render(sceneFramebuffer->getTexture());
+            hdrBloomEffect.render(sceneFramebuffer->getTexture());
         EndDrawing();
     }
 
