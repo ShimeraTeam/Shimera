@@ -22,7 +22,7 @@ void SFMLFramebuffer::unbind() {
 }
 
 void SFMLFramebuffer::clear(shimera::Color color) {
-    const sf::Color sfmlColor(
+    sf::Color sfmlColor(
         static_cast<std::uint8_t>(color.m_r * 255),
         static_cast<std::uint8_t>(color.m_g * 255),
         static_cast<std::uint8_t>(color.m_b * 255),

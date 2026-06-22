@@ -25,19 +25,10 @@ class SHIMERA_API ShaderEffectBase {
 
         virtual void updateUniforms() = 0;
 
-        // restored, suppressed by the move declarations below
-        ShaderEffectBase() = default;
-        // only allow moving ownership
-        ShaderEffectBase(ShaderEffectBase&&) = default;
-        ShaderEffectBase& operator=(ShaderEffectBase&&) = default;
-        // no copying (unique_ptr member), made explicit
-        ShaderEffectBase(const ShaderEffectBase&) = delete;
-        ShaderEffectBase& operator=(const ShaderEffectBase&) = delete;
-
         void setEnabled(bool enabled);
-        [[nodiscard]] bool isEnabled() const;
+        bool isEnabled() const;
 
-        [[nodiscard]] IPostProcessor *getPostProcessor() const;
+        IPostProcessor *getPostProcessor() const;
 
     protected:
         std::unique_ptr<IPostProcessor> m_processor;

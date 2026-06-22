@@ -7,14 +7,14 @@
 
 void cglClearError()
 {
-    while (glGetError() != GL_NO_ERROR) {};
+    while (glGetError() != GL_NO_ERROR);
 }
 
 bool cglLogCall(const char *function, const char *file, int line)
 {
     while (const GLenum error = glGetError())
     {
-        std::cerr << "[OpenGL ERROR] (" << error << "): " << function << " -> " << file << ":" << line << '\n';
+        std::cerr << "[OpenGL ERROR] (" << error << "): " << function << " -> " << file << ":" << line << std::endl;
         return false;
     }
     return true;
@@ -22,9 +22,9 @@ bool cglLogCall(const char *function, const char *file, int line)
 
 std::string readFile(const std::string &filePath)
 {
-    const std::ifstream stream(filePath);
+    std::ifstream stream(filePath);
     if (!stream.is_open()) {
-        std::cerr << "ERROR: can't open file: " << filePath << '\n';
+        std::cerr << "ERROR: can't open file: " << filePath << std::endl;
         return "";
     }
     std::stringstream buffer;
@@ -42,7 +42,7 @@ ShaderProgramSource parseShader(const std::string &vertexFilePath, const std::st
 
 unsigned int compileShader(unsigned int type, const std::string &source)
 {
-    GLC(const unsigned int id = glCreateShader(type);)
+    GLC(unsigned int id = glCreateShader(type);)
     const char *str = source.c_str();
     GLC(glShaderSource(id, 1, &str, nullptr));
     GLC(glCompileShader(id));
@@ -53,10 +53,10 @@ unsigned int compileShader(unsigned int type, const std::string &source)
     {
         int lenght;
         GLC(glGetShaderiv(id, GL_INFO_LOG_LENGTH, &lenght));
-        char *message = static_cast<char *>( alloca(lenght * sizeof(char))); // -> char message[lenght]
+        char *message = (char *) alloca(lenght * sizeof(char)); // -> char message[lenght]
         GLC(glGetShaderInfoLog(id, lenght, &lenght, message));
-        std::cout << "Failed to compile " << (type == GL_VERTEX_SHADER ? "vertex" : "fragment") << " shader" << '\n';
-        std::cout << message << '\n';
+        std::cout << "Failed to compile " << (type == GL_VERTEX_SHADER ? "vertex" : "fragment") << " shader" << std::endl;
+        std::cout << message << std::endl;
         GLC(glDeleteShader(id));
         return 0;
     }
@@ -66,9 +66,9 @@ unsigned int compileShader(unsigned int type, const std::string &source)
 
 unsigned int createShader(const std::string &vertexSource, const std::string &fragmentSource)
 {
-    GLC(const unsigned int program = glCreateProgram());
-    GLC(const unsigned int vertex = compileShader(GL_VERTEX_SHADER, vertexSource));
-    GLC(const unsigned int fragment = compileShader(GL_FRAGMENT_SHADER, fragmentSource));
+    GLC(unsigned int program = glCreateProgram());
+    GLC(unsigned int vertex = compileShader(GL_VERTEX_SHADER, vertexSource));
+    GLC(unsigned int fragment = compileShader(GL_FRAGMENT_SHADER, fragmentSource));
 
     GLC(glAttachShader(program, vertex));
     GLC(glAttachShader(program, fragment));

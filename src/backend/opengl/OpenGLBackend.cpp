@@ -21,7 +21,7 @@ IFrameBuffer* OpenGLBackend::createFrameBuffer(int width, int height) {
 }
 
 IPostProcessor* OpenGLBackend::createPostProcessor(const std::string& vert, const std::string& frag) {
-    auto *processor = new OpenGLPostProcessor();
+    auto processor = new OpenGLPostProcessor();
     processor->setShader(vert, frag);
     return processor;
 }
@@ -31,7 +31,7 @@ ITexture* OpenGLBackend::createTexture(const int width, const int height) {
 }
 
 IShader* OpenGLBackend::createShader(const std::string& vert, const std::string& frag) {
-    auto *shader = new OpenGLShader();
+    auto shader = new OpenGLShader();
     shader->loadFromFiles(vert, frag);
     return shader;
 }

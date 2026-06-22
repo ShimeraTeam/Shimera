@@ -17,17 +17,17 @@ IFrameBuffer* RaylibBackend::createFrameBuffer(int width, int height) {
 }
 
 IPostProcessor* RaylibBackend::createPostProcessor(const std::string& vert, const std::string& frag) {
-    auto *processor = new RaylibPostProcessor();
+    auto processor = new RaylibPostProcessor();
     processor->setShader(vert, frag);
     return processor;
 }
 
-ITexture* RaylibBackend::createTexture(int /*width*/, int /*height*/) {
+ITexture* RaylibBackend::createTexture(int width, int height) {
     return nullptr;
 }
 
 IShader* RaylibBackend::createShader(const std::string& vert, const std::string& frag) {
-    auto *shader = new RaylibShader();
+    auto shader = new RaylibShader();
     shader->loadFromFiles(vert, frag);
     return shader;
 }

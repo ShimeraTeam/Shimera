@@ -30,12 +30,12 @@ using shimera::RaylibBackend;
 IBackend* BackendFactory::create() {
 #ifdef SHIMERA_BACKEND_OPENGL
     return new OpenGLBackend();
-#elifdef SHIMERA_BACKEND_SFML
+#elif defined(SHIMERA_BACKEND_SFML)
     return new SFMLBackend();
-#elifdef SHIMERA_BACKEND_SDL
+#elif defined(SHIMERA_BACKEND_SDL)
     // return new SDLBackend();
     return nullptr;
-#elifdef SHIMERA_BACKEND_RAYLIB
+#elif defined(SHIMERA_BACKEND_RAYLIB)
     return new RaylibBackend();
 #else
     #error "No backend defined. Define SHIMERA_BACKEND_OPENGL, SHIMERA_BACKEND_SFML, or SHIMERA_BACKEND_SDL"

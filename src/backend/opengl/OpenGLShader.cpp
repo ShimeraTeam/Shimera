@@ -21,7 +21,7 @@ OpenGLShader::~OpenGLShader() {
 }
 
 void OpenGLShader::loadFromFiles(const std::string& vertPath, const std::string& fragPath) {
-    const ShaderProgramSource source = parseShader(vertPath, fragPath);
+    ShaderProgramSource source = parseShader(vertPath, fragPath);
 
     m_programId = createShader(source.vertex, source.fragment);
 
@@ -30,7 +30,7 @@ void OpenGLShader::loadFromFiles(const std::string& vertPath, const std::string&
     }
 
     bind();
-    const int location = getUniformLocation("u_screenTexture");
+    int location = getUniformLocation("u_screenTexture");
     if (location != -1) {
         GLC(glUniform1i(location, 0));
     }
@@ -48,7 +48,7 @@ void OpenGLShader::unbind() const {
 void OpenGLShader::setUniform(const std::string& name, const UniformValue& value) {
     const int location = getUniformLocation(name);
     if (location == -1) {
-        std::cerr << "Warning: Uniform '" << name << "' not found in shader." << '\n';
+        std::cerr << "Warning: Uniform '" << name << "' not found in shader." << std::endl;
         return;
     }
 
@@ -80,7 +80,7 @@ int OpenGLShader::getUniformLocation(const std::string& name) {
         return it->second;
     }
 
-    GLC(const int location = glGetUniformLocation(m_programId, name.c_str()));
+    GLC(int location = glGetUniformLocation(m_programId, name.c_str()));
     m_uniformCache[name] = location;
 
     return location;

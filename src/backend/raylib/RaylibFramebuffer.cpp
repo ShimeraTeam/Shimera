@@ -21,11 +21,11 @@ void RaylibFramebuffer::unbind() {
 }
 
 void RaylibFramebuffer::clear(shimera::Color color) {
-    const ::Color raylibColor = {
-        .r = static_cast<unsigned char>(color.m_r * 255),
-        .g = static_cast<unsigned char>(color.m_g * 255),
-        .b = static_cast<unsigned char>(color.m_b * 255),
-        .a = static_cast<unsigned char>(color.m_a * 255)
+    ::Color raylibColor = {
+        static_cast<unsigned char>(color.m_r * 255),
+        static_cast<unsigned char>(color.m_g * 255),
+        static_cast<unsigned char>(color.m_b * 255),
+        static_cast<unsigned char>(color.m_a * 255)
     };
 
     ClearBackground(raylibColor);

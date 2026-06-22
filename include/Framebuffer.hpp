@@ -11,7 +11,7 @@ public:
     ~Framebuffer();
     void bind() const;
     void unbind() const;
-    [[nodiscard]] unsigned int getTexture() const;
+    unsigned int getTexture() const;
 
 private:
     unsigned int m_fbo, m_texture, m_rbo;
