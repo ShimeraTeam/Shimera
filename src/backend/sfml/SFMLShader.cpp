@@ -22,7 +22,7 @@ SFMLShader::~SFMLShader() {
 }
 
 void SFMLShader::loadFromFiles(const std::string& vertPath, const std::string& fragPath) {
-    const ShaderProgramSource source = parseShader(vertPath, fragPath);
+    ShaderProgramSource source = parseShader(vertPath, fragPath);
     
     m_programId = createShader(source.vertex, source.fragment);
     
@@ -32,7 +32,7 @@ void SFMLShader::loadFromFiles(const std::string& vertPath, const std::string& f
     
     // Set up the texture sampler uniform (u_screenTexture) which is automatically bound to texture unit 0
     bind();
-    const int location = getUniformLocation("u_screenTexture");
+    int location = getUniformLocation("u_screenTexture");
     if (location != -1) {
         GLC(glUniform1i(location, 0));
     }
@@ -48,9 +48,9 @@ void SFMLShader::unbind() const {
 }
 
 void SFMLShader::setUniform(const std::string& name, const UniformValue& value) {
-    const int location = getUniformLocation(name);
+    int location = getUniformLocation(name);
     if (location == -1) {
-        std::cerr << "Warning: Uniform '" << name << "' not found in shader." << '\n';
+        std::cerr << "Warning: Uniform '" << name << "' not found in shader." << std::endl;
         return;
     }
     
@@ -83,7 +83,7 @@ int SFMLShader::getUniformLocation(const std::string& name) {
         return it->second;
     }
 
-    GLC(const int location = glGetUniformLocation(m_programId, name.c_str()));
+    GLC(int location = glGetUniformLocation(m_programId, name.c_str()));
     m_uniformCache[name] = location;
     
     return location;

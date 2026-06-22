@@ -4,8 +4,8 @@ repos:
     hooks:
       - id: validate-commit-msg
         name: Validate commit format
-        entry: python .githooks/validate-commit-msg.py
-        language: python
+        entry: .githooks/validate-commit-msg.sh
+        language: script
         stages: [commit-msg]
 
       - id: compile-commands

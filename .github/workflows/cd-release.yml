@@ -14,16 +14,10 @@ jobs:
       strategy:
         matrix:
           plateform: [ubuntu-latest, windows-latest]
-          backend: [ opengl, sfml, raylib ]
-          architecture: [x86, x64]
-          exclude:
-            - plateform: ubuntu-latest
-              architecture: x86
-
       runs-on: ${{ matrix.plateform }}
       name: Build Shimera
       steps:
-        - uses: actions/checkout@v6.0.3
+        - uses: actions/checkout@v6
 
         - name: Install system dependencies
           if: runner.os == 'Linux'
@@ -36,98 +30,56 @@ jobs:
             libxkbcommon-dev libxcb1-dev libxcb-image0-dev libxcb-keysyms1-dev \
             libxcb-shm0-dev libxcb-randr0-dev
 
-        - name: Setup MSVC
-          if: runner.os == 'Windows'
-          uses: TheMrMilchmann/setup-msvc-dev@v4
-          with:
-            arch: ${{ matrix.architecture }}
-
         - name: Setup xmake
           uses: xmake-io/github-action-setup-xmake@v1
           with:
             xmake-version: latest
             actions-cache-folder: ".xmake-cache"
 
+        - name: Build Shimera
+          run: xmake -y
+
         - name: Extract version
           id: get_version
           shell: bash
           run: echo "version=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
 
-        - name: Builds Linux
+        - name: Tar Linux build
           if: runner.os == 'Linux'
-          run: |
-            for mode in release debug; do
-              for shared in n y; do
-                xmake f -y -c -m $mode --shared=$shared
-                xmake build shimera-${{ matrix.backend }}
-              done
-            done
+          run: tar -cvf shimera-${{ env.version }}-linux.tar build/
 
-        - name: Builds Windows
+        - name: Zip Windows build
           if: runner.os == 'Windows'
-          shell: powershell
-          run: |
-            foreach ($mode in @("release", "debug")) {
-              foreach ($shared in @("n", "y")) {
-                xmake f -y -c -m $mode --shared=$shared -a ${{ matrix.architecture }}
-                xmake build shimera-${{ matrix.backend }}
-              }
-            }
-
-        - name: Tar Linux builds
-          if: runner.os == 'Linux'
-          run: |
-            mkdir -p shimera-${{ env.version }}/lib shimera-${{ env.version }}/include/shimera
-            mv build/linux/x86_64/{release,debug}/*.{so,a} shimera-${{ env.version }}/lib/
-            mv include shimera-${{ env.version }}
-            mv README.md shimera-${{ env.version }}
-            mv CHANGELOG.md shimera-${{ env.version }}
-            tar -cvf shimera-${{ env.version }}-${{ matrix.backend }}-linux-${{ matrix.architecture }}.tar shimera-${{ env.version }}
-
-        - name: Zip Windows builds
-          if: runner.os == 'Windows'
-          shell: powershell
-          run: |
-            New-Item -ItemType Directory -Force -Path shimera-${{ env.version }}\lib, shimera-${{ env.version }}\bin, shimera-${{ env.version }}\include\shimera
-            Move-Item build\windows\${{ matrix.architecture }}\release\*.lib, build\windows\${{ matrix.architecture }}\debug\*.lib shimera-${{ env.version }}\lib\
-            Move-Item build\windows\${{ matrix.architecture }}\release\*.dll, build\windows\${{ matrix.architecture }}\debug\*.dll shimera-${{ env.version }}\bin\
-            Get-ChildItem build\windows\${{ matrix.architecture }}\release\*.pdb, build\windows\${{ matrix.architecture }}\debug\*.pdb | Where-Object { $_.Name -notlike "compile.*" } | Move-Item -Destination shimera-${{ env.version }}\bin\
-            Move-Item include shimera-${{ env.version }}
-            Move-Item README.md shimera-${{ env.version }}
-            Move-Item CHANGELOG.md shimera-${{ env.version }}
-            Compress-Archive -Path shimera-${{ env.version }} -DestinationPath shimera-${{ env.version }}-${{ matrix.backend }}-windows-${{ matrix.architecture }}.zip
+          shell: bash
+          run: powershell Compress-Archive -Path build\* -DestinationPath shimera-${{ env.version }}-windows.zip
 
         - name: Upload Linux artifact
           if: runner.os == 'Linux'
-          uses: actions/upload-artifact@v7
+          uses: actions/upload-artifact@v6
           with:
-            name: shimera-build-linux-${{ matrix.backend }}
-            path: shimera-${{ env.version }}-${{ matrix.backend }}-linux-${{ matrix.architecture }}.tar
+            name: shimera-build-Linux
+            path: shimera-${{ env.version }}-linux.tar
 
         - name: Upload Windows artifact
           if: runner.os == 'Windows'
-          uses: actions/upload-artifact@v7
+          uses: actions/upload-artifact@v6
           with:
-            name: shimera-build-windows-${{ matrix.backend }}-${{ matrix.architecture }}
-            path: shimera-${{ env.version }}-${{ matrix.backend }}-windows-${{ matrix.architecture }}.zip
+            name: shimera-build-Windows
+            path: shimera-${{ env.version }}-windows.zip
 
   publish:
     needs: [build-Shimera]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6.0.3
-
-      - name: Download Linux builds
-        uses: actions/download-artifact@v8
+      - name: Download Linux build
+        uses: actions/download-artifact@v7
         with:
-          pattern: shimera-build-linux-*
-          merge-multiple: true
+          name: shimera-build-Linux
 
-      - name: Download Windows builds
-        uses: actions/download-artifact@v8
+      - name: Download Windows build
+        uses: actions/download-artifact@v7
         with:
-          pattern: shimera-build-windows-*
-          merge-multiple: true
+          name: shimera-build-Windows
 
       - name: Check if prerelease
         id: check_prerelease
@@ -143,16 +95,15 @@ jobs:
         run: echo "version=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
 
       - name: Create Release
-        uses: softprops/action-gh-release@v3
+        uses: softprops/action-gh-release@v2
         if: github.ref_type == 'tag'
         with:
           tag_name: ${{ github.ref_name }}
           name: Shimera ${{ env.version }}
           prerelease: ${{ env.prerelease }}
-          body_path: CHANGELOG.md
           files: |
-            *.tar
-            *.zip
+            shimera-${{ env.version }}-linux.tar
+            shimera-${{ env.version }}-windows.zip
 
   check-tag:
     needs: [publish]
@@ -160,7 +111,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6.0.3
+        uses: actions/checkout@v6
 
       - name: Extract tag name
         id: get_tag

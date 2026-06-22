@@ -27,22 +27,22 @@ void DistortionEffect::updateUniforms() {
     m_processor->setUniform("timeScale", m_uTimeScale);
 }
 
-DistortionEffect& DistortionEffect::withTime(float time) {
-    m_uTime = time;
+DistortionEffect& DistortionEffect::withTime(float t) {
+    m_uTime = t;
     return *this;
 }
 
-DistortionEffect& DistortionEffect::withNoiseScale(float noiseScale) {
-    m_uNoiseScale = noiseScale;
+DistortionEffect& DistortionEffect::withNoiseScale(float s) {
+    m_uNoiseScale = s;
     return *this;
 }
 
-DistortionEffect& DistortionEffect::withDistortionStrength(float distortionStrength) {
-    m_uDistortionStrength = distortionStrength;
+DistortionEffect& DistortionEffect::withDistortionStrength(float s) {
+    m_uDistortionStrength = s;
     return *this;
 }
 
-DistortionEffect& DistortionEffect::withTimeScale(float timeScale) {
-    m_uTimeScale = timeScale;
+DistortionEffect& DistortionEffect::withTimeScale(float s) {
+    m_uTimeScale = s;
     return *this;
 }

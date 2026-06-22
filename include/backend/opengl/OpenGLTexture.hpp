@@ -11,7 +11,7 @@ namespace shimera {
  */
 class OpenGLTexture final : public ITexture {
     public:
-        explicit OpenGLTexture(int width, int height);
+        explicit OpenGLTexture(const int width, const int height);
         ~OpenGLTexture() override;
 
         OpenGLTexture(const OpenGLTexture&) = delete;
