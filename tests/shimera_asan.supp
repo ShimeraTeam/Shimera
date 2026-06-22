@@ -1,4 +1,0 @@
-leak:libGL
-leak:libGLX
-leak:libGLX_mesa
-leak:libnvidia-glcore.so

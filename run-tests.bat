@@ -9,21 +9,15 @@ cmd /c "xmake"
 call :run_test "Build Shimera Opengl" "xmake build shimera-opengl"
 call :run_test "Build Shimera Raylib" "xmake build shimera-raylib"
 call :run_test "Build Shimera SFML" "xmake build shimera-sfml"
-call :run_test "Build Memory Test Opengl" "xmake build test-memory-opengl"
-call :run_test "Build Memory Test Raylib" "xmake build test-memory-raylib"
-call :run_test "Build Memory Test SFML" "xmake build test-memory-sfml"
-call :run_test "Build Benchmark Opengl" "xmake build bench-opengl"
-call :run_test "Build Benchmark Raylib" "xmake build bench-raylib"
-call :run_test "Build Benchmark Sfml" "xmake build bench-sfml"
+call :run_test "Build Opengl Tests" "xmake build opengl-tests"
+call :run_test "Build Raylib Tests" "xmake build raylib-tests"
+call :run_test "Build SFML Tests" "xmake build sfml-tests"
 
 cd build/windows/x64/debug/
 
-call :run_test "Memory Opengl" ".\test-memory-opengl"
-call :run_test "Memory Raylib" ".\test-memory-raylib"
-call :run_test "Memory Sfml" ".\test-memory-sfml"
-call :run_test "Benchmark Opengl" ".\bench-opengl" "BENCH"
-call :run_test "Benchmark Raylib" ".\bench-raylib" "BENCH"
-call :run_test "Benchmark Sfml" ".\bench-sfml" "BENCH"
+call :run_test "Run Opengl Tests" ".\opengl-tests"
+call :run_test "Run Raylib Tests" ".\raylib-tests"
+call :run_test "Run Sfml Tests" ".\sfml-tests"
 
 EXIT /B 0
 
