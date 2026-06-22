@@ -21,9 +21,9 @@ class SHIMERA_API VignetteEffect final : public ShaderEffect<VignetteEffect> {
             float strength,
             float radius,
             float gap,
-            Vec4<float> color = Vec4(0.0f, 0.0f, 0.0f, 1.0f),
+            Vec4<float> color = Vec4<float>(0.0f, 0.0f, 0.0f, 1.0f),
             bool isRounded = false,
-            Vec2<float> resolution = Vec2(1920.0f, 1080.0f));
+            Vec2<float> resolution = Vec2<float>(1920.0f, 1080.0f));
 
         void updateUniforms() override;
 

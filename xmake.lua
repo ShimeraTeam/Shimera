@@ -38,9 +38,13 @@ target("shimera-opengl")
     add_files("src/effects/*.cpp")
     add_headerfiles("include/(*.h)")
     add_headerfiles("include/(*.hpp)")
+    add_headerfiles("include/(*.inl)")
     add_headerfiles("include/uniform/(*.hpp)")
+    add_headerfiles("include/uniform/(*.inl)")
+    add_headerfiles("include/backend/(*.inl)")
     add_headerfiles("include/backend/opengl/(*.hpp)")
     add_headerfiles("include/effects/(*.hpp)")
+    add_headerfiles("include/effects/(*.inl)")
     add_includedirs("include", {public = true})
     add_packages("glew", {public = true})
     add_defines("SHIMERA_BACKEND_OPENGL", {public = true})
@@ -49,8 +53,18 @@ target("shimera-opengl")
         set_kind("shared")
         add_defines("SHIMERA_EXPORTS")
         add_defines("SHIMERA_SHARED", {public = true})
+        if is_mode("debug") then
+            set_basename("shimera-opengl-d")
+        else
+            set_basename("shimera-opengl")
+        end
     else
         set_kind("static")
+        if is_mode("debug") then
+            set_basename("shimera-opengl-s-d")
+        else
+            set_basename("shimera-opengl-s")
+        end
     end
 
     if is_plat("windows") then
@@ -70,9 +84,13 @@ target("shimera-sfml")
     add_files("src/effects/*.cpp")
     add_headerfiles("include/(*.h)")
     add_headerfiles("include/(*.hpp)")
+    add_headerfiles("include/(*.inl)")
     add_headerfiles("include/uniform/(*.hpp)")
+    add_headerfiles("include/uniform/(*.inl)")
+    add_headerfiles("include/backend/(*.inl)")
     add_headerfiles("include/backend/sfml/(*.hpp)")
     add_headerfiles("include/effects/(*.hpp)")
+    add_headerfiles("include/effects/(*.inl)")
     add_includedirs("include", {public = true})
     add_packages("glew", {public = true})
     add_packages("sfml", {public = true})
@@ -82,8 +100,18 @@ target("shimera-sfml")
         set_kind("shared")
         add_defines("SHIMERA_EXPORTS")
         add_defines("SHIMERA_SHARED", {public = true})
+        if is_mode("debug") then
+            set_basename("shimera-sfml-d")
+        else
+            set_basename("shimera-sfml")
+        end
     else
         set_kind("static")
+        if is_mode("debug") then
+            set_basename("shimera-sfml-s-d")
+        else
+            set_basename("shimera-sfml-s")
+        end
     end
 
     if is_plat("windows") then
@@ -101,7 +129,10 @@ target("shimera-sdl")
     add_files("src/backend/*.cpp")
     add_headerfiles("include/(*.h)")
     add_headerfiles("include/(*.hpp)")
+    add_headerfiles("include/(*.inl)")
     add_headerfiles("include/uniform/(*.hpp)")
+    add_headerfiles("include/uniform/(*.inl)")
+    add_headerfiles("include/backend/(*.inl)")
     add_includedirs("include", {public = true})
     add_packages("glew", {public = true})
     add_packages("libsdl3", {public = true})
@@ -132,9 +163,13 @@ target("shimera-raylib")
     add_files("src/effects/*.cpp")
     add_headerfiles("include/(*.h)")
     add_headerfiles("include/(*.hpp)")
+    add_headerfiles("include/(*.inl)")
     add_headerfiles("include/uniform/(*.hpp)")
+    add_headerfiles("include/uniform/(*.inl)")
+    add_headerfiles("include/backend/(*.inl)")
     add_headerfiles("include/backend/raylib/(*.hpp)")
     add_headerfiles("include/effects/(*.hpp)")
+    add_headerfiles("include/effects/(*.inl)")
     add_includedirs("include", {public = true})
     add_packages("glew", {public = true})
     add_packages("raylib", {public = true})
@@ -144,8 +179,18 @@ target("shimera-raylib")
         set_kind("shared")
         add_defines("SHIMERA_EXPORTS")
         add_defines("SHIMERA_SHARED", {public = true})
+        if is_mode("debug") then
+            set_basename("shimera-raylib-d")
+        else
+            set_basename("shimera-raylib")
+        end
     else
         set_kind("static")
+        if is_mode("debug") then
+            set_basename("shimera-raylib-s-d")
+        else
+            set_basename("shimera-raylib-s")
+        end
     end
 
     if is_plat("windows") then

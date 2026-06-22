@@ -8,7 +8,7 @@
     #if defined(_WIN32) || defined(_MSC_VER)
         #define DEBUG_BREAK() __debugbreak()
     #elif defined(__GNUC__) || defined(__clang__)
-        #include <signal.h>
+        #include <csignal>
         #define DEBUG_BREAK() raise(SIGTRAP)
     #else
         #include <cstdlib>

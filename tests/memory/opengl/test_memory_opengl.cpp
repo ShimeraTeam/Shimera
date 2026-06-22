@@ -6,17 +6,18 @@
 #include "effects/ChromaticAberration.hpp"
 
 #ifdef _WIN32
-    #define _CRTDBG_MAP_ALLOC
+    #define CRTDBG_MAP_ALLOC
     #include <crtdbg.h>
 #endif
 
 int main() {
     GLFWwindow* window;
 
-    if (!glfwInit())
+    if (!glfwInit()) {
         return -1;
+    }
 
-    window = glfwCreateWindow(640, 480, "shimera memory test - opengl", NULL, NULL);
+    window = glfwCreateWindow(640, 480, "shimera memory test - opengl", nullptr, nullptr);
     if (!window)
     {
         glfwTerminate();
@@ -27,8 +28,9 @@ int main() {
 
     glfwSwapInterval(1);
 
-    if (glewInit() != GLEW_OK)
-        std::cout << "GLEW ERROR" << std::endl;
+    if (glewInit() != GLEW_OK) {
+        std::cout << "GLEW ERROR" << '\n';
+    }
 
 #ifdef _WIN32
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
@@ -73,7 +75,7 @@ int main() {
     {
         shimera::IBackend *backend = shimera::BackendFactory::create();
         for (int i = 0; i < 100; i++) {
-            shimera::IFrameBuffer *fb = backend->createFrameBuffer(960, 540);
+            const shimera::IFrameBuffer *fb = backend->createFrameBuffer(960, 540);
             delete fb;
         }
         delete backend;

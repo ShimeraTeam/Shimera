@@ -9,7 +9,10 @@
 #include <shimera.h>
 #include "backend/BackendFactory.hpp"
 #include "backend/sfml/SFMLFramebuffer.hpp"
+#include "effects/DistortionEffect.hpp"
 #include "effects/GaussianBlurEffect.hpp"
+#include "EffectPipeline.inl"
+#include "effects/VignetteEffect.hpp"
 
 using namespace shimera;
 
@@ -17,20 +20,20 @@ using namespace shimera;
 int main()
 {
     const sf::VideoMode videoMode({960, 540});
-    sf::RenderWindow window(videoMode, "SFML3 - Gaussian Blur");
+    sf::RenderWindow window(videoMode, "SFML3 - Nice Multi-pass Post-processing");
     window.setActive(true);
 
     //TODO: Try to embed that in the backend so the user doesn't have to worry about it (or at least make it optional)
     if (glewInit() != GLEW_OK) {
-        std::cerr << "[GLEW] initialization failed!" << std::endl;
+        std::cerr << "[GLEW] initialization failed!" << '\n';
         return -1;
     }
 
-    std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
+    std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << '\n';
 
     IBackend *backend = BackendFactory::create();
     if (!backend) {
-        std::cerr << "Failed to create backend!" << std::endl;
+        std::cerr << "Failed to create backend!" << '\n';
         return -1;
     }
 
@@ -42,6 +45,12 @@ int main()
                       .withSamples(15)
                       .withResolution(Vec2(960.0f, 540.0f));
 
+    // Effect Pipeline: Managing fbo passes automatically
+    EffectPipeline pipeline(backend, videoMode.size.x, videoMode.size.y);
+    pipeline.addEffect<DistortionEffect>()
+            .addEffect(std::move(gaussianBlurEffect))
+            .addEffect<VignetteEffect>(1.0f, 0.4f, 0.3f)
+            .build();
 
     // sf::CircleShape circle(80.f);
     // circle.setFillColor(sf::Color::Magenta);
@@ -57,23 +66,29 @@ int main()
 
     sf::Texture texture;
     if (!texture.loadFromFile("../../../../examples/res/assets/image_test.jpg")) {
-        std::cerr << "Error loading image" << std::endl;
+        std::cerr << "Error loading image" << '\n';
         return -1;
     }
     sf::Sprite sprite(texture);
     sprite.setPosition(sf::Vector2f(0.f, 0.f));
     sprite.setScale(sf::Vector2f(0.5f, 0.5f));
 
+    sf::Clock clock;
+    clock.start();
     while (window.isOpen())
     {
         while (const std::optional event = window.pollEvent())
         {
-            if (event->is<sf::Event::Closed>())
+            if (event->is<sf::Event::Closed>()) {
                 window.close();
+            }
         }
 
-        if (!window.setActive(true))
+        if (!window.setActive(true)) {
             break;
+        }
+
+        pipeline.get<DistortionEffect>().m_uTime = clock.getElapsedTime().asSeconds();
 
         // Render scene to the framebuffer
         auto *sfmlRenderTexture = static_cast<sf::RenderTexture*>(sceneFramebuffer->getNativeRenderTarget());
@@ -88,10 +103,11 @@ int main()
         // Apply gaussian blur and render to screen
         window.setActive(true);
         glClear(GL_COLOR_BUFFER_BIT);
-        gaussianBlurEffect.render(sceneFramebuffer->getTexture());
+        pipeline.render(sceneFramebuffer->getTexture());
 
         window.display();
     }
+    clock.stop();
 
     // Cleanup
     //TODO: Maybe try to auto clean this (do that in the destructor of the respective classes)

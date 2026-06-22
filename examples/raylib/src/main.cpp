@@ -12,10 +12,11 @@ int main() {
 
     InitWindow(screenWidth, screenHeight, "Raylib - Multi-Pass Post-Processing");
 
-    if (glewInit() != GLEW_OK)
-        std::cerr << "[GLEW] initialization failed!" << std::endl;
+    if (glewInit() != GLEW_OK) {
+        std::cerr << "[GLEW] initialization failed!" << '\n';
+    }
 
-    std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
+    std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << '\n';
 
     Camera camera = { 0 };
     camera.position = { 10.0f, 10.0f, 10.0f };
@@ -24,11 +25,11 @@ int main() {
     camera.fovy = 25.0f;
     camera.projection = CAMERA_PERSPECTIVE;
 
-    Vector3 cubePosition = { 0.0f, 0.0f, 0.0f };
+    const Vector3 cubePosition = { 0.0f, 0.0f, 0.0f };
 
     shimera::IBackend *backend = shimera::BackendFactory::create();
     if (!backend) {
-        std::cerr << "Failed to create backend!" << std::endl;
+        std::cerr << "Failed to create backend!" << '\n';
         return -1;
     }
 
@@ -61,9 +62,9 @@ int main() {
         sceneFramebuffer->unbind();
 
         // Project cube center to screen space and align the pixel grid on it
-        Vector2 cubeScreen = GetWorldToScreen(cubePosition, camera);
-        float pixelUVx = pixelisationEffect.m_uPixelSizeX / screenWidth;
-        float pixelUVy = pixelisationEffect.m_uPixelSizeY / screenHeight;
+        const Vector2 cubeScreen = GetWorldToScreen(cubePosition, camera);
+        const float pixelUVx = pixelisationEffect.m_uPixelSizeX / screenWidth;
+        const float pixelUVy = pixelisationEffect.m_uPixelSizeY / screenHeight;
         pixelisationEffect.m_uOffset = shimera::Vec2(
             cubeScreen.x / screenWidth - pixelUVx * 0.5f,
             cubeScreen.y / screenHeight - pixelUVy * 0.5f

@@ -22,8 +22,8 @@ public:
     void clear(shimera::Color color) override;
     ITexture& getTexture() override;
     void resize(int width, int height) override;
-    int getWidth() const override;
-    int getHeight() const override;
+    [[nodiscard]] int getWidth() const override;
+    [[nodiscard]] int getHeight() const override;
     void* getNativeRenderTarget() override;
 
 private:
