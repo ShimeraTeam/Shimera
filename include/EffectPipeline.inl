@@ -13,6 +13,7 @@ class SHIMERA_API EffectPipeline
     public:
         EffectPipeline(IBackend* backend, const unsigned int width, const unsigned int height)
             : m_backend(backend), m_width(width), m_height(height) {}
+        EffectPipeline(EffectPipeline &&) = default;
         ~EffectPipeline() = default;
 
         template<typename TEffect>
@@ -76,6 +77,18 @@ class SHIMERA_API EffectPipeline
 
         [[nodiscard]] std::size_t size() const {
             return m_effects.size();
+        }
+
+        std::string getEffectsNames() const {
+            std::string names;
+            if (m_effects.empty())
+                return "no_effects";
+            for (const auto &fx : m_effects) {
+                names += fx->getName() + ", ";
+            }
+            if (!names.empty())
+                names.pop_back(), names.pop_back();
+            return names;
         }
 
     private:

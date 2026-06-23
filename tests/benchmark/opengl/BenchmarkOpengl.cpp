@@ -12,7 +12,8 @@ __declspec(dllexport) unsigned long NvOptimusEnablement = 1;
 
 static constexpr int FRAMES = 5000;
 
-BenchmarkOpengl::BenchmarkOpengl(const std::string &testName, GLFWwindow* window) {
+BenchmarkOpengl::BenchmarkOpengl(const std::string &testName, GLFWwindow* window, shimera::IBackend* backend, 
+    shimera::EffectPipeline &&pipeline, GLint vramUsed) : m_backend(backend), m_pipeline(std::move(pipeline)), m_vramUsed(vramUsed) {
     m_name = testName;
     m_window = window;
 }
@@ -69,12 +70,9 @@ void BenchmarkOpengl::setupScene(BenchmarkReport &report) {
     GLint vramBefore = 0;
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
 
-    m_backend = shimera::BackendFactory::create();
     m_sceneFramebuffer = m_backend->createFrameBuffer(960, 540);
 
-    m_distortionEffect = new shimera::DistortionEffect(m_backend);
-    m_distortionEffect->withDistortionStrength(0.2f)
-        .withNoiseScale(4.0f);
+    m_pipeline.build();
 
     glFinish();
 
@@ -82,11 +80,11 @@ void BenchmarkOpengl::setupScene(BenchmarkReport &report) {
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramAfter);
 
     GLint usedKb;
-    if (vramBefore >= 0 && vramAfter >= 0)
-    {
+    if (vramBefore >= 0 && vramAfter >= 0) {
         usedKb = vramBefore - vramAfter;
-        std::cout << "[VRAM BENCH] GPU  : " << glGetString(GL_RENDERER) << "\n";
-        std::cout << "[VRAM BENCH] Used : " << usedKb / 1024 << " MB" << " (" << usedKb << " KB)\n";
+    }
+    if (m_vramUsed >= 0) {
+        usedKb += m_vramUsed;
     }
     report.setVramUsed(usedKb);
 }
@@ -111,11 +109,12 @@ void BenchmarkOpengl::renderScene(float &time, float &r) {
 
     // Render to screen
     m_sceneFramebuffer->unbind();
-    m_distortionEffect->m_uTime = time;
+    if (m_pipeline.getEffectsNames().find("DistortionEffect") != std::string::npos) {
+        m_pipeline.get<shimera::DistortionEffect>().m_uTime = time;
+    }
     GLC(glClearColor(0.1f, 0.1f, 0.1f, 1.0f));
     GLC(glClear(GL_COLOR_BUFFER_BIT));
-    m_distortionEffect->render(m_sceneFramebuffer->getTexture());
-
+    m_pipeline.render(m_sceneFramebuffer->getTexture());
     time += 0.06f;
 
     glfwSwapBuffers(m_window);
@@ -138,14 +137,12 @@ void BenchmarkOpengl::run() {
     }
 
     auto end = std::chrono::high_resolution_clock::now();
-    double totalMs = std::chrono::duration<double, std::milli>(end - start).count();
-    double avgFps  = FRAMES / (totalMs / 1000.0);
-
-    std::cout << "[FPS OPENGL BENCH] Frames    : " << FRAMES   << std::endl;
-    std::cout << "[FPS OPENGL BENCH] Avg FPS   : " << avgFps   << std::endl;
+    int totalMs = std::chrono::duration<double, std::milli>(end - start).count();
+    int avgFps  = FRAMES / (totalMs / 1000.0);
 
     report.setGpu(reinterpret_cast<const char*>(glGetString(GL_RENDERER)))
           .setBackend("OpenGl")
+          .setEffects(m_pipeline.getEffectsNames())
           .setAvgFps(avgFps)
           .setTotalMs(totalMs)
           .setFrames(FRAMES);
@@ -156,9 +153,6 @@ void BenchmarkOpengl::run() {
     GLC(glDeleteBuffers(1, &m_buffer));
     GLC(glDeleteBuffers(1, &m_ibo));
     delete m_sceneFramebuffer;
-    delete m_backend;
     delete m_colorUniform;
-    delete m_distortionEffect;
-    glfwTerminate();
     return;
 }

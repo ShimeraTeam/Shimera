@@ -46,3 +46,7 @@ DistortionEffect& DistortionEffect::withTimeScale(float timeScale) {
     m_uTimeScale = timeScale;
     return *this;
 }
+
+std::string DistortionEffect::getName() const {
+    return "DistortionEffect";
+}

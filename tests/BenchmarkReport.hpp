@@ -11,6 +11,7 @@ class BenchmarkReport {
 
     BenchmarkReport &setGpu(const std::string& gpu);
     BenchmarkReport &setBackend(const std::string& backend);
+    BenchmarkReport &setEffects(const std::string& effects);
     BenchmarkReport &setAvgFps(double avgFps);
     BenchmarkReport &setTotalMs(double totalMs);
     BenchmarkReport &setFrames(double frames);
@@ -22,6 +23,7 @@ class BenchmarkReport {
     private:
         std::string m_gpu;
         std::string m_backend;
+        std::string m_effects;
         double m_avgFps;
         double m_totalMs;
         double m_frames;

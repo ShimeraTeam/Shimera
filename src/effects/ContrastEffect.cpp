@@ -25,3 +25,7 @@ ContrastEffect &ContrastEffect::withContrastFactor(float u_contrastFactor) {
     this->m_uContrastFactor = u_contrastFactor;
     return *this;
 }
+
+std::string ContrastEffect::getName() const {
+    return "ContrastEffect";
+}

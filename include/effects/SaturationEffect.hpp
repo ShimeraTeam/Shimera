@@ -17,6 +17,8 @@ class SHIMERA_API SaturationEffect final : public ShaderEffect<SaturationEffect>
         void updateUniforms() override;
 
         SaturationEffect &withStrength(float u_strength);
+
+        std::string getName() const override;
 };
 
 }

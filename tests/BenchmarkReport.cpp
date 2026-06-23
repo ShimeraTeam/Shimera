@@ -14,6 +14,11 @@ BenchmarkReport &BenchmarkReport::setBackend(const std::string& backend) {
     return *this;
 }
 
+BenchmarkReport &BenchmarkReport::setEffects(const std::string& effects) {
+    m_effects = effects;
+    return *this;
+}
+
 BenchmarkReport &BenchmarkReport::setAvgFps(double avgFps) {
     m_avgFps = avgFps;
     return *this;
@@ -63,8 +68,8 @@ void BenchmarkReport::save(const std::string& path) {
 
     json entry;
 
-    if (results.contains(m_gpu) && results[m_gpu].contains(m_backend)) {
-        const json& tmp = results[m_gpu][m_backend];
+    if (results.contains(m_gpu) && results[m_gpu].contains(m_backend) && results[m_gpu][m_backend].contains(m_effects)) {
+        const json& tmp = results[m_gpu][m_backend][m_effects];
         entry = tmp;
         if (exceedsDeviation(tmp["avgFps"].get<double>(), m_avgFps, 0.10)) {
             entry["avgFps"]  = m_avgFps;
@@ -82,7 +87,7 @@ void BenchmarkReport::save(const std::string& path) {
         results[m_gpu] = json::object();
     }
 
-    results[m_gpu][m_backend] = entry;
+    results[m_gpu][m_backend][m_effects] = entry;
 
     std::ofstream file(path);
     file << results.dump(4);

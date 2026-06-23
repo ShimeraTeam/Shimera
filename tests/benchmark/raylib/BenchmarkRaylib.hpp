@@ -7,11 +7,12 @@
 #include "backend/BackendFactory.hpp"
 #include "effects/DistortionEffect.hpp"
 #include "../../BenchmarkReport.hpp"
+#include "EffectPipeline.inl"
 
 class BenchmarkRaylib : public ITest {
 public:
     BenchmarkRaylib() = default;
-    BenchmarkRaylib(const std::string &testName);
+    BenchmarkRaylib(const std::string &testName, shimera::IBackend* backend, shimera::EffectPipeline &&pipeline, GLint vramUsed);
     ~BenchmarkRaylib() override = default;
 
     std::string getName() const override;
@@ -24,6 +25,8 @@ public:
         shimera::IBackend *m_backend;
         shimera::IFrameBuffer *m_sceneFramebuffer;
         shimera::DistortionEffect* m_distortionEffect;
+        shimera::EffectPipeline m_pipeline;
+        GLint m_vramUsed;
         Vector3 m_cubePosition;
         Camera m_camera;
 };
