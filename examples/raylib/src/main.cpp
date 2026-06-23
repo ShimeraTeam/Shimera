@@ -3,8 +3,12 @@
 #include <GL/glew.h>
 
 #include <shimera.h>
+
+#include "EffectPipeline.inl"
 #include "backend/BackendFactory.hpp"
 #include "effects/AtmosphericScatteringEffect.hpp"
+#include "effects/DistortionEffect.hpp"
+#include "effects/GaussianBlurEffect.hpp"
 #include "effects/PixelisationEffect.hpp"
 
 int main() {
@@ -37,9 +41,23 @@ int main() {
 
     shimera::IFrameBuffer *sceneFramebuffer = backend->createFrameBuffer(screenWidth, screenHeight, true);
 
-    shimera::AtmosphericScatteringEffect atmo(backend);
+    shimera::EffectPipeline effects(backend, 960, 540);
+    effects.addEffect<shimera::GaussianBlurEffect>()
+        .addEffect<shimera::AtmosphericScatteringEffect>()
+        .addEffect<shimera::DistortionEffect>()
+        .build();
+
+    auto &blur = effects.get<shimera::GaussianBlurEffect>();
+    blur.withSigma(5.0f)
+      .withSamples(15)
+      .withResolution(shimera::Vec2(960.0f, 540.0f));
+
+    auto &atmo = effects.get<shimera::AtmosphericScatteringEffect>();
     atmo.withPlanet({0,0,0}, 15.0f, 23.6f)
         .withSun({100, 100, 0});
+
+    auto &distortion = effects.get<shimera::DistortionEffect>();
+    distortion.withDistortionStrength(0.06f);
 
     SetTargetFPS(60);
 
@@ -60,7 +78,9 @@ int main() {
         atmo.m_uCameraUp = shimera::Vec3(camera.up.x, camera.up.y, camera.up.z);
         atmo.m_fovYDegrees = camera.fovy;
 
-        atmo.withDepth(sceneFramebuffer->getDepthTexture());
+        atmo.setDepthTexture(sceneFramebuffer->getDepthTexture());
+
+        distortion.m_uTime = static_cast<float>(GetTime());
 
         sceneFramebuffer->bind();
         sceneFramebuffer->clear(shimera::Color{0, 0, 0, 1});
@@ -73,7 +93,7 @@ int main() {
 
         BeginDrawing();
             ClearBackground(BLACK);
-            atmo.render(sceneFramebuffer->getTexture());
+            effects.render(sceneFramebuffer->getTexture(), &sceneFramebuffer->getDepthTexture());
         EndDrawing();
     }
 

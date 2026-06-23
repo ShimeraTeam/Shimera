@@ -11,7 +11,7 @@ namespace shimera
 class SHIMERA_API EffectPipeline
 {
     public:
-        EffectPipeline(IBackend* backend, unsigned int width, unsigned int height)
+        EffectPipeline(IBackend* backend, const unsigned int width, const unsigned int height)
             : m_backend(backend), m_width(width), m_height(height) {}
         ~EffectPipeline() = default;
 
@@ -32,7 +32,7 @@ class SHIMERA_API EffectPipeline
 
         // Fow now, can only get by type, making stacking same type of shaders difficult.
         template<typename TEffect>
-        TEffect &get(std::size_t index = 0) {
+        TEffect &get(const std::size_t index = 0) {
             std::size_t count = 0;
             for (auto &fx : m_effects) {
                 if (auto *effect = dynamic_cast<TEffect *>(fx.get())) {
@@ -54,14 +54,18 @@ class SHIMERA_API EffectPipeline
             m_built = true;
         }
 
-        void render(ITexture &input) {
+        void render(ITexture &input, ITexture *depth = nullptr) {
+            if (depth != nullptr)
+                m_depthTexture = depth;
             renderImpl(input, nullptr);
         }
-        void render(ITexture &input, IFrameBuffer &tgt) {
+        void render(ITexture &input, IFrameBuffer &tgt, ITexture *depth = nullptr) {
+            if (depth != nullptr)
+                m_depthTexture = depth;
             renderImpl(input, &tgt);
         }
 
-        void resize(int width, int height) {
+        void resize(const int width, const int height) {
             m_width = width;
             m_height = height;
             if (m_fboA)
@@ -69,6 +73,7 @@ class SHIMERA_API EffectPipeline
             if (m_fboB)
                 m_fboB->resize(width, height);
         }
+
         [[nodiscard]] std::size_t size() const {
             return m_effects.size();
         }
@@ -80,6 +85,7 @@ class SHIMERA_API EffectPipeline
         std::unique_ptr<IFrameBuffer> m_fboB;
         unsigned int m_width, m_height = 0;
         bool m_built = false;
+        ITexture *m_depthTexture = nullptr;
 
         void renderImpl(ITexture &input, IFrameBuffer *target = nullptr) {
             if (!m_built)
@@ -94,6 +100,14 @@ class SHIMERA_API EffectPipeline
 
             if (active.empty())
                 return;
+
+            for (auto* fx : active) {
+                if (fx->isDepthNeeded()) {
+                    if (m_depthTexture == nullptr)
+                        throw std::runtime_error("An effect requires scene depth. Call render(input, ..., sceneDepth)");
+                    fx->setDepthTexture(*m_depthTexture);
+                }
+            }
 
             if (active.size() == 1) {
                 if (target != nullptr)

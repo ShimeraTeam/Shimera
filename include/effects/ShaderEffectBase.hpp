@@ -25,6 +25,9 @@ class SHIMERA_API ShaderEffectBase {
 
         virtual void updateUniforms() = 0;
 
+        [[nodiscard]] virtual bool isDepthNeeded() const;
+        virtual void setDepthTexture(ITexture& depth);
+
         // restored, suppressed by the move declarations below
         ShaderEffectBase() = default;
         // only allow moving ownership

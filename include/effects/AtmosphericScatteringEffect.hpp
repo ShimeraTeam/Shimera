@@ -30,13 +30,13 @@ class SHIMERA_API AtmosphericScatteringEffect final : public ShaderEffect<Atmosp
         void render(ITexture& scene) override;                       // overridden: also binds depth
         void render(ITexture& scene, IFrameBuffer& target) override;
         void updateUniforms() override;
+        [[nodiscard]] bool isDepthNeeded() const override;
+        void setDepthTexture(ITexture& depth) override;
 
         AtmosphericScatteringEffect& withCamera(Vec3<float> pos, Vec3<float> target, float fovY, float aspect, float near, float far);
         AtmosphericScatteringEffect& withSun(Vec3<float> dir);
         AtmosphericScatteringEffect& withPlanet(Vec3<float> center, float radius, float atmosphereRadius);
         AtmosphericScatteringEffect& withQuality(int opticalDepthSamples, int inScatteringPoints);
-
-        AtmosphericScatteringEffect& withDepth(ITexture& depth);
 
     private:
         ITexture* m_depth = nullptr;

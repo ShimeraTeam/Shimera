@@ -67,6 +67,14 @@ void AtmosphericScatteringEffect::updateUniforms() {
     m_processor->setUniform("u_inScatteringPoints", m_uInScatteringPoints);
 }
 
+bool AtmosphericScatteringEffect::isDepthNeeded() const {
+    return true;
+}
+
+void AtmosphericScatteringEffect::setDepthTexture(ITexture& depth) {
+    m_depth = &depth;
+}
+
 void AtmosphericScatteringEffect::render(ITexture& scene) {
     if (!m_enabled) return;
     updateUniforms();
@@ -116,10 +124,3 @@ AtmosphericScatteringEffect& AtmosphericScatteringEffect::withQuality(
     m_uInScatteringPoints  = std::max(2, inScatteringPoints);
     return *this;
 }
-
-AtmosphericScatteringEffect& AtmosphericScatteringEffect::withDepth(ITexture& depth) {
-    m_depth = &depth;
-    return *this;
-}
-
-
