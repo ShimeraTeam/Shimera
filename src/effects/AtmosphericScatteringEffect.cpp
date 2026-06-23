@@ -59,8 +59,8 @@ void AtmosphericScatteringEffect::updateUniforms() {
 
     m_processor->setUniform("u_planetCenter", m_uPlanetCenter);
     m_processor->setUniform("u_planetRadius", m_uPlanetRadius);
-    m_processor->setUniform("u_atmosphereRadius", m_upAtmosphereRadius);
-    m_processor->setUniform("u_densityFalloff", m_upDensityFalloff);
+    m_processor->setUniform("u_atmosphereRadius", m_uAtmosphereRadius);
+    m_processor->setUniform("u_densityFalloff", m_uDensityFalloff);
     m_processor->setUniform("u_scatterCoefficients", m_uScatterCoefficients);
 
     m_processor->setUniform("u_opticalDepthSamples", m_uOpticalDepthSamples);
@@ -106,7 +106,7 @@ AtmosphericScatteringEffect& AtmosphericScatteringEffect::withPlanet(
         const Vec3<float> center, const float radius, const float atmosphereRadius) {
     m_uPlanetCenter = center;
     m_uPlanetRadius = radius;
-    m_upAtmosphereRadius = atmosphereRadius;
+    m_uAtmosphereRadius = atmosphereRadius;
     return *this;
 }
 

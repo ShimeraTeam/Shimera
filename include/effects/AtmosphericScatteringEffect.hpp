@@ -19,8 +19,8 @@ class SHIMERA_API AtmosphericScatteringEffect final : public ShaderEffect<Atmosp
         Vec3<float> m_uLightDir {0,1,0};
         Vec3<float> m_uPlanetCenter {0,0,0};
         float m_uPlanetRadius = 100.0f;
-        float m_upAtmosphereRadius = 120.0f;
-        float m_upDensityFalloff = 4.0f;
+        float m_uAtmosphereRadius = 120.0f;
+        float m_uDensityFalloff = 4.0f;
         Vec3<float> m_uScatterCoefficients {5.5f, 13.0f, 22.4f};
         int m_uOpticalDepthSamples = 16;
         int m_uInScatteringPoints = 16;
