@@ -9,7 +9,6 @@
 #include "effects/AtmosphericScatteringEffect.hpp"
 #include "effects/DistortionEffect.hpp"
 #include "effects/GaussianBlurEffect.hpp"
-#include "effects/PixelisationEffect.hpp"
 
 int main() {
     const int screenWidth = 960;

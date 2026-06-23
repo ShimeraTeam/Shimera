@@ -1,4 +1,3 @@
-
 #include "effects/AtmosphericScatteringEffect.hpp"
 
 #include <cstring>
