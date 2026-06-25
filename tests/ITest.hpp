@@ -10,4 +10,4 @@ class ITest {
         virtual ~ITest() = default;
 };
 
-#endif SHIMERA_ITEST_HPP
+#endif //SHIMERA_ITEST_HPP
