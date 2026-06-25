@@ -14,13 +14,14 @@ namespace shimera {
  */
 class SFMLFramebuffer final : public IFrameBuffer {
 public:
-    SFMLFramebuffer(int width, int height);
+    SFMLFramebuffer(int width, int height, bool samplableDepth = false);
     ~SFMLFramebuffer() override = default;
 
     void bind() override;
     void unbind() override;
-    void clear(shimera::Color color) override;
+    void clear(Color color) override;
     ITexture& getTexture() override;
+    ITexture& getDepthTexture() override;
     void resize(int width, int height) override;
     int getWidth() const override;
     int getHeight() const override;

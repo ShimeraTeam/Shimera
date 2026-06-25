@@ -12,8 +12,8 @@ using shimera::RaylibFramebuffer;
 using shimera::RaylibPostProcessor;
 using shimera::RaylibShader;
 
-IFrameBuffer* RaylibBackend::createFrameBuffer(int width, int height) {
-    return new RaylibFramebuffer(width, height);
+IFrameBuffer* RaylibBackend::createFrameBuffer(int width, int height, bool samplableDepth) {
+    return new RaylibFramebuffer(width, height, samplableDepth);
 }
 
 IPostProcessor* RaylibBackend::createPostProcessor(const std::string& vert, const std::string& frag) {

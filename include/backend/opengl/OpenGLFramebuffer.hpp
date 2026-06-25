@@ -14,7 +14,7 @@ namespace shimera {
  */
 class OpenGLFramebuffer final : public IFrameBuffer {
     public:
-        explicit OpenGLFramebuffer(int width, int height);
+        explicit OpenGLFramebuffer(int width, int height, bool samplableDepth = false);
         ~OpenGLFramebuffer() override;
 
         OpenGLFramebuffer(const OpenGLFramebuffer&) = delete;
@@ -24,8 +24,9 @@ class OpenGLFramebuffer final : public IFrameBuffer {
 
         void bind() override;
         void unbind() override;
-        void clear(shimera::Color color) override;
+        void clear(Color color) override;
         ITexture& getTexture() override;
+        ITexture& getDepthTexture() override;
         void resize(int width, int height) override;
         [[nodiscard]] int getWidth() const override;
         [[nodiscard]] int getHeight() const override;
@@ -35,8 +36,10 @@ class OpenGLFramebuffer final : public IFrameBuffer {
         unsigned int m_fbo;
         unsigned int m_rbo;
         std::unique_ptr<OpenGLTexture> m_texture;
+        std::unique_ptr<OpenGLTexture> m_depthTexture;
         int m_width;
         int m_height;
+        bool m_samplableDepth;
 };
 
 }
