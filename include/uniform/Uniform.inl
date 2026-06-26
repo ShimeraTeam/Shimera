@@ -8,18 +8,18 @@
 #include <stdexcept>
 
 #include "Vec2.inl"
-#include <uniform/Vec3.inl>
+#include "Vec3.inl"
 #include "Vec4.inl"
-#include <stdexcept>
+#include "Mat4.hpp"
 
 namespace shimera {
 
-using UniformValue = std::variant<float, int, Vec2<float>, Vec3<float>, Vec4<float>>;
+using UniformValue = std::variant<float, int, Vec2<float>, Vec3<float>, Vec4<float>, Mat4>;
 
 template <typename T>
 class Uniform {
     public:
-        Uniform(unsigned int shaderId, std::string name, T value)
+        Uniform(unsigned int shaderId, const std::string& name, T value)
             : m_name(name), m_value(value), m_location(-1) {
             GLC(m_location = glGetUniformLocation(shaderId, name.c_str()));
             if (m_location == -1) {
@@ -64,7 +64,10 @@ class Uniform {
                 GLC(glUniform3f(m_location, newValue.x, newValue.y, newValue.z));
             } else if constexpr (std::is_same_v<T, Vec4<float>>) {
                 GLC(glUniform4f(m_location, newValue.x, newValue.y, newValue.z, newValue.w));
-            } else {
+            } else if constexpr (std::is_same_v<T, Mat4>) {
+                GLC(glUniformMatrix4fv(m_location, 1, GL_FALSE, newValue.m));
+            }
+            else {
                 static_assert(sizeof(T) == 0, "Unsupported uniform type");
             }
         }

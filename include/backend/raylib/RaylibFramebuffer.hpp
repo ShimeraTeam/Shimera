@@ -14,13 +14,14 @@ namespace shimera {
  */
 class RaylibFramebuffer final : public IFrameBuffer {
 public:
-    RaylibFramebuffer(int width, int height);
+    RaylibFramebuffer(int width, int height, bool samplableDepth);
     ~RaylibFramebuffer() override = default;
 
     void bind() override;
     void unbind() override;
-    void clear(shimera::Color color) override;
+    void clear(Color color) override;
     ITexture& getTexture() override;
+    ITexture& getDepthTexture() override;
     void resize(int width, int height) override;
     [[nodiscard]] int getWidth() const override;
     [[nodiscard]] int getHeight() const override;
@@ -29,7 +30,9 @@ public:
 private:
     RenderTexture2D m_renderTexture;
     std::unique_ptr<RaylibTexture> m_texture;
+    std::unique_ptr<RaylibTexture> m_depthTexture;
     int m_width, m_height;
+    bool m_samplableDepth;
 };
 
 }

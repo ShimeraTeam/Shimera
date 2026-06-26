@@ -14,7 +14,7 @@ public:
     RaylibBackend() = default;
     ~RaylibBackend() override = default;
 
-    IFrameBuffer* createFrameBuffer(int width, int height) override;
+    IFrameBuffer* createFrameBuffer(int width, int height, bool samplableDepth = false) override;
     IPostProcessor* createPostProcessor(const std::string& vert, const std::string& frag) override;
     ITexture* createTexture(int width, int height) override;
     IShader* createShader(const std::string& vert, const std::string& frag) override;

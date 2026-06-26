@@ -11,7 +11,12 @@ namespace shimera {
  */
 class OpenGLTexture final : public ITexture {
     public:
-        explicit OpenGLTexture(int width, int height);
+        enum class Format {
+            Color,
+            Depth
+        };
+
+        explicit OpenGLTexture(int width, int height, Format format = Format::Color);
         ~OpenGLTexture() override;
 
         OpenGLTexture(const OpenGLTexture&) = delete;
@@ -29,6 +34,7 @@ class OpenGLTexture final : public ITexture {
         unsigned int m_textureId;
         int m_width;
         int m_height;
+        Format m_format;
 };
 
 }

@@ -9,7 +9,10 @@
 #include <shimera.h>
 #include "backend/BackendFactory.hpp"
 #include "backend/sfml/SFMLFramebuffer.hpp"
-#include "effects/HDRBloomEffect.hpp"
+#include "effects/DistortionEffect.hpp"
+#include "effects/GaussianBlurEffect.hpp"
+#include "EffectPipeline.inl"
+#include "effects/VignetteEffect.hpp"
 
 using namespace shimera;
 
@@ -17,7 +20,7 @@ using namespace shimera;
 int main()
 {
     const sf::VideoMode videoMode({960, 540});
-    sf::RenderWindow window(videoMode, "SFML3 - HDR Bloom");
+    sf::RenderWindow window(videoMode, "SFML3 - Nice Multi-pass Post-processing");
     window.setActive(true);
 
     //TODO: Try to embed that in the backend so the user doesn't have to worry about it (or at least make it optional)
@@ -45,6 +48,12 @@ int main()
                   .withBlurSamples(18)
                   .withResolution(Vec2(960.0f, 540.0f));
 
+    // Effect Pipeline: Managing fbo passes automatically
+    EffectPipeline pipeline(backend, videoMode.size.x, videoMode.size.y);
+    pipeline.addEffect<DistortionEffect>()
+            .addEffect(std::move(gaussianBlurEffect))
+            .addEffect<VignetteEffect>(1.0f, 0.4f, 0.3f)
+            .build();
 
     // sf::CircleShape circle(80.f);
     // circle.setFillColor(sf::Color::Magenta);
@@ -67,6 +76,8 @@ int main()
     sprite.setPosition(sf::Vector2f(0.f, 0.f));
     sprite.setScale(sf::Vector2f(0.5f, 0.5f));
 
+    sf::Clock clock;
+    clock.start();
     while (window.isOpen())
     {
         while (const std::optional event = window.pollEvent())
@@ -79,6 +90,8 @@ int main()
         if (!window.setActive(true)) {
             break;
         }
+
+        pipeline.get<DistortionEffect>().m_uTime = clock.getElapsedTime().asSeconds();
 
         // Render scene to the framebuffer
         auto *sfmlRenderTexture = static_cast<sf::RenderTexture*>(sceneFramebuffer->getNativeRenderTarget());
@@ -93,10 +106,11 @@ int main()
         // Apply HDR bloom and render to screen
         window.setActive(true);
         glClear(GL_COLOR_BUFFER_BIT);
-        hdrBloomEffect.render(sceneFramebuffer->getTexture());
+        pipeline.render(sceneFramebuffer->getTexture());
 
         window.display();
     }
+    clock.stop();
 
     // Cleanup
     //TODO: Maybe try to auto clean this (do that in the destructor of the respective classes)
