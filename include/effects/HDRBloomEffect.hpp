@@ -38,6 +38,8 @@ class SHIMERA_API HDRBloomEffect final : public ShaderEffect<HDRBloomEffect> {
         HDRBloomEffect &withBlurSamples(int samples);
         HDRBloomEffect &withResolution(Vec2<float> resolution);
 
+        std::string getName() const override;
+
     private:
         std::unique_ptr<IFrameBuffer> m_brightBlurredHBuffer;
 };

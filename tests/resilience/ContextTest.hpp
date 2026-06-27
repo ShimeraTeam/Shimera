@@ -32,7 +32,6 @@ protected:
         }
 #elif defined(SHIMERA_BACKEND_RAYLIB)
         InitWindow(640, 480, "Raylib window");
-        SetWindowState(FLAG_WINDOW_HIDDEN);
 #endif
         glewInit();
     }
