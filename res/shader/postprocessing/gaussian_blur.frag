@@ -16,13 +16,16 @@ float gaussian(float x, float sigma) {
 void main() {
     vec2 texelSize = 1.0 / u_resolution;
 
-    vec4 result = vec4(0.0);
-    float totalWeight = 0.0;
+    float centerWeight = gaussian(0.0, u_sigma);
+    vec4 result = texture(u_screenTexture, texCoords) * centerWeight;
+    float totalWeight = centerWeight;
 
-    for (int i = -u_samples; i <= u_samples; i++) {
+    for (int i = 1; i <= u_samples; i++) {
         float weight = gaussian(float(i), u_sigma);
-        result += texture(u_screenTexture, texCoords + u_direction * texelSize * float(i)) * weight;
-        totalWeight += weight;
+        vec2 off = u_direction * texelSize * float(i);
+        result += texture(u_screenTexture, texCoords + off) * weight;
+        result += texture(u_screenTexture, texCoords - off) * weight;
+        totalWeight += 2.0 * weight;
     }
 
     color = result / totalWeight;
