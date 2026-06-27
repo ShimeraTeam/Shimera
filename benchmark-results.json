@@ -280,9 +280,9 @@
                 "vramUsed": 13568
             },
             "DistortionEffect": {
-                "avgFps": 17421.0,
+                "avgFps": 20080.0,
                 "frames": 5000.0,
-                "totalMs": 287.0,
+                "totalMs": 249.0,
                 "vramUsed": 14080
             },
             "GaussianBlurEffect": {
@@ -452,9 +452,9 @@
                 "vramUsed": 6656
             },
             "no_effects": {
-                "avgFps": 665.0,
+                "avgFps": 578.0,
                 "frames": 5000.0,
-                "totalMs": 7518.0,
+                "totalMs": 8650.0,
                 "vramUsed": 6656
             }
         }
