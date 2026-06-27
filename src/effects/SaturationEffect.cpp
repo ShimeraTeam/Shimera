@@ -25,3 +25,7 @@ SaturationEffect &SaturationEffect::withStrength(float u_strength) {
     this->m_uStrength = u_strength;
     return *this;
 }
+
+std::string SaturationEffect::getName() const {
+    return "SaturationEffect";
+}

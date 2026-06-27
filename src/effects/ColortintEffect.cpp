@@ -26,3 +26,7 @@ ColortintEffect &ColortintEffect::withTint(const Vec3<float> &tint) {
     this->m_uTint = tint;
     return *this;
 }
+
+std::string ColortintEffect::getName() const {
+    return "ColortintEffect";
+}
