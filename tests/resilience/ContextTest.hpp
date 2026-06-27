@@ -14,12 +14,12 @@ class ContextTest : public ::testing::Test {
 protected:
 
 #ifdef SHIMERA_BACKEND_OPENGL
-    GLFWwindow* m_window = nullptr;
+    static inline GLFWwindow* m_window = nullptr;
 #elif defined(SHIMERA_BACKEND_SFML)
-    sf::Window* m_window = nullptr;
+    static inline sf::Window* m_window = nullptr;
 #endif
 
-    void SetUp() override {
+    static void SetUpTestSuite() {
 #ifdef SHIMERA_BACKEND_OPENGL
         glfwInit();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
@@ -36,7 +36,7 @@ protected:
         glewInit();
     }
 
-    void TearDown() override {
+    static void TearDownTestSuite() {
 #ifdef SHIMERA_BACKEND_OPENGL
         glfwDestroyWindow(m_window);
         glfwTerminate();
