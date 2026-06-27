@@ -18,6 +18,9 @@ class SHIMERA_API ShaderEffectBase {
     public:
         virtual ~ShaderEffectBase() = default;
 
+        // shader name, used for debugging and identifying the effect in the pipeline
+        [[nodiscard]] virtual std::string getName() const = 0;
+
         // screen render
         virtual void render(ITexture &texture) = 0;
         // offscreen (framebuffer) render

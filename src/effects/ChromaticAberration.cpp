@@ -44,3 +44,7 @@ ChromaticAberrationEffect& ChromaticAberrationEffect::withSamples(int s) {
     m_uSamples = s;
     return *this;
 }
+
+std::string ChromaticAberrationEffect::getName() const {
+    return "ChromaticAberrationEffect";
+}
