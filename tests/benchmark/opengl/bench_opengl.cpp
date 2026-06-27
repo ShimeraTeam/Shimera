@@ -6,6 +6,7 @@
 #include <shimera.h>
 #include "backend/BackendFactory.hpp"
 #include "effects/DistortionEffect.hpp"
+#include "../BenchmarkReport.hpp"
 
 #define GL_GPU_MEM_INFO_TOTAL_AVAILABLE_MEM_NVX 0x9048
 #define GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX 0x9049
@@ -71,15 +72,15 @@ void setShapes(unsigned int& buffer, unsigned int& ibo, unsigned int& vao) {
     GLC(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
     GLC(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW));
 
-    shimera::ShaderProgramSource source = parseShader(
+    const shimera::ShaderProgramSource source = parseShader(
         "../../../../res/shader/basic.vert",
         "../../../../res/shader/basic.frag"
         );
 
-    unsigned int shader = createShader(source.vertex, source.fragment);
+    const unsigned int shader = createShader(source.vertex, source.fragment);
     GLC(glUseProgram(shader));
 
-    shimera::Uniform colorUniform(shader, "u_Color", shimera::Vec4(0.3f, 0.3f, 0.8f, 1.0f));
+    const shimera::Uniform colorUniform(shader, "u_Color", shimera::Vec4(0.3f, 0.3f, 0.8f, 1.0f));
 
     GLC(glGenVertexArrays(1, &vao));
     GLC(glBindVertexArray(vao));
@@ -129,6 +130,7 @@ void render(GLFWwindow* window, unsigned int shader, unsigned int vao,
 
 int main() {
     try {
+        BenchmarkReport report;
         GLFWwindow* window = initWindow(640, 480);
         if (!window) {
             return -1;
@@ -162,8 +164,9 @@ int main() {
         GLint vramAfter = 0;
         glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramAfter);
 
+        GLint usedKb;
         if (vramBefore >= 0 && vramAfter >= 0) {
-            const GLint usedKb = vramBefore - vramAfter;
+            usedKb = vramBefore - vramAfter;
             std::cout << "[VRAM BENCH] GPU  : " << glGetString(GL_RENDERER) << "\n";
             std::cout << "[VRAM BENCH] Used : " << usedKb / 1024 << " MB" << " (" << usedKb << " KB)\n";
         }
@@ -189,7 +192,13 @@ int main() {
 
         std::cout << "[FPS OPENGL BENCH] Frames    : " << FRAMES   << '\n';
         std::cout << "[FPS OPENGL BENCH] Avg FPS   : " << avgFps   << '\n';
-
+        report.setGpu(reinterpret_cast<const char*>(glGetString(GL_RENDERER)))
+              .setBackend("OpenGl")
+              .setAvgFps(avgFps)
+              .setTotalMs(totalMs)
+              .setFrames(FRAMES)
+              .setVramUsed(usedKb);
+        report.save("../../../../bench.json");
         GLC(glDeleteProgram(shader));
         GLC(glDeleteVertexArrays(1, &vao));
         GLC(glDeleteBuffers(1, &buffer));

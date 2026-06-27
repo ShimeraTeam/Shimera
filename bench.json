@@ -1,0 +1,42 @@
+{
+    "NVIDIA GeForce RTX 3060 Laptop GPU/PCIe/SSE2": {
+        "OpenGl": {
+            "avgFps": 5160.316054909478,
+            "frames": 5000.0,
+            "totalMs": 968.9329,
+            "vramUsed": 4940
+        },
+        "Raylib": {
+            "avgFps": 4527.831402394353,
+            "frames": 5000.0,
+            "totalMs": 1104.2814,
+            "vramUsed": 4940
+        },
+        "Sfml": {
+            "avgFps": 4969.032492602851,
+            "frames": 5000.0,
+            "totalMs": 1006.2321,
+            "vramUsed": 4480
+        }
+    },
+    "Quadro RTX 5000/PCIe/SSE2": {
+        "OpenGl": {
+            "avgFps": 5004.605873910118,
+            "frames": 5000.0,
+            "totalMs": 999.079673,
+            "vramUsed": 8320
+        },
+        "Raylib": {
+            "avgFps": 5279.01011752485,
+            "frames": 5000.0,
+            "totalMs": 947.147266,
+            "vramUsed": 4224
+        },
+        "Sfml": {
+            "avgFps": 4983.853490878975,
+            "frames": 5000.0,
+            "totalMs": 1003.239764,
+            "vramUsed": 8192
+        }
+    }
+}

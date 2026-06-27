@@ -1,4 +1,8 @@
 name: CI - Tests Linux
+
+permissions:
+  contents: write
+
 on:
   workflow_dispatch:
   pull_request:
@@ -10,9 +14,12 @@ on:
 jobs:
   run-shimera-tests:
     runs-on: self-hosted
+    if: github.actor != 'github-actions[bot]'
     name: Run Tests
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Set xmake path
         run: echo "$HOME/.local/bin" >> $GITHUB_PATH
@@ -24,3 +31,15 @@ jobs:
         run: ./run-tests.sh
         env:
           DISPLAY: :0
+
+      - name: Commit update
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'github-actions@noreply.github.com'
+          git add bench.json
+          git diff --cached --quiet && exit 0
+          git commit -m "chore(ci): update bench.json from CI test results"
+
+      - name: Push changes
+        run: |
+          git push origin HEAD:${{ github.head_ref || github.ref_name }}
