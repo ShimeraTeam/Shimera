@@ -3,7 +3,7 @@ Rem run-tests.bat
 
 for /f %%A in ('echo prompt $E ^| cmd') do set "ESC=%%A"
 
-cmd /c "xmake f -m debug -y -c"
+cmd /c "xmake f -m debug -c -y"
 cmd /c "xmake require"
 cmd /c "xmake"
 
