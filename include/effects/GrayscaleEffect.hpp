@@ -11,6 +11,8 @@ class SHIMERA_API GrayscaleEffect final : public ShaderEffect<GrayscaleEffect> {
         explicit GrayscaleEffect(IBackend *backend);
 
         void updateUniforms() override;
+
+        std::string getName() const override;
 };
 
 }

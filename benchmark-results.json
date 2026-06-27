@@ -1,0 +1,244 @@
+{
+    "NVIDIA GeForce RTX 5060/PCIe/SSE2": {
+        "OpenGl": {
+            "BrightnessEffect": {
+                "avgFps": 5241.0,
+                "frames": 5000.0,
+                "totalMs": 954.0,
+                "vramUsed": 11380
+            },
+            "ChromaticAberrationEffect": {
+                "avgFps": 4761.0,
+                "frames": 5000.0,
+                "totalMs": 1050.0,
+                "vramUsed": 11380
+            },
+            "ColortintEffect": {
+                "avgFps": 5192.0,
+                "frames": 5000.0,
+                "totalMs": 963.0,
+                "vramUsed": 11380
+            },
+            "ContrastEffect": {
+                "avgFps": 4975.0,
+                "frames": 5000.0,
+                "totalMs": 1005.0,
+                "vramUsed": 11508
+            },
+            "ContrastEffect, GrayscaleEffect, GaussianBlurEffect": {
+                "avgFps": 3717.0,
+                "frames": 5000.0,
+                "totalMs": 1345.0,
+                "vramUsed": 16692
+            },
+            "ContrastEffect, SaturationEffect": {
+                "avgFps": 4022.0,
+                "frames": 5000.0,
+                "totalMs": 1243.0,
+                "vramUsed": 16436
+            },
+            "DistortionEffect": {
+                "avgFps": 5065.0,
+                "frames": 5000.0,
+                "totalMs": 987.0,
+                "vramUsed": 11892
+            },
+            "GaussianBlurEffect": {
+                "avgFps": 4184.0,
+                "frames": 5000.0,
+                "totalMs": 1195.0,
+                "vramUsed": 14292
+            },
+            "GrayscaleEffect": {
+                "avgFps": 5045.0,
+                "frames": 5000.0,
+                "totalMs": 991.0,
+                "vramUsed": 11380
+            },
+            "PixelisationEffect": {
+                "avgFps": 4911.0,
+                "frames": 5000.0,
+                "totalMs": 1018.0,
+                "vramUsed": 11380
+            },
+            "SaturationEffect": {
+                "avgFps": 4975.0,
+                "frames": 5000.0,
+                "totalMs": 1005.0,
+                "vramUsed": 11380
+            },
+            "VignetteEffect": {
+                "avgFps": 3903.0,
+                "frames": 5000.0,
+                "totalMs": 1281.0,
+                "vramUsed": 13360
+            },
+            "no_effects": {
+                "avgFps": 5268.0,
+                "frames": 5000.0,
+                "totalMs": 949.0,
+                "vramUsed": 11380
+            }
+        },
+        "Raylib": {
+            "BrightnessEffect": {
+                "avgFps": 4364.316752682985,
+                "frames": 5000.0,
+                "totalMs": 1145.6547,
+                "vramUsed": 10164
+            },
+            "ChromaticAberrationEffect": {
+                "avgFps": 4505.79657211613,
+                "frames": 5000.0,
+                "totalMs": 1109.6817,
+                "vramUsed": 10164
+            },
+            "ColortintEffect": {
+                "avgFps": 4557.889711648753,
+                "frames": 5000.0,
+                "totalMs": 1096.9989,
+                "vramUsed": 10164
+            },
+            "ContrastEffect": {
+                "avgFps": 4627.158384299941,
+                "frames": 5000.0,
+                "totalMs": 1080.5768,
+                "vramUsed": 10164
+            },
+            "ContrastEffect, GrayscaleEffect, GaussianBlurEffect": {
+                "avgFps": 3550.375100679762,
+                "frames": 5000.0,
+                "totalMs": 1408.3019,
+                "vramUsed": 12724
+            },
+            "ContrastEffect, SaturationEffect": {
+                "avgFps": 3668.675462144882,
+                "frames": 5000.0,
+                "totalMs": 1362.8897,
+                "vramUsed": 10164
+            },
+            "DistortionEffect": {
+                "avgFps": 4419.816441487332,
+                "frames": 5000.0,
+                "totalMs": 1131.2687,
+                "vramUsed": 9844
+            },
+            "GaussianBlurEffect": {
+                "avgFps": 3835.6544796416883,
+                "frames": 5000.0,
+                "totalMs": 1303.5585,
+                "vramUsed": 12724
+            },
+            "GrayscaleEffect": {
+                "avgFps": 4398.107933966808,
+                "frames": 5000.0,
+                "totalMs": 1136.8525,
+                "vramUsed": 10164
+            },
+            "PixelisationEffect": {
+                "avgFps": 4442.430542598467,
+                "frames": 5000.0,
+                "totalMs": 1125.51,
+                "vramUsed": 10164
+            },
+            "SaturationEffect": {
+                "avgFps": 4555.011373407899,
+                "frames": 5000.0,
+                "totalMs": 1097.6921,
+                "vramUsed": 10164
+            },
+            "VignetteEffect": {
+                "avgFps": 3668.0,
+                "frames": 5000.0,
+                "totalMs": 1363.0,
+                "vramUsed": 10216
+            },
+            "no_effects": {
+                "avgFps": 3828.0,
+                "frames": 5000.0,
+                "totalMs": 1306.0,
+                "vramUsed": 10164
+            }
+        },
+        "Sfml": {
+            "BrightnessEffect": {
+                "avgFps": 4918.394974265973,
+                "frames": 5000.0,
+                "totalMs": 1016.5918,
+                "vramUsed": 4992
+            },
+            "ChromaticAberrationEffect": {
+                "avgFps": 4887.0,
+                "frames": 5000.0,
+                "totalMs": 1023.0,
+                "vramUsed": 4992
+            },
+            "ColortintEffect": {
+                "avgFps": 4699.0,
+                "frames": 5000.0,
+                "totalMs": 1064.0,
+                "vramUsed": 4992
+            },
+            "ContrastEffect": {
+                "avgFps": 4984.153879570681,
+                "frames": 5000.0,
+                "totalMs": 1003.1793,
+                "vramUsed": 4992
+            },
+            "ContrastEffect, GrayscaleEffect, GaussianBlurEffect": {
+                "avgFps": 3732.547169318343,
+                "frames": 5000.0,
+                "totalMs": 1339.5678,
+                "vramUsed": 4992
+            },
+            "ContrastEffect, SaturationEffect": {
+                "avgFps": 3770.0,
+                "frames": 5000.0,
+                "totalMs": 1326.0,
+                "vramUsed": 4992
+            },
+            "DistortionEffect": {
+                "avgFps": 4366.0,
+                "frames": 5000.0,
+                "totalMs": 1145.0,
+                "vramUsed": 5504
+            },
+            "GaussianBlurEffect": {
+                "avgFps": 4599.268072478945,
+                "frames": 5000.0,
+                "totalMs": 1087.1295,
+                "vramUsed": 4992
+            },
+            "GrayscaleEffect": {
+                "avgFps": 5064.415311226553,
+                "frames": 5000.0,
+                "totalMs": 987.2808,
+                "vramUsed": 4992
+            },
+            "PixelisationEffect": {
+                "avgFps": 5030.17450782006,
+                "frames": 5000.0,
+                "totalMs": 994.0013,
+                "vramUsed": 4992
+            },
+            "SaturationEffect": {
+                "avgFps": 4881.83184295889,
+                "frames": 5000.0,
+                "totalMs": 1024.2057,
+                "vramUsed": 4992
+            },
+            "VignetteEffect": {
+                "avgFps": 3949.828020538158,
+                "frames": 5000.0,
+                "totalMs": 1265.8779,
+                "vramUsed": 6272
+            },
+            "no_effects": {
+                "avgFps": 4472.303916307094,
+                "frames": 5000.0,
+                "totalMs": 1117.992,
+                "vramUsed": 4992
+            }
+        }
+    }
+}

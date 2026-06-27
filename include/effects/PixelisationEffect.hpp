@@ -27,6 +27,8 @@ class SHIMERA_API PixelisationEffect final : public ShaderEffect<PixelisationEff
         PixelisationEffect &withPixelSizeY(float pixelSizeY);
         PixelisationEffect &withResolution(Vec2<float> resolution);
         PixelisationEffect &withOffset(Vec2<float> offset);
+
+        std::string getName() const override;
 };
 
 }
