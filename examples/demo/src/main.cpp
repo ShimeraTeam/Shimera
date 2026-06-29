@@ -5,7 +5,6 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
-#include <cstdint>
 #include <iostream>
 #include <numbers>
 
@@ -26,7 +25,7 @@ namespace {
 constexpr int kWidth = 1280;
 constexpr int kHeight = 720;
 
-enum class Shape : std::uint8_t { Cube, Sphere, Cylinder, Cone, Pyramid, Capsule, HexPrism, Diamond };
+enum class Shape : unsigned char { Cube, Sphere, Cylinder, Cone, Pyramid, Capsule, HexPrism, Diamond };
 
 struct ShapeEntry {
     Shape shape;
