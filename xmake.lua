@@ -214,4 +214,5 @@ if has_config("examples") then
     includes("examples/sdl/xmake.lua")
     includes("examples/sfml/xmake.lua")
     includes("examples/raylib/xmake.lua")
+    includes("examples/demo/xmake.lua")
 end
