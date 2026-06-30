@@ -24,7 +24,6 @@ cd shimera
 # Build static library for your backend (static by default)
 xmake b shimera-sfml       # SFML backend
 xmake b shimera-opengl     # Pure OpenGL backend
-xmake b shimera-sdl        # SDL3 backend
 xmake b shimera-raylib     # Raylib backend
 
 # Build shared library
@@ -145,7 +144,7 @@ target("myapp")
     set_kind("binary")
     add_files("src/*.cpp")
 
-    add_deps("shimera-sfml")  -- or shimera-opengl, shimera-sdl, shimera-raylib
+    add_deps("shimera-sfml")  -- or shimera-opengl, shimera-raylib
     add_packages("glfw", "glew")
 ```
 
@@ -155,7 +154,6 @@ To build a specific example:
 ```bash
 xmake b opengl-example
 xmake b sfml-example
-xmake b sdl-example
 xmake b raylib-example
 ```
 
@@ -180,7 +178,6 @@ shimera/
 ├── examples/
 │   ├── opengl/
 │   ├── raylib/
-│   ├── sdl/
 │   └── sfml/
 ├── build/              # Build artifacts
 │   └── linux/x86_64/release/

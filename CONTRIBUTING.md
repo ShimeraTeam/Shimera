@@ -4,12 +4,12 @@ Thanks for taking the time to contribute. Whether you're fixing a bug, adding a 
 
 ## Philosophy
 
-Shimera exists to solve a single problem: **users should need only one call to display a shader**, regardless of whether they use SFML, Raylib, SDL, or pure OpenGL.
+Shimera exists to solve a single problem: **users should need only one call to display a shader**, regardless of whether they use SFML, Raylib or pure OpenGL.
 
 To achieve this, we follow these core principles:
 
 - **Simplify, don't expose.** Hide low-level OpenGL and backend-specific complexity behind clean interfaces.
-- **Consistency across backends.** The same code should work the same way on SFML, Raylib, SDL, and OpenGL.
+- **Consistency across backends.** The same code should work the same way on SFML, Raylib and OpenGL.
 - **Keep interfaces minimal.** Add only what is necessary to solve the user's problem.
 - **Support effect chaining.** Multiple effects should work together cleanly.
 - **Performance**: We care about the performance of the library and its users' applications.
@@ -30,6 +30,20 @@ When you contribute, ask yourself: *Does this change make it easier for users to
 - [Shimera user documentation](https://shimerateam.github.io/ShimeraDocs/userdoc/) - for examples and user-facing documentation.
 
 If you prefer to read the docs locally, see the `ShimeraDocs/public/docs` folder for the source content.
+
+## Licensing of Contributions
+
+Shimera is released under the **GNU General Public License v3.0** (`GPL-3.0-only`); see the [LICENSE](LICENSE) file.
+
+By submitting a contribution (a pull request, patch, or any other form of change), you certify that:
+
+- you wrote the contribution yourself, or otherwise have the right to submit it under the project's license;
+- your contribution is provided under the terms of the GPL-3.0; and
+- you grant the Shimera maintainers (the people listed in the **Maintainers** section of [AUTHORS.md](AUTHORS.md)) a perpetual, worldwide, non-exclusive, royalty-free, irrevocable license to use, reproduce, modify, sublicense and distribute your contribution, **including the right to relicense it, together with the rest of the project, under any other license in the future, whether open source or proprietary/commercial** (for example to dual-license the project as GPL-3.0 plus a commercial license, or to move it to a more permissive open-source license such as MPL-2.0).
+
+This grant lets the project adapt its license over time and pursue dual-licensing while keeping every contribution usable. The license you grant is **non-exclusive**: you keep full copyright to your own contributions and may use them elsewhere as you wish.
+
+New source files should start with the standard license header used across the codebase (`SPDX-License-Identifier: GPL-3.0-only` and the `The Shimera Authors` copyright line).
 
 ## Code Style
 
