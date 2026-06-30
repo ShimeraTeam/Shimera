@@ -1,5 +1,6 @@
 #include "backend/raylib/RaylibBackend.hpp"
 #include "backend/raylib/RaylibFramebuffer.hpp"
+#include "backend/raylib/RaylibMesh.hpp"
 #include "backend/raylib/RaylibPostProcessor.hpp"
 #include "backend/raylib/RaylibShader.hpp"
 
@@ -20,6 +21,11 @@ IPostProcessor* RaylibBackend::createPostProcessor(const std::string& vert, cons
     auto *processor = new RaylibPostProcessor();
     processor->setShader(vert, frag);
     return processor;
+}
+
+shimera::IMesh* RaylibBackend::createMesh(const std::vector<float>&  /*positions*/,
+    const std::vector<float>&  /*normals*/, const std::vector<unsigned int>&  /*indices*/) {
+    throw std::runtime_error("Not supported by this backend, use the backend's native mesh type instead ");
 }
 
 ITexture* RaylibBackend::createTexture(int /*width*/, int /*height*/) {

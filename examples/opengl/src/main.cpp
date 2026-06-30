@@ -1,159 +1,139 @@
 #include <iostream>
-#include <array>
+#include <vector>
+#include <cmath>
+
 #include <GLFW/glfw3.h>
 #include <GL/glew.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #include <shimera.h>
 #include "backend/BackendFactory.hpp"
-#include "effects/DistortionEffect.hpp"
+#include "converts/GlmConvert.hpp"
+#include "scene/Camera.hpp"
+#include "effects/materials/FresnelEffect.hpp"
 
 using namespace shimera;
 
 namespace {
 
+constexpr int kWidth = 800;
+constexpr int kHeight = 600;
+
 GLFWwindow* initWindow(int width, int height) {
     if (!glfwInit())
         return nullptr;
 
-    GLFWwindow* window = glfwCreateWindow(width, height, "Hello World", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(width, height, "Shimera - Fresnel (3D)", nullptr, nullptr);
     if (!window) {
         glfwTerminate();
         return nullptr;
     }
 
-    /* Make the window's context current */
     glfwMakeContextCurrent(window);
-
     glfwSwapInterval(1);
 
     if (glewInit() != GLEW_OK) {
-        std::cout << "GLEW ERROR" << '\n';
+        std::cerr << "GLEW ERROR\n";
         return nullptr;
     }
 
     std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << '\n';
-
     return window;
 }
 
-void setShapes(unsigned int& buffer, unsigned int& ibo, unsigned int& vao) {
-    const std::array<float, 8> positions = {
-        -0.5f, -0.5f,
-        -0.5f,  0.5f,
-         0.5f, -0.5f,
-         0.5f,  0.5f
-    };
+// Generates a unit UV-sphere centered at the origin.
+// For a unit sphere, the normal at a vertex equals its (normalized) position.
+void makeSphere(int stacks, int slices,
+                std::vector<float>& positions,
+                std::vector<float>& normals,
+                std::vector<unsigned int>& indices) {
+    for (int i = 0; i <= stacks; ++i) {
+        const float v = static_cast<float>(i) / static_cast<float>(stacks);
+        const float phi = v * glm::pi<float>();          // 0 .. PI
+        for (int j = 0; j <= slices; ++j) {
+            const float u = static_cast<float>(j) / static_cast<float>(slices);
+            const float theta = u * glm::two_pi<float>(); // 0 .. 2PI
 
-    const std::array<unsigned int, 6> indices = {
-        0, 1, 2,
-        1, 3, 2
-    };
+            const float x = std::sin(phi) * std::cos(theta);
+            const float y = std::cos(phi);
+            const float z = std::sin(phi) * std::sin(theta);
 
-    GLC(glGenBuffers(1, &buffer));
-    GLC(glBindBuffer(GL_ARRAY_BUFFER, buffer));
-    GLC(glBufferData(GL_ARRAY_BUFFER, positions.size() * sizeof(float), positions.data(), GL_STATIC_DRAW));
+            positions.insert(positions.end(), {x, y, z});
+            normals.insert(normals.end(), {x, y, z}); // unit sphere -> position == normal
+        }
+    }
 
-    GLC(glGenBuffers(1, &ibo));
-    GLC(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
-    GLC(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW));
-
-    GLC(glGenVertexArrays(1, &vao));
-    GLC(glBindVertexArray(vao));
-    GLC(glBindBuffer(GL_ARRAY_BUFFER, buffer));
-    GLC(glEnableVertexAttribArray(0));
-    GLC(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, nullptr));
-    GLC(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
-    GLC(glBindVertexArray(0));
+    const int ring = slices + 1;
+    for (int i = 0; i < stacks; ++i) {
+        for (int j = 0; j < slices; ++j) {
+            const unsigned int a = i * ring + j;
+            const unsigned int b = a + ring;
+            indices.insert(indices.end(), {a, b, a + 1, a + 1, b, b + 1});
+        }
+    }
 }
 
-void loop(GLFWwindow* window, unsigned int shader, unsigned int vao,
-          Uniform<Vec4<float>>& colorUniform, IFrameBuffer* sceneFramebuffer, DistortionEffect& distortionEffect) {
+} // namespace
 
-    float time = 0.0f;
-    float r = 0.0f;
-    float increment = 0.05f;
+int main() {
+    GLFWwindow* window = initWindow(kWidth, kHeight);
+    if (!window)
+        return -1;
 
-    while (!glfwWindowShouldClose(window))
-    {
-        sceneFramebuffer->bind();
-        sceneFramebuffer->clear(shimera::Color(0.0f, 0.0f, 0.0f, 1.0f));
+    IBackend* backend = BackendFactory::create();
+    if (!backend) {
+        std::cerr << "Failed to create backend!\n";
+        glfwTerminate();
+        return -1;
+    }
 
-        GLC(glUseProgram(shader));
-        colorUniform = Vec4(r, 0.3f, 0.8f, 1.0f);
-        GLC(glBindVertexArray(vao));
-        GLC(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+    std::vector<float> positions;
+    std::vector<float> normals;
+    std::vector<unsigned int> indices;
+    makeSphere(64, 64, positions, normals, indices);
 
-        if (r > 1.0f) {
-            increment = -0.05f;
-        } else if (r < 0.0f) {
-            increment =  0.05f;
-        }
-        r += increment;
+    IMesh* sphere = backend->createMesh(positions, normals, indices);
 
-        sceneFramebuffer->unbind();
-        distortionEffect.withTime(time);
-        GLC(glClearColor(0.1f, 0.1f, 0.1f, 1.0f));
-        GLC(glClear(GL_COLOR_BUFFER_BIT));
-        distortionEffect.render(sceneFramebuffer->getTexture());
+    FresnelEffect fresnel(backend);
+    fresnel.withColor(Vec3(0.3f, 0.6f, 1.0f))
+           .withPower(3.0f)
+           .withReflectance(0.04f)
+           .withIntensity(1.5f);
 
-        time += 0.06f;
+    // Static camera looking at the origin.
+    Camera camera;
+    camera.position = Vec3(0.0f, 0.0f, 3.5f);
+    camera.view = toShimMat4(glm::lookAt(
+        glm::vec3(camera.position.x, camera.position.y, camera.position.z),
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 1.0f, 0.0f)));
+    camera.projection = toShimMat4(glm::perspective(
+        glm::radians(45.0f),
+        static_cast<float>(kWidth) / static_cast<float>(kHeight),
+        0.1f, 100.0f));
+
+    glEnable(GL_DEPTH_TEST);
+
+    float angle = 0.0f;
+    while (!glfwWindowShouldClose(window)) {
+        glClearColor(0.02f, 0.02f, 0.04f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // Spin the sphere so the rim/grazing-angle highlight is easy to see.
+        angle += 0.01f;
+        const glm::mat4 model = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0f, 1.0f, 0.0f));
+        fresnel.setModel(toShimMat4(model));
+
+        fresnel.render(*sphere, camera);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-}
-}
 
-int main()
-{
-    try {
-        GLFWwindow* window = initWindow(640, 480);
-        if (!window) 
-            return -1;
-
-        unsigned int buffer, ibo, vao;
-        setShapes(buffer, ibo, vao);
-
-        const ShaderProgramSource source = parseShader(
-            "../../../../res/shader/basic.vert",
-            "../../../../res/shader/basic.frag"
-        );
-        const unsigned int shader = createShader(source.vertex, source.fragment);
-        GLC(glUseProgram(shader));
-
-        Uniform colorUniform(shader, "u_Color", Vec4(0.3f, 0.3f, 0.8f, 1.0f));
-
-        IBackend* backend = BackendFactory::create();
-        if (!backend) {
-            std::cerr << "Failed to create backend!\n";
-            GLC(glDeleteProgram(shader));
-            GLC(glDeleteVertexArrays(1, &vao));
-            GLC(glDeleteBuffers(1, &buffer));
-            GLC(glDeleteBuffers(1, &ibo));
-            glfwTerminate();
-            return -1;
-        }
-
-        IFrameBuffer* sceneFramebuffer = backend->createFrameBuffer(640, 480);
-
-        DistortionEffect distortionEffect(backend);
-        distortionEffect.withDistortionStrength(0.13f)
-                        .withNoiseScale(3.0f)
-                        .withTimeScale(0.1f);
-
-        loop(window, shader, vao, colorUniform, sceneFramebuffer, distortionEffect);
-
-        GLC(glDeleteProgram(shader));
-        GLC(glDeleteVertexArrays(1, &vao));
-        GLC(glDeleteBuffers(1, &buffer));
-        GLC(glDeleteBuffers(1, &ibo));
-        delete sceneFramebuffer;
-        delete backend;
-        glfwTerminate();
-
-    } catch (const std::exception& e) {
-        std::cerr << e.what() << '\n';
-        return -1;
-    }
+    delete sphere;
+    delete backend;
+    glfwTerminate();
     return 0;
 }

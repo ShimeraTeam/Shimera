@@ -6,6 +6,8 @@
 
 #include <stdexcept>
 
+#include "backend/opengl/OpenGLMesh.hpp"
+
 using shimera::IFrameBuffer;
 using shimera::IPostProcessor;
 using shimera::IShader;
@@ -24,6 +26,11 @@ IPostProcessor* OpenGLBackend::createPostProcessor(const std::string& vert, cons
     auto *processor = new OpenGLPostProcessor();
     processor->setShader(vert, frag);
     return processor;
+}
+
+shimera::IMesh* OpenGLBackend::createMesh(const std::vector<float>& positions, const std::vector<float>& normals,
+    const std::vector<unsigned int>& indices) {
+    return new OpenGLMesh(positions, normals, indices);
 }
 
 ITexture* OpenGLBackend::createTexture(const int width, const int height) {

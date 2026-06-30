@@ -6,9 +6,11 @@
 
 #include "EffectPipeline.inl"
 #include "backend/BackendFactory.hpp"
-#include "effects/AtmosphericScatteringEffect.hpp"
+#include "backend/raylib/converts/RaylibCamera.hpp"
+#include "backend/raylib/RaylibMesh.hpp"
 #include "effects/DistortionEffect.hpp"
-#include "effects/GaussianBlurEffect.hpp"
+#include "effects/materials/FresnelEffect.hpp"
+#include "scene/Camera.hpp"
 
 int main() {
     const int screenWidth = 960;
@@ -29,8 +31,10 @@ int main() {
     camera.fovy = 25.0f;
     camera.projection = CAMERA_PERSPECTIVE;
 
+    shimera::Camera shCam = shimera::RaylibCamera::toShimera(camera);
+
     // Vector3 cubePosition = { 0.0f, 0.0f, 0.0f };
-    auto spherePosition = Vector3(0.0f, 0.0f, 0.0f);
+    auto spherePosition = shimera::Vec3(0.0f, 0.0f, 0.0f);
 
     shimera::IBackend *backend = shimera::BackendFactory::create();
     if (!backend) {
@@ -38,25 +42,16 @@ int main() {
         return -1;
     }
 
-    shimera::IFrameBuffer *sceneFramebuffer = backend->createFrameBuffer(screenWidth, screenHeight, true);
+    Mesh sphereMesh = GenMeshSphere(1.5f, 48, 48);
+    shimera::RaylibMesh shMesh(sphereMesh);
 
-    shimera::EffectPipeline effects(backend, 960, 540);
-    effects.addEffect<shimera::GaussianBlurEffect>()
-        .addEffect<shimera::AtmosphericScatteringEffect>()
-        .addEffect<shimera::DistortionEffect>()
-        .build();
+    shimera::FresnelEffect fresnelMat(backend);
+    fresnelMat.withColor(shimera::Vec3(0.3f, 0.7f, 1.0f))
+           .withPower(3.0f)
+           .withReflectance(0.04f)
+           .withIntensity(1.5f);
 
-    auto &blur = effects.get<shimera::GaussianBlurEffect>();
-    blur.withSigma(5.0f)
-      .withSamples(15)
-      .withResolution(shimera::Vec2(960.0f, 540.0f));
-
-    auto &atmo = effects.get<shimera::AtmosphericScatteringEffect>();
-    atmo.withPlanet({0,0,0}, 15.0f, 23.6f)
-        .withSun({100, 100, 0});
-
-    auto &distortion = effects.get<shimera::DistortionEffect>();
-    distortion.withDistortionStrength(0.06f);
+    fresnelMat.setTransform(spherePosition);
 
     SetTargetFPS(60);
 
@@ -72,32 +67,23 @@ int main() {
             UpdateCamera(&camera, CAMERA_THIRD_PERSON);
         }
 
-        atmo.m_uCameraPos = shimera::Vec3(camera.position.x, camera.position.y, camera.position.z);
-        atmo.m_uCameraTarget = shimera::Vec3(camera.target.x, camera.target.y, camera.target.z);
-        atmo.m_uCameraUp = shimera::Vec3(camera.up.x, camera.up.y, camera.up.z);
-        atmo.m_fovYDegrees = camera.fovy;
-
-        atmo.setDepthTexture(sceneFramebuffer->getDepthTexture());
-
-        distortion.m_uTime = static_cast<float>(GetTime());
-
-        sceneFramebuffer->bind();
-        sceneFramebuffer->clear(shimera::Color{0, 0, 0, 1});
-            BeginMode3D(camera);
-                // DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, RED);
-                // DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, BLACK);
-                DrawSphere(spherePosition, 20.0f, {.r=53, .g=88, .b=29, .a=255});
-            EndMode3D();
-        sceneFramebuffer->unbind();
+        shCam = shimera::RaylibCamera::toShimera(camera);
 
         BeginDrawing();
+            glClear(GL_DEPTH_BUFFER_BIT);
             ClearBackground(BLACK);
-            effects.render(sceneFramebuffer->getTexture(), &sceneFramebuffer->getDepthTexture());
+            BeginMode3D(camera);
+                DrawCube({5, 0, 0}, 2.0f, 2.0f, 2.0f, RED);
+                DrawCubeWires({5, 0, 0}, 2.0f, 2.0f, 2.0f, WHITE);
+            EndMode3D();
+            glEnable(GL_DEPTH_TEST);
+            fresnelMat.render(shMesh, shCam);
+            glDisable(GL_DEPTH_TEST);
         EndDrawing();
     }
 
-    CloseWindow();
-    delete sceneFramebuffer;
+    UnloadMesh(sphereMesh);
     delete backend;
+    CloseWindow();
     return 0;
 }
