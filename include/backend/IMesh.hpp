@@ -8,10 +8,6 @@ namespace shimera {
 class SHIMERA_API IMesh {
     public:
         virtual ~IMesh() = default;
-
-        virtual void draw() const = 0;
-
-        [[nodiscard]] virtual unsigned int getIndexCount() const = 0;
 };
 
 }

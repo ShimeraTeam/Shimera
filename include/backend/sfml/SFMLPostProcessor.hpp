@@ -4,6 +4,7 @@
 #include "backend/IPostProcessor.hpp"
 #include "backend/IShader.hpp"
 #include <memory>
+#include <vector>
 
 namespace shimera {
 
@@ -19,6 +20,8 @@ class SFMLPostProcessor final : public IPostProcessor {
         void setShader(const std::string& vert, const std::string& frag) override;
         void render(ITexture& texture) override;
         void setUniform(const std::string& name, const UniformValue& value) override;
+        void addInputTexture(const std::string& uniformName, ITexture& texture,
+            unsigned int unit) override;
         IShader& getShader() override;
         void bindShader() override;
 
@@ -32,6 +35,7 @@ class SFMLPostProcessor final : public IPostProcessor {
         unsigned int m_ebo;
 
         std::unique_ptr<IShader> m_shader;
+        std::vector<ExtraTex> m_extraTextures;
 };
 
 }

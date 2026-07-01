@@ -16,7 +16,7 @@ int main() {
     const int screenWidth = 960;
     const int screenHeight = 540;
 
-    InitWindow(screenWidth, screenHeight, "Raylib - Multi-Pass Post-Processing");
+    InitWindow(screenWidth, screenHeight, "Raylib - Fresnel Material");
 
     if (glewInit() != GLEW_OK) {
         std::cerr << "[GLEW] initialization failed!" << '\n';
@@ -42,8 +42,8 @@ int main() {
         return -1;
     }
 
-    Mesh sphereMesh = GenMeshSphere(1.5f, 48, 48);
-    shimera::RaylibMesh shMesh(sphereMesh);
+    Model m = LoadModelFromMesh(GenMeshSphere(1.5f, 48, 48));
+    shimera::RaylibMesh sphere(m);
 
     shimera::FresnelEffect fresnelMat(backend);
     fresnelMat.withColor(shimera::Vec3(0.3f, 0.7f, 1.0f))
@@ -60,29 +60,26 @@ int main() {
         if (GetMouseWheelMove() != 0)
         {
             UpdateCamera(&camera, CAMERA_THIRD_PERSON);
+            shCam = shimera::RaylibCamera::toShimera(camera);
         }
 
         if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
         {
             UpdateCamera(&camera, CAMERA_THIRD_PERSON);
+            shCam = shimera::RaylibCamera::toShimera(camera);
         }
 
-        shCam = shimera::RaylibCamera::toShimera(camera);
-
         BeginDrawing();
-            glClear(GL_DEPTH_BUFFER_BIT);
             ClearBackground(BLACK);
             BeginMode3D(camera);
+                fresnelMat.render(sphere, shCam);
                 DrawCube({5, 0, 0}, 2.0f, 2.0f, 2.0f, RED);
                 DrawCubeWires({5, 0, 0}, 2.0f, 2.0f, 2.0f, WHITE);
             EndMode3D();
-            glEnable(GL_DEPTH_TEST);
-            fresnelMat.render(shMesh, shCam);
-            glDisable(GL_DEPTH_TEST);
         EndDrawing();
     }
 
-    UnloadMesh(sphereMesh);
+    UnloadModel(m);
     delete backend;
     CloseWindow();
     return 0;

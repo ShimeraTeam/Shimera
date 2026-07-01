@@ -8,27 +8,14 @@
 namespace shimera
 {
 
-class RaylibMesh : public IMesh {
+class SHIMERA_API RaylibMesh : public IMesh {
     public:
-        explicit RaylibMesh(Mesh& mesh);
-        explicit RaylibMesh(Model& model, int meshIndex = 0);
-        ~RaylibMesh() override;
+        explicit RaylibMesh(Model& model);
 
-        RaylibMesh(const RaylibMesh&) = delete;
-        RaylibMesh& operator=(const RaylibMesh&) = delete;
-
-        void draw() const override;
-        [[nodiscard]] unsigned int getIndexCount() const override;
+        [[nodiscard]] Model& model();
 
     private:
-        void upload(const Mesh& mesh);
-
-        unsigned int m_vao = 0;
-        unsigned int m_vboPos = 0;
-        unsigned int m_vboNormal = 0;
-        unsigned int m_ebo = 0;
-        unsigned int m_indexCount = 0;
-        bool m_indexed = false;
+        Model& m_model;
 };
 
 }

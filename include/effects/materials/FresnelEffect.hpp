@@ -5,23 +5,20 @@
 
 namespace shimera {
 
-class FresnelEffect : public MaterIalEffect<FresnelEffect> {
+class SHIMERA_API FresnelEffect : public MaterialEffect<FresnelEffect> {
     public:
-        Vec3<float> m_uColor = Vec3(0.4f, 0.7f, 1.0f);
-        float m_uPower = 3.0f;
-        float m_uReflectance  = 0.04f;
-        float m_uIntensity = 1.0f;
-
         explicit FresnelEffect(IBackend* backend);
 
-        FresnelEffect(IBackend* backend, Vec3<float> color, float power, float reflectance, float intensity);
-
-        void updateUniforms(const Camera& camera) override;
+        void uploadUniforms(IMaterial& material);
 
         FresnelEffect& withColor(Vec3<float> color);
         FresnelEffect& withPower(float power);
         FresnelEffect& withReflectance(float reflectance);
         FresnelEffect& withIntensity(float intensity);
+
+    private:
+        Vec3<float> m_color{0.3f, 0.7f, 1.0f};
+        float m_power = 3.0f, m_reflectance = 0.04f, m_intensity = 1.5f;
 };
 
 }

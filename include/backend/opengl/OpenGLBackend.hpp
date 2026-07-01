@@ -18,6 +18,8 @@ class OpenGLBackend final : public IBackend {
         IPostProcessor* createPostProcessor(const std::string& vert, const std::string& frag) override;
         IMesh* createMesh(const std::vector<float>& positions, const std::vector<float>& normals,
             const std::vector<unsigned int>& indices) override;
+        IMaterial* createMaterial(const std::string& vert, const std::string& frag) override;
+        void renderMaterial(IMaterial& material, IMesh& mesh, const Camera& camera, const Mat4& transform) override;
         ITexture* createTexture(int width, int height) override;
         IShader* createShader(const std::string& vert, const std::string& frag) override;
 };

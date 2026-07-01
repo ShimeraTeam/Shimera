@@ -22,13 +22,13 @@ OpenGLMesh::OpenGLMesh(const std::vector<float>& positions, const std::vector<fl
     GLC(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr));
     GLC(glEnableVertexAttribArray(0));
 
-    // location 1: normal (vec3)
+    // location 2: normal (vec3) (to matches Raylib's baked mesh layout, to be changed in the future)
     GLC(glGenBuffers(1, &m_vboNormal));
     GLC(glBindBuffer(GL_ARRAY_BUFFER, m_vboNormal));
     GLC(glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(float),
         normals.data(), GL_STATIC_DRAW));
-    GLC(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr));
-    GLC(glEnableVertexAttribArray(1));
+    GLC(glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr));
+    GLC(glEnableVertexAttribArray(2));
 
     GLC(glGenBuffers(1, &m_ebo));
     GLC(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo));

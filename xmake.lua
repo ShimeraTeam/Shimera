@@ -102,6 +102,7 @@ target("shimera-sfml")
     add_headerfiles("include/effects/(*.inl)")
     add_includedirs("include", {public = true})
     add_packages("glew", {public = true})
+    add_packages("glm")
     add_packages("sfml", {public = true})
     add_defines("SHIMERA_BACKEND_SFML", {public = true})
 

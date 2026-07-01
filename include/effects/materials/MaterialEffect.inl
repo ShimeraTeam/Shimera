@@ -5,24 +5,22 @@
 namespace shimera {
 
 template <typename Derived>
-class MaterIalEffect : public MaterialEffectBase {
+class MaterialEffect : public MaterialEffectBase {
     public:
-        void render(IMesh& mesh, const Camera& camera) override {
+        void render(IMesh& mesh, const Camera& camera) {
             if (!m_enabled)
                 return;
-            m_shader->bind();
-            static_cast<Derived*>(this)->updateUniforms(camera);
-            mesh.draw();
-            m_shader->unbind();
+            static_cast<Derived*>(this)->uploadUniforms(*m_material);
+            m_backend->renderMaterial(*m_material, mesh, camera, m_transform);
         }
 
-        Derived& with() {
-            return *static_cast<Derived*>(this);
-        }
+        Derived& with() { return *static_cast<Derived*>(this); }
 
-    private:
-        MaterIalEffect() = default;
-        friend Derived;
+    protected:
+        MaterialEffect(IBackend* backend, const std::string& vert, const std::string& frag) {
+            m_backend = backend;
+            m_material.reset(backend->createMaterial(vert, frag));
+        }
 };
 
 }

@@ -18,8 +18,8 @@ class SHIMERA_API OpenGLMesh final : public IMesh {
         OpenGLMesh(const OpenGLMesh&) = delete;
         OpenGLMesh& operator=(const OpenGLMesh&) = delete;
 
-        void draw() const override;
-        [[nodiscard]] unsigned int getIndexCount() const override;
+        void draw() const;
+        [[nodiscard]] unsigned int getIndexCount() const;
 
     private:
         unsigned int m_vao = 0;
