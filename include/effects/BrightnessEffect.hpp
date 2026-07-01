@@ -17,6 +17,8 @@ class SHIMERA_API BrightnessEffect final : public ShaderEffect<BrightnessEffect>
         void updateUniforms() override;
 
         BrightnessEffect &withStrength(float u_strength);
+
+        std::string getName() const override;
 };
 
 }

@@ -101,3 +101,7 @@ HDRBloomEffect &HDRBloomEffect::withResolution(Vec2<float> resolution) {
     m_brightBlurredHBuffer->resize(static_cast<int>(resolution.x), static_cast<int>(resolution.y));
     return *this;
 }
+
+std::string HDRBloomEffect::getName() const {
+    return "HDRBloom";
+}

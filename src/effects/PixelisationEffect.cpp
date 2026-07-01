@@ -51,4 +51,6 @@ PixelisationEffect &PixelisationEffect::withOffset(Vec2<float> offset) {
     return *this;
 }
 
-
+std::string PixelisationEffect::getName() const {
+    return "PixelisationEffect";
+}

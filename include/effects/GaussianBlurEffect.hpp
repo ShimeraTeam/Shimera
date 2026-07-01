@@ -29,6 +29,8 @@ class SHIMERA_API GaussianBlurEffect final : public ShaderEffect<GaussianBlurEff
         GaussianBlurEffect &withSamples(int samples);
         GaussianBlurEffect &withResolution(Vec2<float> resolution);
 
+        std::string getName() const override;
+
     private:
         std::unique_ptr<IFrameBuffer> m_intermediateBuffer;
 };

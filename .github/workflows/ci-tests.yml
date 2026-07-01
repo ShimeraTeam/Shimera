@@ -36,9 +36,9 @@ jobs:
         run: |
           git config --global user.name 'GitHub Action'
           git config --global user.email 'github-actions@noreply.github.com'
-          git add bench.json
+          git add benchmark-results.json
           git diff --cached --quiet && exit 0
-          git commit -m "chore(ci): update bench.json from CI test results"
+          git commit -m "chore(ci): update benchmark-results.json from CI test results"
 
       - name: Push changes
         run: |

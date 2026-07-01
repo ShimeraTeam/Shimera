@@ -25,3 +25,7 @@ BrightnessEffect &BrightnessEffect::withStrength(float u_strength) {
     this->m_uStrength = u_strength;
     return *this;
 }
+
+std::string BrightnessEffect::getName() const {
+    return "BrightnessEffect";
+}

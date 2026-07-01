@@ -72,3 +72,7 @@ GaussianBlurEffect &GaussianBlurEffect::withResolution(Vec2<float> resolution) {
     m_intermediateBuffer->resize(static_cast<int>(resolution.x), static_cast<int>(resolution.y));
     return *this;
 }
+
+std::string GaussianBlurEffect::getName() const {
+    return "GaussianBlurEffect";
+}
