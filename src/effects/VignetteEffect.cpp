@@ -60,3 +60,7 @@ VignetteEffect& VignetteEffect::withResolution(Vec2<float> resolution) {
     m_uResolution = resolution;
     return *this;
 }
+
+std::string VignetteEffect::getName() const {
+    return "VignetteEffect";
+}

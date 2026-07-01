@@ -17,6 +17,8 @@ class SHIMERA_API ContrastEffect final : public ShaderEffect<ContrastEffect> {
         void updateUniforms() override;
 
         ContrastEffect &withContrastFactor(float u_contrastFactor);
+
+        std::string getName() const override;
 };
 
 }

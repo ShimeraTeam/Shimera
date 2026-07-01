@@ -27,6 +27,8 @@ class SHIMERA_API DistortionEffect final : public ShaderEffect<DistortionEffect>
         DistortionEffect &withNoiseScale(float noiseScale);
         DistortionEffect &withDistortionStrength(float distortionStrength);
         DistortionEffect &withTimeScale(float timeScale);
+
+        std::string getName() const override;
 };
 
 }

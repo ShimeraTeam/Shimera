@@ -33,6 +33,8 @@ class SHIMERA_API VignetteEffect final : public ShaderEffect<VignetteEffect> {
         VignetteEffect &withColor(Vec4<float> color);
         VignetteEffect &withIsRounded(bool isRounded);
         VignetteEffect &withResolution(Vec2<float> resolution);
+
+        std::string getName() const override;
 };
 
 }
