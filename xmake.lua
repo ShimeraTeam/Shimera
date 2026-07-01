@@ -104,7 +104,6 @@ target("shimera-sfml")
     add_packages("glew", {public = true})
     add_packages("glm")
     add_packages("sfml", {public = true})
-    add_packages("glm")
     add_defines("SHIMERA_BACKEND_SFML", {public = true})
 
     if has_config("shared") then

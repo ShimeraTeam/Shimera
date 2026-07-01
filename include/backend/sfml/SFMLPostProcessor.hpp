@@ -5,7 +5,6 @@
 #include "backend/IShader.hpp"
 #include <vector>
 #include <memory>
-#include <vector>
 
 namespace shimera {
 
@@ -27,7 +26,6 @@ class SFMLPostProcessor final : public IPostProcessor {
         void bindShader() override;
 
     private:
-        std::vector<ExtraTex> m_extraTextures;
 
         void initializeQuad();
         void cleanupQuad();
