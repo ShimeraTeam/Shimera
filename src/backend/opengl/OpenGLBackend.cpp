@@ -6,6 +6,9 @@
 
 #include <stdexcept>
 
+#include "backend/opengl/OpenGLMaterial.hpp"
+#include "backend/opengl/OpenGLMesh.hpp"
+
 using shimera::IFrameBuffer;
 using shimera::IPostProcessor;
 using shimera::IShader;
@@ -24,6 +27,28 @@ IPostProcessor* OpenGLBackend::createPostProcessor(const std::string& vert, cons
     auto *processor = new OpenGLPostProcessor();
     processor->setShader(vert, frag);
     return processor;
+}
+
+shimera::IMesh* OpenGLBackend::createMesh(const std::vector<float>& positions, const std::vector<float>& normals,
+    const std::vector<unsigned int>& indices) {
+    return new OpenGLMesh(positions, normals, indices);
+}
+
+shimera::IMaterial* OpenGLBackend::createMaterial(const std::string& vert, const std::string& frag) {
+    return new OpenGLMaterial(vert, frag);
+}
+
+void OpenGLBackend::renderMaterial(IMaterial& material, IMesh& mesh, const Camera& camera, const Mat4& transform) {
+    auto& mat = static_cast<OpenGLMaterial&>(material);
+    auto& glm = static_cast<OpenGLMesh&>(mesh);
+    mat.setUniform("u_model", transform);
+    mat.setUniform("u_view", camera.view);
+    mat.setUniform("u_projection", camera.projection);
+    mat.setUniform("u_cameraPos", camera.position);
+    glEnable(GL_DEPTH_TEST);
+    mat.shader().bind();
+    glm.draw();
+    mat.shader().unbind();
 }
 
 ITexture* OpenGLBackend::createTexture(const int width, const int height) {
