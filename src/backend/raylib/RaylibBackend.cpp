@@ -1,5 +1,7 @@
 #include "backend/raylib/RaylibBackend.hpp"
 
+#include <stdexcept>
+
 #include "backend/raylib/converts/RaylibConvert.hpp"
 #include "backend/raylib/RaylibFramebuffer.hpp"
 #include "backend/raylib/RaylibMaterial.hpp"

@@ -8,7 +8,7 @@ using shimera::OpenGLMesh;
 
 
 OpenGLMesh::OpenGLMesh(const std::vector<float>& positions, const std::vector<float>& normals,
-    const std::vector<unsigned>& indices)
+    const std::vector<unsigned int>& indices)
     : m_indexCount(static_cast<unsigned int>(indices.size())) {
 
     GLC(glGenVertexArrays(1, &m_vao));
@@ -53,7 +53,7 @@ void OpenGLMesh::draw() const {
     GLC(glBindVertexArray(m_vao));
     GLC(glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(m_indexCount),
         GL_UNSIGNED_INT, nullptr));
-    GLC(glBindVertexArray(0))
+    GLC(glBindVertexArray(0));
 }
 
 unsigned int OpenGLMesh::getIndexCount() const {

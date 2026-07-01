@@ -39,7 +39,7 @@ IShader* SFMLBackend::createShader(const std::string& vert, const std::string& f
     return shader;
 }
 
-/** Only material available for now is FresnelEffect. It is generaly only for 3D mesh.
+/** Only material available for now is FresnelEffect. It is generally only for 3D mesh.
  * So no materials for SFML for now, so no material implementation yet. **/
 
 shimera::IMesh* SFMLBackend::createMesh(const std::vector<float>& /*positions*/,

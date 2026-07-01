@@ -1,11 +1,11 @@
 #include "backend/opengl/OpenGLBackend.hpp"
+
+#include <GL/glew.h>
+
 #include "backend/opengl/OpenGLFramebuffer.hpp"
 #include "backend/opengl/OpenGLPostProcessor.hpp"
 #include "backend/opengl/OpenGLShader.hpp"
 #include "backend/opengl/OpenGLTexture.hpp"
-
-#include <stdexcept>
-
 #include "backend/opengl/OpenGLMaterial.hpp"
 #include "backend/opengl/OpenGLMesh.hpp"
 
