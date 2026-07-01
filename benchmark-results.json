@@ -452,9 +452,9 @@
                 "vramUsed": 6656
             },
             "no_effects": {
-                "avgFps": 578.0,
+                "avgFps": 674.0,
                 "frames": 5000.0,
-                "totalMs": 8650.0,
+                "totalMs": 7410.0,
                 "vramUsed": 6656
             }
         }
