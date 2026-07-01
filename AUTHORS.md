@@ -20,7 +20,7 @@ Two roles are distinguished:
 The people who steward the project and hold the project-wide license grant described
 above.
 
-- Léo Maurel ([@Imaoleo](https://github.com/Imaoleo))
+- Léo Maurel ([@lmaoleo](https://github.com/lmaoleo))
 - Paul Arbez ([@PaulArbez](https://github.com/PaulArbez))
 - Eddy Gardes ([@Eddy02136](https://github.com/Eddy02136))
 
