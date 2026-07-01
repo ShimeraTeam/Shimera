@@ -109,3 +109,7 @@ AtmosphericScatteringEffect& AtmosphericScatteringEffect::withQuality(
     m_uInScatteringPoints  = std::max(2, inScatteringPoints);
     return *this;
 }
+
+std::string AtmosphericScatteringEffect::getName() const { 
+    return "AtmosphericScattering"; 
+}

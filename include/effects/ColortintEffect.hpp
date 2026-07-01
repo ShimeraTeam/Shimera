@@ -18,6 +18,8 @@ class SHIMERA_API ColortintEffect final : public ShaderEffect<ColortintEffect> {
         void updateUniforms() override;
 
         ColortintEffect &withTint(const Vec3<float> &tint);
+
+        std::string getName() const override;
 };
 
 }

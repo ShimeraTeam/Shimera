@@ -29,6 +29,8 @@ class SHIMERA_API ChromaticAberrationEffect final : public ShaderEffect<Chromati
         ChromaticAberrationEffect &withRadius(bool r);
         ChromaticAberrationEffect &withContrast(float c);
         ChromaticAberrationEffect &withSamples(int s);
+
+        std::string getName() const override;
 };
 
 }

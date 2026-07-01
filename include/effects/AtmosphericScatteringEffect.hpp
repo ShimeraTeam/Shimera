@@ -38,6 +38,8 @@ class SHIMERA_API AtmosphericScatteringEffect final : public ShaderEffect<Atmosp
         AtmosphericScatteringEffect& withPlanet(Vec3<float> center, float radius, float atmosphereRadius);
         AtmosphericScatteringEffect& withQuality(int opticalDepthSamples, int inScatteringPoints);
 
+        std::string getName() const override;
+
     private:
         ITexture* m_depth = nullptr;
 };

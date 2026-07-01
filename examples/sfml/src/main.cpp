@@ -11,6 +11,7 @@
 #include "backend/sfml/SFMLFramebuffer.hpp"
 #include "effects/DistortionEffect.hpp"
 #include "effects/GaussianBlurEffect.hpp"
+#include "effects/HDRBloomEffect.hpp"
 #include "EffectPipeline.inl"
 #include "effects/VignetteEffect.hpp"
 
@@ -40,15 +41,18 @@ int main()
     // Create framebuffer for the scene
     IFrameBuffer *sceneFramebuffer = backend->createFrameBuffer(960, 540);
 
-    GaussianBlurEffect gaussianBlurEffect(backend);
-    gaussianBlurEffect.withSigma(5.0f)
-                      .withSamples(15)
-                      .withResolution(Vec2(960.0f, 540.0f));
+    HDRBloomEffect hdrBloomEffect(backend);
+    hdrBloomEffect.withThreshold(0.85f)
+                  .withKnee(0.4f)
+                  .withIntensity(0.5f)
+                  .withBlurSigma(6.0f)
+                  .withBlurSamples(18)
+                  .withResolution(Vec2(960.0f, 540.0f));
 
     // Effect Pipeline: Managing fbo passes automatically
     EffectPipeline pipeline(backend, videoMode.size.x, videoMode.size.y);
     pipeline.addEffect<DistortionEffect>()
-            .addEffect(std::move(gaussianBlurEffect))
+            .addEffect(std::move(hdrBloomEffect))
             .addEffect<VignetteEffect>(1.0f, 0.4f, 0.3f)
             .build();
 
@@ -100,7 +104,7 @@ int main()
         // sfmlRenderTexture->draw(triangle);
         sceneFramebuffer->unbind(); // Calls display() internally
 
-        // Apply gaussian blur and render to screen
+        // Apply HDR bloom and render to screen
         window.setActive(true);
         glClear(GL_COLOR_BUFFER_BIT);
         pipeline.render(sceneFramebuffer->getTexture());
