@@ -38,3 +38,20 @@ IShader* SFMLBackend::createShader(const std::string& vert, const std::string& f
     shader->loadFromFiles(vert, frag);
     return shader;
 }
+
+/** Only material available for now is FresnelEffect. It is generally only for 3D mesh.
+ * So no materials for SFML for now, so no material implementation yet. **/
+
+shimera::IMesh* SFMLBackend::createMesh(const std::vector<float>& /*positions*/,
+    const std::vector<float>& /*normals*/, const std::vector<unsigned int>& /*indices*/) {
+    throw std::runtime_error("Materials are not yet supported by the SFML backend");
+}
+
+shimera::IMaterial* SFMLBackend::createMaterial(const std::string& /*vert*/, const std::string& /*frag*/) {
+    throw std::runtime_error("Materials are not yet supported by the SFML backend");
+}
+
+void SFMLBackend::renderMaterial(IMaterial& /*material*/, IMesh& /*mesh*/,
+    const Camera& /*camera*/, const Mat4& /*transform*/) {
+    throw std::runtime_error("Materials are not yet supported by the SFML backend");
+}

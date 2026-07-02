@@ -1,8 +1,9 @@
 #ifndef SHIMERA_RAYLIBTEXTURE_HPP
 #define SHIMERA_RAYLIBTEXTURE_HPP
 
+#include <raylib.h>
+
 #include "backend/ITexture.hpp"
-#include "raylib.h"
 
 namespace shimera {
 
