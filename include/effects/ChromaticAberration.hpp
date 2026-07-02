@@ -1,5 +1,5 @@
-#ifndef SHIMERA_SFML_CHROMATICABERRATION_HPP
-#define SHIMERA_SFML_CHROMATICABERRATION_HPP
+#ifndef SHIMERA_CHROMATICABERRATION_HPP
+#define SHIMERA_CHROMATICABERRATION_HPP
 
 #include "shimera_api.h"
 #include "ShaderEffect.inl"
@@ -35,4 +35,4 @@ class SHIMERA_API ChromaticAberrationEffect final : public ShaderEffect<Chromati
 
 }
 
-#endif //SHIMERA_SFML_CHROMATICABERRATION_HPP
+#endif //SHIMERA_CHROMATICABERRATION_HPP

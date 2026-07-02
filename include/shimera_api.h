@@ -1,6 +1,8 @@
 #ifndef SHIMERA_API_H
 #define SHIMERA_API_H
 
+//TODO: Rename `SHIMERA_API` to `EXPOSE`
+
 // DLL export/import macros for Windows
 #if defined(_WIN32) || defined(_MSC_VER)
     #ifdef SHIMERA_EXPORTS

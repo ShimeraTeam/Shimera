@@ -1,5 +1,5 @@
-#ifndef SHIMERA_VEC3_HPP
-#define SHIMERA_VEC3_HPP
+#ifndef SHIMERA_VEC3_INL
+#define SHIMERA_VEC3_INL
 
 namespace shimera {
 
@@ -17,4 +17,4 @@ class Vec3 {
 
 }
 
-#endif //SHIMERA_VEC3_HPP
+#endif //SHIMERA_VEC3_INL

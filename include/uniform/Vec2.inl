@@ -1,5 +1,5 @@
-#ifndef SHIMERA_SFML_VEC2_HPP
-#define SHIMERA_SFML_VEC2_HPP
+#ifndef SHIMERA_VEC2_INL
+#define SHIMERA_VEC2_INL
 
 namespace shimera {
 
@@ -16,4 +16,4 @@ class Vec2 {
 
 }
 
-#endif //SHIMERA_SFML_VEC2_HPP
+#endif //SHIMERA_VEC2_INL
