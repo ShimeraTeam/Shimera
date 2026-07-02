@@ -1,5 +1,6 @@
-#ifndef TEST_MEMORY_SFML_FRESNELEFFECT_HPP
-#define TEST_MEMORY_SFML_FRESNELEFFECT_HPP
+#ifndef SHIMERA_FRESNELEFFECT_HPP
+#define SHIMERA_FRESNELEFFECT_HPP
+
 #include "MaterialEffect.inl"
 #include "backend/IBackend.hpp"
 
@@ -23,4 +24,4 @@ class SHIMERA_API FresnelEffect : public MaterialEffect<FresnelEffect> {
 
 }
 
-#endif //TEST_MEMORY_SFML_FRESNELEFFECT_HPP
+#endif //SHIMERA_FRESNELEFFECT_HPP

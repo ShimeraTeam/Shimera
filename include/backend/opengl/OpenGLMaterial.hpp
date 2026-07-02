@@ -1,5 +1,5 @@
-#ifndef TEST_MEMORY_SFML_OPENGLMATERIAL_HPP
-#define TEST_MEMORY_SFML_OPENGLMATERIAL_HPP
+#ifndef SHIMERA_OPENGLMATERIAL_HPP
+#define SHIMERA_OPENGLMATERIAL_HPP
 
 #include "shimera_api.h"
 #include "OpenGLShader.hpp"
@@ -18,4 +18,4 @@ SHIMERA_API class OpenGLMaterial : public IMaterial {
 
 }
 
-#endif //TEST_MEMORY_SFML_OPENGLMATERIAL_HPP
+#endif //SHIMERA_OPENGLMATERIAL_HPP

@@ -1,5 +1,5 @@
-#ifndef TEST_MEMORY_SFML_CAMERAFACTORY_HPP
-#define TEST_MEMORY_SFML_CAMERAFACTORY_HPP
+#ifndef SHIMERA_CAMERAFACTORY_HPP
+#define SHIMERA_CAMERAFACTORY_HPP
 
 #include "Camera.hpp"
 #include "shimera_api.h"
@@ -14,4 +14,4 @@ class SHIMERA_API CameraFactory {
 
 }
 
-#endif //TEST_MEMORY_SFML_CAMERAFACTORY_HPP
+#endif //SHIMERA_CAMERAFACTORY_HPP

@@ -1,5 +1,5 @@
-#ifndef TEST_MEMORY_SFML_CAMERA_HPP
-#define TEST_MEMORY_SFML_CAMERA_HPP
+#ifndef SHIMERA_CAMERA_HPP
+#define SHIMERA_CAMERA_HPP
 
 #include "shimera_api.h"
 #include "uniform/Mat4.hpp"
@@ -15,4 +15,4 @@ struct SHIMERA_API Camera {
 
 }
 
-#endif //TEST_MEMORY_SFML_CAMERA_HPP
+#endif //SHIMERA_CAMERA_HPP

@@ -1,5 +1,5 @@
-#ifndef TEST_MEMORY_SFML_OPENGLMESH_HPP
-#define TEST_MEMORY_SFML_OPENGLMESH_HPP
+#ifndef SHIMERA_OPENGLMESH_HPP
+#define SHIMERA_OPENGLMESH_HPP
 
 #include <vector>
 
@@ -31,4 +31,4 @@ class SHIMERA_API OpenGLMesh final : public IMesh {
 
 }
 
-#endif //TEST_MEMORY_SFML_OPENGLMESH_HPP
+#endif //SHIMERA_OPENGLMESH_HPP

@@ -1,5 +1,5 @@
-#ifndef TEST_MEMORY_SFML_MAT4_INL
-#define TEST_MEMORY_SFML_MAT4_INL
+#ifndef SHIMERA_MAT4_HPP
+#define SHIMERA_MAT4_HPP
 
 namespace shimera {
 
@@ -10,4 +10,4 @@ struct Mat4 {
 
 }
 
-#endif //TEST_MEMORY_SFML_MAT4_INL
+#endif //SHIMERA_MAT4_HPP

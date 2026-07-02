@@ -1,5 +1,6 @@
-#ifndef TEST_MEMORY_SFML_MATERIALEFFECT_INL
-#define TEST_MEMORY_SFML_MATERIALEFFECT_INL
+#ifndef SHIMERA_MATERIALEFFECT_INL
+#define SHIMERA_MATERIALEFFECT_INL
+
 #include "MaterialEffectBase.hpp"
 
 namespace shimera {
@@ -25,4 +26,4 @@ class MaterialEffect : public MaterialEffectBase {
 
 }
 
-#endif //TEST_MEMORY_SFML_MATERIALEFFECT_INL
+#endif //SHIMERA_MATERIALEFFECT_INL

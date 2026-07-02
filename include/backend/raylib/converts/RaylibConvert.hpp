@@ -1,5 +1,5 @@
-#ifndef TEST_MEMORY_SFML_RAYLIBCONVERT_HPP
-#define TEST_MEMORY_SFML_RAYLIBCONVERT_HPP
+#ifndef SHIMERA_RAYLIBCONVERT_HPP
+#define SHIMERA_RAYLIBCONVERT_HPP
 
 #include <raylib.h>
 
@@ -12,4 +12,4 @@ namespace shimera {
     SHIMERA_API ::Color toRaylibColor(const shimera::Color& c);
 }
 
-#endif //TEST_MEMORY_SFML_RAYLIBCONVERT_HPP
+#endif //SHIMERA_RAYLIBCONVERT_HPP

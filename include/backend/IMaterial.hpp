@@ -1,5 +1,5 @@
-#ifndef TEST_MEMORY_SFML_IMATERIAL_HPP
-#define TEST_MEMORY_SFML_IMATERIAL_HPP
+#ifndef SHIMERA_IMATERIAL_HPP
+#define SHIMERA_IMATERIAL_HPP
 
 #include "shimera_api.h"
 #include "uniform/Uniform.inl"
@@ -14,4 +14,4 @@ class SHIMERA_API IMaterial {
 
 }
 
-#endif //TEST_MEMORY_SFML_IMATERIAL_HPP
+#endif //SHIMERA_IMATERIAL_HPP

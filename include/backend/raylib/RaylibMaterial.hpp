@@ -1,5 +1,5 @@
-#ifndef TEST_MEMORY_SFML_RAYLIBMATERIAL_HPP
-#define TEST_MEMORY_SFML_RAYLIBMATERIAL_HPP
+#ifndef SHIMERA_RAYLIBMATERIAL_HPP
+#define SHIMERA_RAYLIBMATERIAL_HPP
 
 #include <raylib.h>
 #include <unordered_map>
@@ -25,4 +25,4 @@ class SHIMERA_API RaylibMaterial : public IMaterial {
 
 }
 
-#endif //TEST_MEMORY_SFML_RAYLIBMATERIAL_HPP
+#endif //SHIMERA_RAYLIBMATERIAL_HPP

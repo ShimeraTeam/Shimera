@@ -1,5 +1,5 @@
-#ifndef TEST_MEMORY_SFML_RAYLIBMESH_HPP
-#define TEST_MEMORY_SFML_RAYLIBMESH_HPP
+#ifndef SHIMERA_RAYLIBMESH_HPP
+#define SHIMERA_RAYLIBMESH_HPP
 
 #include <raylib.h>
 
@@ -20,4 +20,4 @@ class SHIMERA_API RaylibMesh : public IMesh {
 
 }
 
-#endif //TEST_MEMORY_SFML_RAYLIBMESH_HPP
+#endif //SHIMERA_RAYLIBMESH_HPP

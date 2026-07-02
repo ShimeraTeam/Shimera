@@ -1,5 +1,5 @@
-#ifndef TEST_MEMORY_SFML_IMESH_HPP
-#define TEST_MEMORY_SFML_IMESH_HPP
+#ifndef SHIMERA_IMESH_HPP
+#define SHIMERA_IMESH_HPP
 
 #include "shimera_api.h"
 
@@ -12,4 +12,4 @@ class SHIMERA_API IMesh {
 
 }
 
-#endif //TEST_MEMORY_SFML_IMESH_HPP
+#endif //SHIMERA_IMESH_HPP
