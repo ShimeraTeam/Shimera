@@ -1,5 +1,5 @@
-#ifndef OPENGL_LEARNING_UTILS_H
-    #define OPENGL_LEARNING_UTILS_H
+#ifndef SHIMERA_GLUTILS_H
+    #define SHIMERA_GLUTILS_H
 
     #include <shimera_api.h>
 #include <string>
@@ -39,4 +39,4 @@
     SHIMERA_API unsigned int compileShader(unsigned int type, const std::string &source);
     SHIMERA_API unsigned int createShader(const std::string &vertexSource, const std::string &fragmentSource);
 
-#endif //OPENGL_LEARNING_UTILS_H
+#endif //SHIMERA_GLUTILS_H
