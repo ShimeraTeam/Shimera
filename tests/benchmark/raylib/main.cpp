@@ -21,6 +21,7 @@ int main() {
     InitWindow(960, 540, "Raylib shimera tests");
     glewInit();
     shimera::IBackend *backend = shimera::BackendFactory::create();
+    shimera::IFrameBuffer *sceneFramebuffer = backend->createFrameBuffer(960, 540);
     TestRunner runner;
     GLint vramBefore = 0;
     GLint vramAfter = 0;
@@ -31,7 +32,7 @@ int main() {
 
     // Benchmark without any effects
     shimera::EffectPipeline pipelineNoEffects(backend, 640, 480);
-    runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib No Effects", backend, std::move(pipelineNoEffects), 0));
+    runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib No Effects", backend, sceneFramebuffer, std::move(pipelineNoEffects), 0));
 
     // Benchmark DistortionEffect
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
@@ -39,7 +40,7 @@ int main() {
     pipelineDistortion.addEffect<shimera::DistortionEffect>();
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramAfter);
     vramUsed = vramBefore - vramAfter;
-    runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib DistortionEffect", backend, std::move(pipelineDistortion), vramUsed));
+    runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib DistortionEffect", backend, sceneFramebuffer, std::move(pipelineDistortion), vramUsed));
 
     // Benchmark BrightnessEffect
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
@@ -47,7 +48,7 @@ int main() {
     pipelineBrightness.addEffect<shimera::BrightnessEffect>(0.5f);
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramAfter);
     vramUsed = vramBefore - vramAfter;
-    runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib BrightnessEffect", backend, std::move(pipelineBrightness), vramUsed));
+    runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib BrightnessEffect", backend, sceneFramebuffer, std::move(pipelineBrightness), vramUsed));
 
     // Benchmark ChromaticAberration
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
@@ -55,7 +56,7 @@ int main() {
     pipelineChromaticAberration.addEffect<shimera::ChromaticAberrationEffect>(1.0f, true, 2.0f, 20);
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramAfter);
     vramUsed = vramBefore - vramAfter;
-    runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib ChromaticAberration", backend, std::move(pipelineChromaticAberration), vramUsed));
+    runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib ChromaticAberration", backend, sceneFramebuffer, std::move(pipelineChromaticAberration), vramUsed));
 
     // Benchmark ColortintEffect
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
@@ -63,7 +64,7 @@ int main() {
     pipelineColortint.addEffect<shimera::ColortintEffect>(shimera::Vec3<float>(0.5f, 0.2f, 0.8f));
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramAfter);
     vramUsed = vramBefore - vramAfter;
-    runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib ColortintEffect", backend, std::move(pipelineColortint), vramUsed));
+    runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib ColortintEffect", backend, sceneFramebuffer, std::move(pipelineColortint), vramUsed));
 
     // Benchmark ContrastEffect
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
@@ -71,7 +72,7 @@ int main() {
     pipelineContrast.addEffect<shimera::ContrastEffect>(1.5f);
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramAfter);
     vramUsed = vramBefore - vramAfter;
-    runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib ContrastEffect", backend, std::move(pipelineContrast), vramUsed));
+    runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib ContrastEffect", backend, sceneFramebuffer, std::move(pipelineContrast), vramUsed));
 
     // Benchmark GrayscaleEffect
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
@@ -79,7 +80,7 @@ int main() {
     pipelineGrayscale.addEffect<shimera::GrayscaleEffect>();
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramAfter);
     vramUsed = vramBefore - vramAfter;
-    runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib GrayscaleEffect", backend, std::move(pipelineGrayscale), vramUsed));
+    runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib GrayscaleEffect", backend, sceneFramebuffer, std::move(pipelineGrayscale), vramUsed));
 
     // Benchmark SaturationEffect
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
@@ -87,7 +88,7 @@ int main() {
     pipelineSaturation.addEffect<shimera::SaturationEffect>(0.5f);
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramAfter);
     vramUsed = vramBefore - vramAfter;
-    runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib SaturationEffect", backend, std::move(pipelineSaturation), vramUsed ));
+    runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib SaturationEffect", backend, sceneFramebuffer, std::move(pipelineSaturation), vramUsed ));
 
     // Benchmark PixelisationEffect
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
@@ -95,7 +96,7 @@ int main() {
     pipelinePixelisation.addEffect<shimera::PixelisationEffect>(200.0f, shimera::Vec2<float>(640.0f, 480.0f));
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramAfter);
     vramUsed = vramBefore - vramAfter;
-    runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib PixelisationEffect", backend, std::move(pipelinePixelisation), vramUsed));
+    runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib PixelisationEffect", backend, sceneFramebuffer, std::move(pipelinePixelisation), vramUsed));
 
     // Benchmark GaussianBlurEffect
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
@@ -103,7 +104,7 @@ int main() {
     pipelineGaussianBlur.addEffect<shimera::GaussianBlurEffect>(5.0f, 15, shimera::Vec2<float>(640.0f, 480.0f));
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramAfter);
     vramUsed = vramBefore - vramAfter;
-    runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib GaussianBlurEffect", backend, std::move(pipelineGaussianBlur), vramUsed));
+    runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib GaussianBlurEffect", backend, sceneFramebuffer, std::move(pipelineGaussianBlur), vramUsed));
 
     // Benchmark VignetteEffect
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
@@ -111,7 +112,7 @@ int main() {
     pipelineVignette.addEffect<shimera::VignetteEffect>(1.0f, 0.4f, 0.3f);
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramAfter);
     vramUsed = vramBefore - vramAfter;
-    runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib VignetteEffect", backend, std::move(pipelineVignette), vramUsed));
+    runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib VignetteEffect", backend, sceneFramebuffer, std::move(pipelineVignette), vramUsed));
 
     //Benchmark with two effects
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
@@ -120,7 +121,7 @@ int main() {
     pipelineTwoEffects.addEffect<shimera::SaturationEffect>(0.5f);
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramAfter);
     vramUsed = vramBefore - vramAfter;
-    runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib TwoEffects", backend, std::move(pipelineTwoEffects), vramUsed));
+    runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib TwoEffects", backend, sceneFramebuffer, std::move(pipelineTwoEffects), vramUsed));
 
     //Benchmark with three effects
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
@@ -130,9 +131,10 @@ int main() {
     pipelineThreeEffects.addEffect<shimera::GaussianBlurEffect>(5.0f, 15, shimera::Vec2<float>(640.0f, 480.0f));
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramAfter);
     vramUsed = vramBefore - vramAfter;
-    runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib ThreeEffects", backend, std::move(pipelineThreeEffects), vramUsed));
+    runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib ThreeEffects", backend, sceneFramebuffer, std::move(pipelineThreeEffects), vramUsed));
 
     runner.runAll();
+    delete sceneFramebuffer;
     delete backend;
     CloseWindow();
     exit(0);

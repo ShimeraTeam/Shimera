@@ -12,8 +12,8 @@ __declspec(dllexport) unsigned long NvOptimusEnablement = 1;
 
 static constexpr int FRAMES = 5000;
 
-BenchmarkRaylib::BenchmarkRaylib(const std::string &testName, shimera::IBackend* backend, 
-    shimera::EffectPipeline &&pipeline, GLint vramUsed) : m_backend(backend), m_pipeline(std::move(pipeline)), m_vramUsed(vramUsed) {
+BenchmarkRaylib::BenchmarkRaylib(const std::string &testName, shimera::IBackend* backend, shimera::IFrameBuffer *sceneFramebuffer,
+    shimera::EffectPipeline &&pipeline, GLint vramUsed) : m_backend(backend), m_sceneFramebuffer(sceneFramebuffer), m_pipeline(std::move(pipeline)), m_vramUsed(vramUsed) {
     m_name = testName;
 }
 
@@ -26,8 +26,7 @@ void BenchmarkRaylib::setupScene(BenchmarkReport &report) {
     // check vram
     GLint vramBefore = 0;
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
-
-    m_sceneFramebuffer = m_backend->createFrameBuffer(960, 540);
+    m_sceneFramebuffer->clear(shimera::Color{0, 0, 0, 1});
     m_pipeline.build();
     glFinish();
 
@@ -95,7 +94,5 @@ void BenchmarkRaylib::run() {
           .setTotalMs(totalMs)
           .setFrames(FRAMES);
     report.save("../../../../benchmark-results.json");
-
-    delete m_sceneFramebuffer;
     return;
 }

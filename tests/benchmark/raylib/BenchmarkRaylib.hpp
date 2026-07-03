@@ -12,7 +12,7 @@
 class BenchmarkRaylib : public ITest {
 public:
     BenchmarkRaylib() = default;
-    BenchmarkRaylib(const std::string &testName, shimera::IBackend* backend, shimera::EffectPipeline &&pipeline, GLint vramUsed);
+    BenchmarkRaylib(const std::string &testName, shimera::IBackend* backend, shimera::IFrameBuffer *sceneFramebuffer, shimera::EffectPipeline &&pipeline, GLint vramUsed);
     ~BenchmarkRaylib() override = default;
 
     std::string getName() const override;
