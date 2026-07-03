@@ -10,6 +10,7 @@ on:
     branches:
       - master
       - dev
+      - fix/204-fix-raylib-tests
 
 jobs:
   run-shimera-tests:
@@ -32,14 +33,14 @@ jobs:
         env:
           DISPLAY: :0
 
-      - name: Commit update
-        run: |
-          git config --global user.name 'GitHub Action'
-          git config --global user.email 'github-actions@noreply.github.com'
-          git add benchmark-results.json
-          git diff --cached --quiet && exit 0
-          git commit -m "chore(ci): update benchmark-results.json from CI test results"
+      #- name: Commit update
+        #run: |
+          #git config --global user.name 'GitHub Action'
+          #git config --global user.email 'github-actions@noreply.github.com'
+          #git add benchmark-results.json
+          #git diff --cached --quiet && exit 0
+          #git commit -m "chore(ci): update benchmark-results.json from CI test results"
 
-      - name: Push changes
-        run: |
-          git push origin HEAD:${{ github.head_ref || github.ref_name }}
+      #- name: Push changes
+        #run: |
+          #git push origin HEAD:${{ github.head_ref || github.ref_name }}
