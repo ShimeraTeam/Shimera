@@ -44,6 +44,15 @@ ITexture& RaylibFramebuffer::getDepthTexture() {
 }
 
 void RaylibFramebuffer::resize(int width, int height) {
+
+    if (!IsWindowReady()) {
+        throw std::runtime_error("No OpenGL context current");
+    }
+
+    if (width <= 0 || height <= 0) {
+        throw std::runtime_error("Framebuffer size too small");
+    }
+
     m_width = width;
     m_height = height;
 
