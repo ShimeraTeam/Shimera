@@ -31,12 +31,12 @@ int main() {
     runner.add(std::make_unique<MemoryTest>("Memory Tests"));
 
     // Benchmark GaussianBlurEffect
-    glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
-    shimera::EffectPipeline pipelineGaussianBlur(backend, 640, 480);
-    pipelineGaussianBlur.addEffect<shimera::GaussianBlurEffect>(5.0f, 15, shimera::Vec2<float>(640.0f, 480.0f));
-    glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramAfter);
-    vramUsed = vramBefore - vramAfter;
-    runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib GaussianBlurEffect", backend, std::move(pipelineGaussianBlur), vramUsed));
+    //glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
+    //shimera::EffectPipeline pipelineGaussianBlur(backend, 640, 480);
+    //pipelineGaussianBlur.addEffect<shimera::GaussianBlurEffect>(5.0f, 15, shimera::Vec2<float>(640.0f, 480.0f));
+    //glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramAfter);
+    //vramUsed = vramBefore - vramAfter;
+    //runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib GaussianBlurEffect", backend, std::move(pipelineGaussianBlur), vramUsed));
 
     // Benchmark VignetteEffect
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
@@ -47,12 +47,12 @@ int main() {
     runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib VignetteEffect", backend, std::move(pipelineVignette), vramUsed));
 
     // Benchmark HDRBloom
-    glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
-    shimera::EffectPipeline pipelineHDRBloom(backend, 640, 480);
-    pipelineHDRBloom.addEffect<shimera::HDRBloomEffect>(0.7f, 0.2f, 1.5f, 15.0f, 30, shimera::Vec2<float>(640.0f, 480.0f));
-    glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramAfter);
-    vramUsed = vramBefore - vramAfter;
-    runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib HDRBloomEffect", backend, std::move(pipelineHDRBloom), vramUsed));
+    //glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
+    //shimera::EffectPipeline pipelineHDRBloom(backend, 640, 480);
+    //pipelineHDRBloom.addEffect<shimera::HDRBloomEffect>(0.7f, 0.2f, 1.5f, 15.0f, 30, shimera::Vec2<float>(640.0f, 480.0f));
+    //glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramAfter);
+    //vramUsed = vramBefore - vramAfter;
+    //runner.add(std::make_unique<BenchmarkRaylib>( "Benchmark Raylib HDRBloomEffect", backend, std::move(pipelineHDRBloom), vramUsed));
 
     // Benchmark AtmosphericScatteringEffect
     shimera::EffectPipeline pipelineAtmosphericScattering(backend, 640, 480);
