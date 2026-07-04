@@ -1,4 +1,6 @@
 #include <chrono>
+#include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
 #include "BenchmarkOpengl.hpp"
 
 #define GL_GPU_MEM_INFO_TOTAL_AVAILABLE_MEM_NVX 0x9048
@@ -12,18 +14,35 @@ __declspec(dllexport) unsigned long NvOptimusEnablement = 1;
 
 static constexpr int FRAMES = 5000;
 
-BenchmarkOpengl::BenchmarkOpengl(const std::string &testName, GLFWwindow* window, shimera::IBackend* backend, 
-    shimera::EffectPipeline &&pipeline, GLint vramUsed) : m_backend(backend), m_pipeline(std::move(pipeline)), m_vramUsed(vramUsed) {
-    m_name = testName;
-    m_window = window;
+namespace {
+
+    void makeSphere(int stacks, int slices,
+                std::vector<float>& positions,
+                std::vector<float>& normals,
+                std::vector<unsigned int>& indices) {
+        for (int i = 0; i <= stacks; ++i) {
+            const float phi = static_cast<float>(i) / static_cast<float>(stacks) * glm::pi<float>();
+            for (int j = 0; j <= slices; ++j) {
+                const float theta = static_cast<float>(j) / static_cast<float>(slices) * glm::two_pi<float>();
+                const float x = std::sin(phi) * std::cos(theta);
+                const float y = std::cos(phi);
+                const float z = std::sin(phi) * std::sin(theta);
+                positions.insert(positions.end(), {x, y, z});
+                normals.insert(normals.end(), {x, y, z});
+            }
+        }
+        const int ring = slices + 1;
+        for (int i = 0; i < stacks; ++i) {
+            for (int j = 0; j < slices; ++j) {
+                const unsigned int a = i * ring + j;
+                const unsigned int b = a + ring;
+                indices.insert(indices.end(), {a, b, a + 1, a + 1, b, b + 1});
+            }
+        }
+    }
 }
 
-std::string BenchmarkOpengl::getName() const {
-    return m_name;
-}
-
-void BenchmarkOpengl::setupScene(BenchmarkReport &report) {
-
+void BenchmarkOpengl::make2DCube() {
     float positions[] = {
         -0.5f, -0.5f,
         -0.5f, 0.5f,
@@ -62,17 +81,45 @@ void BenchmarkOpengl::setupScene(BenchmarkReport &report) {
     GLC(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0));
 
     GLC(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo));
+}
+
+BenchmarkOpengl::BenchmarkOpengl(const std::string &testName, GLFWwindow* window, shimera::IBackend* backend, 
+    shimera::EffectPipeline &&pipeline, GLint vramUsed) : m_backend(backend), m_pipeline(std::move(pipeline)), m_vramUsed(vramUsed) {
+    m_name = testName;
+    m_window = window;
+}
+
+std::string BenchmarkOpengl::getName() const {
+    return m_name;
+}
+
+void BenchmarkOpengl::setupScene(BenchmarkReport &report) {
+    GLint vramBefore = 0;
+    glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
+    if (m_name.find("FresnelEffect") == std::string::npos) {
+        make2DCube();
+    } else {
+
+        makeSphere(64, 64, m_spPos, m_spNrm, m_spIdx);
+        m_sphere = m_backend->createMesh(m_spPos, m_spNrm, m_spIdx);
+
+        m_fresnelEffect = new shimera::FresnelEffect(m_backend);
+        m_fresnelEffect->withColor(shimera::Vec3(0.3f, 0.6f, 1.0f))
+            .withPower(3.0f)
+            .withReflectance(0.04f)
+            .withIntensity(1.5f);
+        glEnable(GL_DEPTH_TEST);
+    }
 
     // Unbind for now
     GLC(glBindVertexArray(0));
 
     // check vram
-    GLint vramBefore = 0;
-    glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
 
-    m_sceneFramebuffer = m_backend->createFrameBuffer(960, 540);
-
-    m_pipeline.build();
+    if (m_pipeline.size() > 0) {
+        m_sceneFramebuffer = m_backend->createFrameBuffer(960, 540);
+        m_pipeline.build();
+    }
 
     glFinish();
 
@@ -91,6 +138,45 @@ void BenchmarkOpengl::setupScene(BenchmarkReport &report) {
 
 void BenchmarkOpengl::renderScene(float &time, float &r) {
     float increment = 0.05f;
+
+    if (m_name.find("FresnelEffect") != std::string::npos) {
+        int fbw = 0, fbh = 0;
+        glfwGetFramebufferSize(m_window, &fbw, &fbh);
+        glViewport(0, 0, fbw, fbh);
+        const float aspect = fbh > 0 ? static_cast<float>(fbw) / static_cast<float>(fbh) : 1.0f;
+        const shimera::Camera camera = shimera::CameraFactory::perspective(
+            shimera::Vec3(10.0f, 10.0f, 10.0f),
+            shimera::Vec3(0.0f, 3.0f, 6.0f),
+            shimera::Vec3(0.0f, 1.0f, 0.0f),
+            45.0f, aspect, 0.1f, 100.0f);
+
+        glClearColor(0.02f, 0.02f, 0.04f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        m_fresnelEffect->setTransform(shimera::Vec3(0.0f, 3.0f, 6.0f));
+        m_fresnelEffect->render(*m_sphere, camera);
+
+        glfwSwapBuffers(m_window);
+        return;
+    }
+
+    if (m_pipeline.size() == 0) {
+        GLC(glClearColor(0.1f, 0.1f, 0.1f, 1.0f));
+        GLC(glClear(GL_COLOR_BUFFER_BIT));
+        GLC(glUseProgram(m_shader));
+        *m_colorUniform = shimera::Vec4(r, 0.3f, 0.8f, 1.0f);
+        GLC(glBindVertexArray(m_vao));
+        GLC(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+
+        if (r > 1.0f)
+            increment = -0.05f;
+        else if (r < 0.0f)
+            increment = 0.05f;
+        r += increment;
+
+        glfwSwapBuffers(m_window);
+        return;
+    }
 
     m_sceneFramebuffer->bind();
     m_sceneFramebuffer->clear(shimera::Color(0.0f, 0.0f, 0.0f, 1.0f));
@@ -146,13 +232,23 @@ void BenchmarkOpengl::run() {
           .setAvgFps(avgFps)
           .setTotalMs(totalMs)
           .setFrames(FRAMES);
-    report.save("../../../../benchmark-results.json");
 
-    GLC(glDeleteProgram(m_shader));
-    GLC(glDeleteVertexArrays(1, &m_vao));
-    GLC(glDeleteBuffers(1, &m_buffer));
-    GLC(glDeleteBuffers(1, &m_ibo));
-    delete m_sceneFramebuffer;
-    delete m_colorUniform;
+    if (m_name.find("FresnelEffect") == std::string::npos) {
+        GLC(glDeleteProgram(m_shader));
+        GLC(glDeleteVertexArrays(1, &m_vao));
+        GLC(glDeleteBuffers(1, &m_buffer));
+        GLC(glDeleteBuffers(1, &m_ibo));
+        delete m_colorUniform;
+    }
+    if (m_pipeline.size() > 0) {
+        delete m_sceneFramebuffer;
+    }
+    if (m_name.find("FresnelEffect") != std::string::npos) {
+        report.setEffects("FresnelEffect");
+        delete m_fresnelEffect;
+        delete m_sphere;
+        GLC(glDisable(GL_DEPTH_TEST));
+    }
+    report.save("../../../../benchmark-results.json");
     return;
 }

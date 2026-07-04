@@ -11,6 +11,7 @@
 #include "effects/GrayscaleEffect.hpp"
 #include "effects/SaturationEffect.hpp"
 #include "effects/PixelisationEffect.hpp"
+#include "effects/HDRBloomEffect.hpp"
 
 
 #define GL_GPU_MEM_INFO_TOTAL_AVAILABLE_MEM_NVX 0x9048
@@ -45,7 +46,7 @@ int main() {
     // Benchmark BrightnessEffect
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
     shimera::EffectPipeline pipelineBrightness(backend, 640, 480);
-    pipelineBrightness.addEffect<shimera::BrightnessEffect>(0.5f);
+    pipelineBrightness.addEffect<shimera::BrightnessEffect>(0.2f);
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramAfter);
     vramUsed = vramBefore - vramAfter;
     runner.add(std::make_unique<BenchmarkSfml>( "Benchmark Sfml BrightnessEffect", window, backend, std::move(pipelineBrightness), vramUsed));
@@ -53,7 +54,7 @@ int main() {
     // Benchmark ChromaticAberration
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
     shimera::EffectPipeline pipelineChromaticAberration(backend, 640, 480);
-    pipelineChromaticAberration.addEffect<shimera::ChromaticAberrationEffect>(1.0f, true, 2.0f, 20);
+    pipelineChromaticAberration.addEffect<shimera::ChromaticAberrationEffect>(0.5f, false, 2.0f, 20);
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramAfter);
     vramUsed = vramBefore - vramAfter;
     runner.add(std::make_unique<BenchmarkSfml>( "Benchmark Sfml ChromaticAberration", window, backend, std::move(pipelineChromaticAberration), vramUsed));
@@ -61,7 +62,7 @@ int main() {
     // Benchmark ColortintEffect
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
     shimera::EffectPipeline pipelineColortint(backend, 640, 480);
-    pipelineColortint.addEffect<shimera::ColortintEffect>(shimera::Vec3<float>(0.5f, 0.2f, 0.8f));
+    pipelineColortint.addEffect<shimera::ColortintEffect>(shimera::Vec3<float>(1.0f, 0.0f, 0.0f));
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramAfter);
     vramUsed = vramBefore - vramAfter;
     runner.add(std::make_unique<BenchmarkSfml>( "Benchmark Sfml ColortintEffect", window, backend, std::move(pipelineColortint), vramUsed));
@@ -85,7 +86,7 @@ int main() {
     // Benchmark SaturationEffect
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
     shimera::EffectPipeline pipelineSaturation(backend, 640, 480);
-    pipelineSaturation.addEffect<shimera::SaturationEffect>(0.5f);
+    pipelineSaturation.addEffect<shimera::SaturationEffect>(1.5f);
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramAfter);
     vramUsed = vramBefore - vramAfter;
     runner.add(std::make_unique<BenchmarkSfml>( "Benchmark Sfml SaturationEffect", window, backend, std::move(pipelineSaturation), vramUsed ));
@@ -93,7 +94,7 @@ int main() {
     // Benchmark PixelisationEffect
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
     shimera::EffectPipeline pipelinePixelisation(backend, 640, 480);
-    pipelinePixelisation.addEffect<shimera::PixelisationEffect>(200.0f, shimera::Vec2<float>(640.0f, 480.0f));
+    pipelinePixelisation.addEffect<shimera::PixelisationEffect>(8.0f, shimera::Vec2<float>(640.0f, 480.0f));
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramAfter);
     vramUsed = vramBefore - vramAfter;
     runner.add(std::make_unique<BenchmarkSfml>( "Benchmark Sfml PixelisationEffect", window, backend, std::move(pipelinePixelisation), vramUsed));
@@ -109,10 +110,18 @@ int main() {
     // Benchmark VignetteEffect
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
     shimera::EffectPipeline pipelineVignette(backend, 640, 480);
-    pipelineVignette.addEffect<shimera::VignetteEffect>(1.0f, 0.4f, 0.3f);
+    pipelineVignette.addEffect<shimera::VignetteEffect>(0.8f, 0.3f, 0.1f, shimera::Vec4<float>(0.0f, 0.0f, 0.0f, 1.0f), true, shimera::Vec2<float>(640.0f, 480.0f));
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramAfter);
     vramUsed = vramBefore - vramAfter;
     runner.add(std::make_unique<BenchmarkSfml>( "Benchmark Sfml VignetteEffect", window, backend, std::move(pipelineVignette), vramUsed));
+
+    // Benchmark HDRBloom
+    glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
+    shimera::EffectPipeline pipelineHDRBloom(backend, 640, 480);
+    pipelineHDRBloom.addEffect<shimera::HDRBloomEffect>(0.7f, 0.2f, 1.5f, 15.0f, 30, shimera::Vec2<float>(640.0f, 480.0f));
+    glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramAfter);
+    vramUsed = vramBefore - vramAfter;
+    runner.add(std::make_unique<BenchmarkSfml>( "Benchmark Sfml HDRBloomEffect", window, backend, std::move(pipelineHDRBloom), vramUsed));
 
     //Benchmark with two effects
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
