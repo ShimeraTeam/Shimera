@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <SFML/Graphics/RenderTexture.hpp>
+#include <SFML/Window/Context.hpp>
 #include "backend/IFrameBuffer.hpp"
 #include "SFMLTexture.hpp"
 
