@@ -24,7 +24,6 @@ cd shimera
 # Build static library for your backend (static by default)
 xmake b shimera-sfml       # SFML backend
 xmake b shimera-opengl     # Pure OpenGL backend
-xmake b shimera-sdl        # SDL3 backend
 xmake b shimera-raylib     # Raylib backend
 
 # Build shared library
@@ -145,7 +144,7 @@ target("myapp")
     set_kind("binary")
     add_files("src/*.cpp")
 
-    add_deps("shimera-sfml")  -- or shimera-opengl, shimera-sdl, shimera-raylib
+    add_deps("shimera-sfml")  -- or shimera-opengl, shimera-raylib
     add_packages("glfw", "glew")
 ```
 
@@ -155,7 +154,6 @@ To build a specific example:
 ```bash
 xmake b opengl-example
 xmake b sfml-example
-xmake b sdl-example
 xmake b raylib-example
 ```
 
@@ -180,7 +178,6 @@ shimera/
 ├── examples/
 │   ├── opengl/
 │   ├── raylib/
-│   ├── sdl/
 │   └── sfml/
 ├── build/              # Build artifacts
 │   └── linux/x86_64/release/
@@ -197,4 +194,6 @@ Shimera is an open-source project, and it needs your help to grow! If you want t
 
 ## License
 
-Shimera is licensed under the ... License. See the [license.md](LICENSE) file for more details.
+Shimera is licensed under the **GNU General Public License v3.0** (`GPL-3.0-only`). See the [LICENSE](LICENSE) file for the full text and [AUTHORS.md](AUTHORS.md) for the copyright holders.
+
+You are free to use, study, share, and modify Shimera, but any distributed work based on it must also remain open source under the GPL-3.0. See <https://www.gnu.org/licenses/gpl-3.0.html> for a summary.
