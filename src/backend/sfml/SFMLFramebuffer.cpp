@@ -40,6 +40,15 @@ ITexture& SFMLFramebuffer::getDepthTexture() {
 }
 
 void SFMLFramebuffer::resize(int width, int height) {
+
+    if (!sf::Context::getActiveContextId()) {
+        throw std::runtime_error("No OpenGL context current");
+    }
+
+    if (width <= 0 || height <= 0) {
+        throw std::runtime_error("Framebuffer size too small");
+    }
+
     m_width = width;
     m_height = height;
     
