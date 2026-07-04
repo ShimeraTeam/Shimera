@@ -15,8 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef OPENGL_EXEMPLE_VEC4_H
-#define OPENGL_EXEMPLE_VEC4_H
+#ifndef SHIMERA_VEC4_INL
+#define SHIMERA_VEC4_INL
 
 namespace shimera {
 
@@ -34,4 +34,4 @@ class Vec4 {
 }
 
 
-#endif //OPENGL_EXEMPLE_VEC4_H
+#endif //SHIMERA_VEC4_INL

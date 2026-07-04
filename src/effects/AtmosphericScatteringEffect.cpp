@@ -17,11 +17,9 @@
 
 #include "effects/AtmosphericScatteringEffect.hpp"
 
-#include <cstring>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include "uniform/Mat4.hpp"
+#include "converts/GlmConvert.hpp"
 
 using shimera::AtmosphericScatteringEffect;
 using shimera::IBackend;
@@ -30,20 +28,8 @@ using shimera::IPostProcessor;
 using shimera::ITexture;
 using shimera::Mat4;
 using shimera::Vec3;
-
-namespace {
-
-Mat4 toShimMat4(const glm::mat4& mat) {
-    Mat4 result;
-    std::memcpy(result.m, glm::value_ptr(mat), 16 * sizeof(float));
-    return result;
-}
-
-glm::vec3 toGlmVec3(const Vec3<float>& v) {
-    return {v.x, v.y, v.z};
-}
-
-}
+using shimera::toGlmVec3;
+using shimera::toShimMat4;
 
 AtmosphericScatteringEffect::AtmosphericScatteringEffect(IBackend* backend) {
     m_processor = std::unique_ptr<IPostProcessor>(

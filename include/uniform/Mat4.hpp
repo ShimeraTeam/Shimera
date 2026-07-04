@@ -15,8 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef TEST_MEMORY_SFML_MAT4_INL
-#define TEST_MEMORY_SFML_MAT4_INL
+#ifndef SHIMERA_MAT4_HPP
+#define SHIMERA_MAT4_HPP
 
 namespace shimera {
 
@@ -27,4 +27,4 @@ struct Mat4 {
 
 }
 
-#endif //TEST_MEMORY_SFML_MAT4_INL
+#endif //SHIMERA_MAT4_HPP

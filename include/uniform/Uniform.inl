@@ -15,8 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef OPENGL_LEARNING_UNIFORM_H
-#define OPENGL_LEARNING_UNIFORM_H
+#ifndef SHIMERA_UNIFORM_INL
+#define SHIMERA_UNIFORM_INL
 
 #include <GL/glew.h>
 #include <string>
@@ -93,4 +93,4 @@ class Uniform {
 }
 
 
-#endif //OPENGL_LEARNING_UNIFORM_H
+#endif //SHIMERA_UNIFORM_INL

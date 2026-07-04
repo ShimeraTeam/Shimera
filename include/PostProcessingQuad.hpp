@@ -15,8 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef OPENGL_LEARNING_POSTPROCESSINGQUAD_H
-#define OPENGL_LEARNING_POSTPROCESSINGQUAD_H
+#ifndef SHIMERA_POSTPROCESSINGQUAD_HPP
+#define SHIMERA_POSTPROCESSINGQUAD_HPP
+
 #include <shimera_api.h>
 #include <string>
 
@@ -38,4 +39,4 @@ class SHIMERA_API PostProcessingQuad {
 }
 
 
-#endif //OPENGL_LEARNING_POSTPROCESSINGQUAD_H
+#endif //SHIMERA_POSTPROCESSINGQUAD_HPP

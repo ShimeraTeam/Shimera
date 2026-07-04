@@ -15,8 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef SHIMERA_SFML_EFFECTPIPELINE_HPP
-#define SHIMERA_SFML_EFFECTPIPELINE_HPP
+#ifndef SHIMERA_EFFECTPIPELINE_INL
+#define SHIMERA_EFFECTPIPELINE_INL
+
 #include <vector>
 
 #include "backend/IBackend.hpp"
@@ -168,4 +169,4 @@ class SHIMERA_API EffectPipeline
 
 }
 
-#endif //SHIMERA_SFML_EFFECTPIPELINE_HPP
+#endif //SHIMERA_EFFECTPIPELINE_INL

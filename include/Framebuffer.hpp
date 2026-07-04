@@ -15,8 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef OPENGL_LEARNING_FRAMEBUFFER_H
-#define OPENGL_LEARNING_FRAMEBUFFER_H
+#ifndef SHIMERA_FRAMEBUFFER_HPP
+#define SHIMERA_FRAMEBUFFER_HPP
 
 #include <shimera_api.h>
 
@@ -38,4 +38,4 @@ private:
 }
 
 
-#endif //OPENGL_LEARNING_FRAMEBUFFER_H
+#endif //SHIMERA_FRAMEBUFFER_HPP
