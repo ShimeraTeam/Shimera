@@ -21,7 +21,7 @@ run_test() {
   fi
 }
 
-run_test "Configure and Build" "xmake f -y -c && xmake require && xmake"
+run_test "Configure and Build" "xmake f -y -c && xmake require -y && xmake"
 
 run_test "Build Shimera Opengl" "xmake build shimera-opengl"
 run_test "Build Shimera Raylib" "xmake build shimera-raylib"

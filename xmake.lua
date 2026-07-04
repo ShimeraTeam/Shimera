@@ -6,6 +6,7 @@ end
 
 add_requires("glew")
 add_requires("glm")
+add_requires("glfw")
 add_requires("sfml", {optional = true})
 add_requires("libsdl3", {optional = true})
 add_requires("raylib", {optional = true})
@@ -56,6 +57,7 @@ target("shimera-opengl")
     add_includedirs("include", {public = true})
     add_packages("glew", {public = true})
     add_packages("glm", {public = true})
+    add_packages("glfw", {public = true})
     add_defines("SHIMERA_BACKEND_OPENGL", {public = true})
 
     if has_config("shared") then

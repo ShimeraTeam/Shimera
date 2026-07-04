@@ -6,8 +6,13 @@
 #include "../../ITest.hpp"
 #include "backend/BackendFactory.hpp"
 #include "effects/DistortionEffect.hpp"
+#include "effects/AtmosphericScatteringEffect.hpp"
+#include "effects/materials/FresnelEffect.hpp"
 #include "../../BenchmarkReport.hpp"
+#include "scene/Camera.hpp"
+#include "scene/CameraFactory.hpp"
 #include "EffectPipeline.inl"
+#include "shimera.h"
 
 class BenchmarkOpengl : public ITest {
     public:
@@ -24,6 +29,8 @@ class BenchmarkOpengl : public ITest {
         std::string m_name;
         GLFWwindow* m_window;
         shimera::EffectPipeline m_pipeline;
+        shimera::IMesh* m_sphere;
+        shimera::FresnelEffect* m_fresnelEffect;
         unsigned int m_vao;
         unsigned int m_shader;
         unsigned int m_ibo;
@@ -32,6 +39,10 @@ class BenchmarkOpengl : public ITest {
         shimera::IFrameBuffer *m_sceneFramebuffer;
         shimera::Uniform<shimera::Vec4<float>>* m_colorUniform;
         GLint m_vramUsed;
+        std::vector<float> m_spPos, m_spNrm;
+        std::vector<unsigned int> m_spIdx;
+
+        void make2DCube();
 };
 
 #endif //SHIMERA_BENCHMARKOPENGL_HPP
