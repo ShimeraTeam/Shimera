@@ -82,5 +82,6 @@ int main() {
     UnloadModel(m);
     delete backend;
     CloseWindow();
+    exit(EXIT_SUCCESS);
     return 0;
 }
