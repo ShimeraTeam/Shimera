@@ -24,7 +24,7 @@
 
 namespace shimera {
 
-SHIMERA_API class OpenGLMaterial : public IMaterial {
+class SHIMERA_API OpenGLMaterial : public IMaterial {
     public:
         OpenGLMaterial(const std::string& vert, const std::string& frag);
         void setUniform(const std::string& name, const UniformValue& value) override;
