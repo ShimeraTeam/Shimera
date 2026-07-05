@@ -40,15 +40,6 @@ vec3 brightPass(vec3 c) {
     return c * w;
 }
 
-vec3 ACESFilm(vec3 x) {
-    const float a = 2.51;
-    const float b = 0.03;
-    const float c = 2.43;
-    const float d = 0.59;
-    const float e = 0.14;
-    return clamp((x * (a * x + b)) / (x * (c * x + d) + e), 0.0, 1.0);
-}
-
 void main() {
     vec2 texelSize = 1.0 / u_resolution;
 
@@ -81,6 +72,6 @@ void main() {
         bloom /= totalWeight;
 
         vec3 scene = texture(u_screenTexture, texCoords).rgb;
-        color = vec4(ACESFilm(scene + bloom * u_intensity), 1.0);
+        color = vec4(scene + bloom * u_intensity, 1.0);
     }
 }
