@@ -18,7 +18,6 @@ TEST_F(ContextTest, CreateBackend) {
 }
 
 TEST(IFrameBuffer, CreateFrameBufferWithoutContext) {
-    GTEST_SKIP(); // undefined behavior occurs without a valid OpenGL context.
     IBackend* backend = BackendFactory::create();
     EXPECT_NE(backend, nullptr);
     EXPECT_THROW(backend->createFrameBuffer(800, 600), std::runtime_error);
@@ -29,6 +28,13 @@ TEST_F(ContextTest, CreateFrameBuffer) {
     IBackend* backend = BackendFactory::create();
     EXPECT_NE(backend, nullptr);
     EXPECT_NE(backend->createFrameBuffer(800, 600), nullptr);
+    delete backend;
+}
+
+TEST_F(ContextTest, CreateFrameBufferWithBadSize) {
+    IBackend* backend = BackendFactory::create();
+    EXPECT_NE(backend, nullptr);
+    EXPECT_THROW(backend->createFrameBuffer(-1, 600), std::runtime_error);
     delete backend;
 }
 
