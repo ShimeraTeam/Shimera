@@ -3,12 +3,12 @@
 #include "rlgl.h"
 
 #include <algorithm>
-#include <array>
 #include <cmath>
 #include <iostream>
-#include <numbers>
+#include <stdexcept>
 
-#include <shimera.h>
+#include "shimera.h"
+#include "EffectPipeline.inl"
 #include "backend/BackendFactory.hpp"
 #include "effects/HDRBloomEffect.hpp"
 #include "effects/ChromaticAberration.hpp"
@@ -19,157 +19,121 @@
 #include "effects/ContrastEffect.hpp"
 #include "effects/ColortintEffect.hpp"
 #include "effects/AtmosphericScatteringEffect.hpp"
+#include "effects/materials/FresnelEffect.hpp"
+#include "backend/raylib/RaylibMesh.hpp"
+#include "backend/raylib/converts/RaylibCamera.hpp"
 
 namespace {
 
 constexpr int kWidth = 1280;
 constexpr int kHeight = 720;
 
-enum class Shape : unsigned char { Cube, Sphere, Cylinder, Cone, Pyramid, Capsule, HexPrism, Diamond };
+constexpr float kHalf = 5.0f;
+constexpr float kBoxHeight = 10.0f;
+constexpr Vector3 kBoxCenter{0.0f, kBoxHeight * 0.45f, 0.0f};
 
-struct ShapeEntry {
-    Shape shape;
-    Color color;
-    float spin;
-    float emission;
-};
+constexpr Vector3 kSphereCenter{1.8f, 3.9f, 1.2f};
+constexpr float kSphereRadius = 0.9f;
+constexpr float kAtmosphereScale = 1.7f;
 
-constexpr std::array<ShapeEntry, 8> kShapes = {{
-    {Shape::Cube,     Color{230,  60,  60, 255}, 24.0f, 0.0f},  // red,    matte
-    {Shape::Sphere,   Color{ 70, 150, 255, 255}, 18.0f, 1.0f},  // blue,   glowing
-    {Shape::Cylinder, Color{ 90, 220, 110, 255}, 30.0f, 0.25f}, // green,  faint
-    {Shape::Cone,     Color{255, 160,  40, 255}, 22.0f, 0.6f},  // orange, lit
-    {Shape::Pyramid,  Color{180, 100, 255, 255}, 28.0f, 0.0f},  // violet, matte
-    {Shape::Capsule,  Color{ 40, 225, 225, 255}, 20.0f, 0.85f}, // cyan,   glowing
-    {Shape::HexPrism, Color{255, 215,  60, 255}, 26.0f, 0.4f},  // gold,   lit
-    {Shape::Diamond,  Color{255, 110, 200, 255}, 32.0f, 0.0f},  // pink,   matte
-}};
-
-constexpr float kRingRadius = 9.0f;       // radius the ring shapes sit on
-constexpr float kAtmosphereScale = 1.7f;  // atmosphere radius / planet radius
+constexpr float kNearPlane = 0.1f;
+constexpr float kFarPlane = 300.0f;
 
 Vector3 add(Vector3 a, Vector3 b) { return Vector3{a.x + b.x, a.y + b.y, a.z + b.z}; }
+Vector3 scale(Vector3 v, float s) { return Vector3{v.x * s, v.y * s, v.z * s}; }
 
 shimera::Vec3<float> toVec3(Vector3 v) { return {v.x, v.y, v.z}; }
 
-// World-space center & radius of the existing ring sphere (kShapes index 1),
-// so the atmospheric scattering effect can be pointed straight at it.
-constexpr int kSphereShapeIndex = 1;
-constexpr float kSphereRadius = 1.3f;
-Vector3 ringSphereCenter()
+template<typename TEffect, typename Fn>
+void updateIfActive(shimera::EffectPipeline &pipeline, Fn &&fn)
 {
-    const float a = (static_cast<float>(kSphereShapeIndex) / kShapes.size()) * 2.0f * std::numbers::pi_v<float>;
-    return Vector3{std::cos(a) * kRingRadius, 1.55f, std::sin(a) * kRingRadius};
-}
-
-// Slightly darker shade, used for the solid fill so the wireframe pops on top.
-Color shade(Color c, float k)
-{
-    const auto m = [&](unsigned char v) {
-        const auto scaled = static_cast<int>(static_cast<float>(v) * k);
-        return static_cast<unsigned char>(std::clamp(scaled, 0, 255));
-    };
-    return Color{m(c.r), m(c.g), m(c.b), c.a};
-}
-
-Color withEmission(Color base, float e)
-{
-    return shade(base, 0.5f + e * 1.7f); // e=0 -> x0.5 (dim), e=1 -> x2.2 (glow)
-}
-
-
-void drawShape(Shape shape, Vector3 base, float angle, Color baseColor, float emission)
-{
-    const Color color = withEmission(baseColor, emission);
-
-    DrawCylinderEx(base, add(base, Vector3{0, 0.25f, 0}), 1.7f, 1.7f, 24, Color{30, 32, 40, 255});
-    DrawCylinderWiresEx(base, add(base, Vector3{0, 0.25f, 0}), 1.7f, 1.7f, 24, Color{70, 74, 88, 255});
-
-    const Color fill = shade(color, 0.85f);
-
-    rlPushMatrix();
-    rlTranslatef(base.x, base.y + 0.25f, base.z);
-    rlRotatef(angle, 0.0f, 1.0f, 0.0f);
-
-    switch (shape) {
-        case Shape::Cube:
-            DrawCube(Vector3{0, 1.1f, 0}, 2.0f, 2.0f, 2.0f, fill);
-            DrawCubeWires(Vector3{0, 1.1f, 0}, 2.0f, 2.0f, 2.0f, color);
-            break;
-        case Shape::Sphere:
-            DrawSphereEx(Vector3{0, 1.3f, 0}, 1.3f, 18, 18, fill);
-            DrawSphereWires(Vector3{0, 1.3f, 0}, 1.32f, 10, 10, color);
-            break;
-        case Shape::Cylinder:
-            DrawCylinderEx(Vector3{0, 0, 0}, Vector3{0, 2.6f, 0}, 1.0f, 1.0f, 32, fill);
-            DrawCylinderWiresEx(Vector3{0, 0, 0}, Vector3{0, 2.6f, 0}, 1.0f, 1.0f, 32, color);
-            break;
-        case Shape::Cone:
-            DrawCylinderEx(Vector3{0, 0, 0}, Vector3{0, 2.8f, 0}, 1.2f, 0.0f, 32, fill);
-            DrawCylinderWiresEx(Vector3{0, 0, 0}, Vector3{0, 2.8f, 0}, 1.2f, 0.0f, 32, color);
-            break;
-        case Shape::Pyramid:
-            DrawCylinderEx(Vector3{0, 0, 0}, Vector3{0, 2.6f, 0}, 1.5f, 0.0f, 4, fill);
-            DrawCylinderWiresEx(Vector3{0, 0, 0}, Vector3{0, 2.6f, 0}, 1.5f, 0.0f, 4, color);
-            break;
-        case Shape::Capsule:
-            DrawCapsule(Vector3{0, 0.8f, 0}, Vector3{0, 2.4f, 0}, 0.8f, 16, 12, fill);
-            DrawCapsuleWires(Vector3{0, 0.8f, 0}, Vector3{0, 2.4f, 0}, 0.8f, 12, 8, color);
-            break;
-        case Shape::HexPrism:
-            DrawCylinderEx(Vector3{0, 0, 0}, Vector3{0, 2.4f, 0}, 1.2f, 1.2f, 6, fill);
-            DrawCylinderWiresEx(Vector3{0, 0, 0}, Vector3{0, 2.4f, 0}, 1.2f, 1.2f, 6, color);
-            break;
-        case Shape::Diamond:
-            DrawCylinderEx(Vector3{0, 1.4f, 0}, Vector3{0, 2.8f, 0}, 1.3f, 0.0f, 4, fill);
-            DrawCylinderEx(Vector3{0, 1.4f, 0}, Vector3{0, 0.0f, 0}, 1.3f, 0.0f, 4, fill);
-            DrawCylinderWiresEx(Vector3{0, 1.4f, 0}, Vector3{0, 2.8f, 0}, 1.3f, 0.0f, 4, color);
-            DrawCylinderWiresEx(Vector3{0, 1.4f, 0}, Vector3{0, 0.0f, 0}, 1.3f, 0.0f, 4, color);
-            break;
+    try {
+        fn(pipeline.get<TEffect>());
+    } catch (const std::out_of_range &) {
+        // effect not in the pipeline this run, nothing to update
     }
+}
+
+void drawQuad(Vector3 a, Vector3 b, Vector3 c, Vector3 d, Color color)
+{
+    DrawTriangle3D(a, b, c, color);
+    DrawTriangle3D(a, c, d, color);
+}
+
+void drawRotatedCube(Vector3 center, Vector3 size, float angleDeg, Color fill, Color wire)
+{
+    rlPushMatrix();
+    rlTranslatef(center.x, center.y, center.z);
+    rlRotatef(angleDeg, 0.0f, 1.0f, 0.0f);
+    DrawCube(Vector3{0, 0, 0}, size.x, size.y, size.z, fill);
+    DrawCubeWires(Vector3{0, 0, 0}, size.x, size.y, size.z, wire);
     rlPopMatrix();
 }
 
-void drawScene(float t)
+void drawCornellBox()
 {
-    constexpr float ringRadius = kRingRadius;
-    for (std::size_t i = 0; i < kShapes.size(); ++i) {
-        const float a = (static_cast<float>(i) / kShapes.size()) * 2.0f * std::numbers::pi_v<float>;
-        const Vector3 base{std::cos(a) * ringRadius, 0.0f, std::sin(a) * ringRadius};
-        drawShape(kShapes[i].shape, base, t * kShapes[i].spin, kShapes[i].color, kShapes[i].emission);
-    }
+    constexpr Color back{79, 79, 79, 255};
+    constexpr Color floorCol{79, 79, 79, 255};
+    constexpr Color ceilCol{79, 79, 79, 255};
+    constexpr Color red{190, 45, 40, 255};
+    constexpr Color green{45, 160, 60, 255};
+    constexpr Color light{255, 255, 240, 255};
 
-    constexpr float heroEmission = 0.95f;
-    const Color gem = withEmission(Color{150, 110, 255, 255}, heroEmission);
-    rlPushMatrix();
-    rlTranslatef(0.0f, 2.6f, 0.0f);
-    rlRotatef(t * 12.0f, 0.0f, 1.0f, 0.0f);
-    DrawCylinderEx(Vector3{0, 0.0f, 0}, Vector3{0, 1.8f, 0}, 2.0f, 0.0f, 6, gem);
-    DrawCylinderEx(Vector3{0, 0.0f, 0}, Vector3{0, -1.8f, 0}, 2.0f, 0.0f, 6, gem);
-    DrawCylinderWiresEx(Vector3{0, 0.0f, 0}, Vector3{0, 1.8f, 0}, 2.0f, 0.0f, 6, Color{220, 200, 255, 255});
-    DrawCylinderWiresEx(Vector3{0, 0.0f, 0}, Vector3{0, -1.8f, 0}, 2.0f, 0.0f, 6, Color{220, 200, 255, 255});
-    rlPopMatrix();
-    DrawSphereEx(Vector3{0, 2.6f, 0}, 0.5f, 16, 16, WHITE);
+    constexpr float h = kHalf;
+    constexpr float top = kBoxHeight;
+
+    // floor (faces +y)
+    drawQuad({-h, 0, -h}, {-h, 0, h}, {h, 0, h}, {h, 0, -h}, floorCol);
+    // ceiling (faces -y)
+    drawQuad({-h, top, -h}, {h, top, -h}, {h, top, h}, {-h, top, h}, ceilCol);
+    // back wall (faces +z)
+    drawQuad({-h, 0, -h}, {h, 0, -h}, {h, top, -h}, {-h, top, -h}, back);
+    // left wall, red (faces +x)
+    drawQuad({-h, 0, h}, {-h, 0, -h}, {-h, top, -h}, {-h, top, h}, red);
+    // right wall, green (faces -x)
+    drawQuad({h, 0, -h}, {h, 0, h}, {h, top, h}, {h, top, -h}, green);
+
+    // ceiling area light (faces -y), bright enough for the bloom pass to pick up
+    drawQuad({-2, top - 0.02f, -2}, {2, top - 0.02f, -2},
+             {2, top - 0.02f, 2}, {-2, top - 0.02f, 2}, light);
+
+    DrawCubeWires(Vector3{0.0f, top * 0.5f, 0.0f}, 2.0f * h, top, 2.0f * h,
+                  Fade(RAYWHITE, 0.18f));
 }
 
-void drawHud(const char *effectName)
+void drawScene()
 {
-    DrawRectangle(8, 8, 450, 190, Fade(BLACK, 0.55f));
-    DrawRectangleLines(8, 8, 450, 190, Fade(RAYWHITE, 0.15f));
-    DrawText("Shimera - Raylib shape showcase", 18, 16, 18, RAYWHITE);
-    DrawText(TextFormat("Effect: %s", effectName), 18, 44, 16, Color{120, 230, 255, 255});
-    DrawText("[0] none   [1] bloom  [2] chroma   [3] vignette", 18, 70, 14, GRAY);
-    DrawText("[4] pixel  [5] blur   [6] distort  [7] contrast", 18, 90, 14, GRAY);
-    DrawText("[8] tint   [9] atmospheric scattering", 18, 110, 14, GRAY);
-    DrawText("[C] combo (distortion + chroma)", 18, 130, 14, Color{120, 230, 255, 255});
-    DrawText("drag mouse = orbit   wheel = zoom", 18, 158, 14, GRAY);
+    drawCornellBox();
+
+    constexpr Color blockWire{100, 100, 110, 255};
+
+    drawRotatedCube(Vector3{-1.8f, 3.0f, -1.5f}, Vector3{3.0f, 6.0f, 3.0f}, 18.0f, DARKBLUE, blockWire);
+    drawRotatedCube(Vector3{1.8f, 1.5f, 1.2f}, Vector3{3.0f, 3.0f, 3.0f}, -15.0f, GRAY, blockWire);
+
+    DrawSphereEx(kSphereCenter, kSphereRadius, 24, 24, Color{120, 180, 255, 255});
+    DrawSphereWires(kSphereCenter, kSphereRadius + 0.01f, 12, 12, Color{170, 215, 255, 255});
+}
+
+void drawHud(const char *effects, bool freeCam)
+{
+    DrawRectangle(8, 8, 520, 132, Fade(BLACK, 0.55f));
+    DrawRectangleLines(8, 8, 520, 132, Fade(RAYWHITE, 0.15f));
+    DrawText("Shimera - Démonstration", 18, 16, 18, RAYWHITE);
+    DrawText(TextFormat("Effets: %s", effects), 18, 44, 15, Color{120, 230, 255, 255});
+    DrawText(TextFormat("Caméra: %s   [R] alterner", freeCam ? "Libre" : "Orbital"),
+             18, 72, 14, Color{255, 210, 120, 255});
+    if (freeCam) {
+        DrawText("ZQSD bouger   Espace/Maj haut-bas", 18, 100, 14, GRAY);
+    } else {
+        DrawText("auto-orbital   molette = zoom", 18, 100, 14, GRAY);
+    }
 }
 
 }
 
 int main()
 {
-    InitWindow(kWidth, kHeight, "Shimera - Raylib shape showcase");
+    InitWindow(kWidth, kHeight, "Shimera - Démonstration");
 
     if (glewInit() != GLEW_OK) {
         std::cerr << "[GLEW] initialization failed!" << '\n';
@@ -177,17 +141,20 @@ int main()
     }
     std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << '\n';
 
-    const Vector3 target{0.0f, 2.0f, 0.0f};
-    float yaw = -0.7f;
-    float pitch = 0.4f;
-    float dist = 20.0f;
+    rlSetClipPlanes(kNearPlane, kFarPlane);
 
-    Camera camera = {0};
-    camera.target = target;
+    Camera camera = {};
+    camera.position = Vector3{12.0f, 8.0f, 16.0f};
+    camera.target = kBoxCenter;
     camera.up = Vector3{0.0f, 1.0f, 0.0f};
     camera.fovy = 45.0f;
     camera.projection = CAMERA_PERSPECTIVE;
 
+    bool freeCam = false;
+    float yaw = 0.0f;
+    float pitch = 0.0f;
+
+    // 1. Pick a backend. The factory returns the one this target was built with.
     shimera::IBackend *backend = shimera::BackendFactory::create();
     if (!backend) {
         std::cerr << "Failed to create backend!" << '\n';
@@ -195,13 +162,16 @@ int main()
         return -1;
     }
 
+    // 2. Render the scene into an offscreen framebuffer (with a samplable depth
+    // buffer, which the atmospheric scattering effect needs).
     shimera::IFrameBuffer *sceneFb = backend->createFrameBuffer(kWidth, kHeight, true);
-    shimera::IFrameBuffer *chainFb = backend->createFrameBuffer(kWidth, kHeight);
 
     const auto resolution = shimera::Vec2(static_cast<float>(kWidth), static_cast<float>(kHeight));
 
+    // 3. Create and configure the effects. Every parameter is set through a
+    // fluent .withX() call. No shader code, no GPU knowledge required.
     shimera::HDRBloomEffect bloom(backend);
-    bloom.withThreshold(0.6f)
+    bloom.withThreshold(0.95f)
          .withKnee(0.2f)
          .withIntensity(1.3f)
          .withBlurSigma(20.0f)
@@ -246,82 +216,116 @@ int main()
     atmosphere.withSun(shimera::Vec3(100.0f, 100.0f, 0.0f))
               .withQuality(16, 16);
 
+    // A 3D material effect.
+    Model fresnelModel = LoadModelFromMesh(GenMeshSphere(1.1f, 32, 32));
+    shimera::RaylibMesh fresnelMesh(fresnelModel);
+
+    shimera::FresnelEffect fresnel(backend);
+    fresnel.withColor(shimera::Vec3(0.3f, 0.7f, 1.0f))
+           .withPower(3.0f)
+           .withReflectance(0.04f)
+           .withIntensity(1.5f);
+    fresnel.setTransform(shimera::Vec3(-1.8f, 7.1f, -1.5f));
+
+    // 4. Assemble the post-processing chain.
+    shimera::EffectPipeline pipeline(backend, kWidth, kHeight);
+    // pipeline.addEffect(std::move(bloom));        // HDR bloom: glow on bright areas
+    // pipeline.addEffect(std::move(chroma));       // chromatic aberration
+    // pipeline.addEffect(std::move(vignette));     // darkened edges
+    // pipeline.addEffect(std::move(pixelise));     // retro pixelation
+    // pipeline.addEffect(std::move(blur));         // gaussian blur
+    // pipeline.addEffect(std::move(distortion));   // animated screen distortion
+    // pipeline.addEffect(std::move(contrast));     // contrast boost
+    // pipeline.addEffect(std::move(colortint));    // warm color tint
+    // pipeline.addEffect(std::move(atmosphere));   // atmospheric scattering on the sphere
+
+    // Seulement quand la pipeline est vide
     shimera::IPostProcessor *passthrough = backend->createPostProcessor(
         "../../../../res/shader/postprocessing/postprocess.vert",
         "../../../../res/shader/postprocessing/normal.frag");
-
-    int mode = 0;
-    constexpr std::array<const char *, 11> kModeNames = {
-        "None (raw scene)", "HDR Bloom", "Chromatic Aberration", "Vignette",
-        "Pixelisation", "Gaussian Blur", "Distortion", "Contrast", "Color Tint",
-        "Atmospheric Scattering", "Combo: Distortion + Chroma"};
 
     SetTargetFPS(60);
 
     while (!WindowShouldClose()) {
         const auto t = static_cast<float>(GetTime());
 
-        // number keys 0-9 select effects 0-9; C selects the chained combo
-        for (int i = 0; i <= 9; ++i) {
-            if (IsKeyPressed(KEY_ZERO + i)) mode = i;
+        if (IsKeyPressed(KEY_R)) {
+            freeCam = !freeCam;
+            if (freeCam) {
+                DisableCursor();
+                const Vector3 d = add(camera.target, scale(camera.position, -1.0f));
+                const float len = std::sqrt(d.x * d.x + d.y * d.y + d.z * d.z);
+                yaw = std::atan2(d.x, d.z);
+                pitch = std::asin(d.y / len);
+            } else {
+                EnableCursor();
+                camera.target = kBoxCenter;
+            }
         }
-        if (IsKeyPressed(KEY_C)) mode = 10;
 
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) || IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
-            const Vector2 d = GetMouseDelta();
-            yaw -= d.x * 0.005f;
-            pitch = std::clamp(pitch - d.y * 0.005f, -1.4f, 1.4f);
+        if (freeCam) {
+            const auto [x, y] = GetMouseDelta();
+            yaw -= x * 0.003f;
+            pitch = std::clamp(pitch - y * 0.003f, -1.5f, 1.5f);
+
+            const Vector3 forward{std::cos(pitch) * std::sin(yaw), std::sin(pitch),
+                                  std::cos(pitch) * std::cos(yaw)};
+            const float flatLen = std::max(std::sqrt(forward.x * forward.x + forward.z * forward.z), 0.001f);
+            const Vector3 right{-forward.z / flatLen, 0.0f, forward.x / flatLen};
+
+            Vector3 move{0, 0, 0};
+            if (IsKeyDown(KEY_W)) move = add(move, forward);
+            if (IsKeyDown(KEY_S)) move = add(move, scale(forward, -1.0f));
+            if (IsKeyDown(KEY_A)) move = add(move, scale(right, -1.0f));
+            if (IsKeyDown(KEY_D)) move = add(move, right);
+            if (IsKeyDown(KEY_SPACE)) move.y += 1.0f;
+            if (IsKeyDown(KEY_LEFT_SHIFT)) move.y -= 1.0f;
+
+            camera.position = add(camera.position, scale(move, 8.0f * GetFrameTime()));
+            camera.target = add(camera.position, forward);
+        } else {
+            UpdateCamera(&camera, CAMERA_ORBITAL);
         }
-        dist = std::clamp(dist - GetMouseWheelMove() * 1.5f, 8.0f, 50.0f);
 
-        camera.position = Vector3{
-            target.x + dist * std::cos(pitch) * std::sin(yaw),
-            target.y + dist * std::sin(pitch),
-            target.z + dist * std::cos(pitch) * std::cos(yaw)};
+        // shimera camera for the 3D material pass
+        const shimera::Camera shCam = shimera::RaylibCamera::toShimera(camera, kNearPlane, kFarPlane);
 
         sceneFb->bind();
         sceneFb->clear(shimera::Color{0.03f, 0.04f, 0.06f, 1.0f});
         BeginMode3D(camera);
-            drawScene(t);
+            drawScene();
+            // fresnel.render(fresnelMesh, shCam);
         EndMode3D();
         sceneFb->unbind();
 
+        updateIfActive<shimera::DistortionEffect>(pipeline, [t](auto &fx) {
+            fx.withTime(t);
+        });
+        updateIfActive<shimera::AtmosphericScatteringEffect>(pipeline, [&](auto &fx) {
+            const float aspect = static_cast<float>(kWidth) / static_cast<float>(kHeight);
+            fx.withCamera(toVec3(camera.position), toVec3(camera.target),
+                          camera.fovy, aspect, kNearPlane, kFarPlane)
+              .withPlanet(toVec3(kSphereCenter), kSphereRadius,
+                          kSphereRadius * kAtmosphereScale);
+        });
 
         BeginDrawing();
             ClearBackground(BLACK);
-            switch (mode) {
-                case 1:  bloom.render(sceneFb->getTexture());                  break;
-                case 2:  chroma.render(sceneFb->getTexture());                 break;
-                case 3:  vignette.render(sceneFb->getTexture());               break;
-                case 4:  pixelise.render(sceneFb->getTexture());               break;
-                case 5:  blur.render(sceneFb->getTexture());                   break;
-                case 6:  distortion.withTime(t).render(sceneFb->getTexture()); break;
-                case 7:  contrast.render(sceneFb->getTexture());               break;
-                case 8:  colortint.render(sceneFb->getTexture());              break;
-                case 9: {
-                    const float aspect = static_cast<float>(kWidth) / static_cast<float>(kHeight);
-                    atmosphere.withCamera(toVec3(camera.position), toVec3(target),
-                                          camera.fovy, aspect, 0.01f, 1000.0f);
-                    atmosphere.withPlanet(toVec3(ringSphereCenter()), kSphereRadius,
-                                          kSphereRadius * kAtmosphereScale);
-                    atmosphere.setDepthTexture(sceneFb->getDepthTexture());
-                    atmosphere.render(sceneFb->getTexture());
-                    break;
-                }
-                case 10:
-                    distortion.withTime(t).render(sceneFb->getTexture(), *chainFb);
-                    chroma.render(chainFb->getTexture());
-                    break;
-                default: passthrough->render(sceneFb->getTexture());           break;
+            if (pipeline.size() == 0) {
+                passthrough->render(sceneFb->getTexture());
+            } else {
+                pipeline.render(sceneFb->getTexture(), &sceneFb->getDepthTexture());
             }
-            drawHud(kModeNames[static_cast<std::size_t>(mode)]);
+            const std::string effects = pipeline.getEffectsNames();
+            drawHud(effects.c_str(), freeCam);
         EndDrawing();
     }
 
+    UnloadModel(fresnelModel);
     delete passthrough;
-    delete chainFb;
     delete sceneFb;
     delete backend;
     CloseWindow();
+    exit(EXIT_SUCCESS);
     return 0;
 }
