@@ -10,16 +10,17 @@ Our goal is to provide a simple and efficient way for developers to add visual e
 
 - **C++23** or higher
 - **OpenGL 3.3+**
-- **GLEW** (OpenGL Extension Wrangler Library)
 - **xmake**
+
+> **Note:** Library dependencies (**GLEW**, **GLM**, and your chosen backend's package such as SFML or Raylib) are declared via `add_requires()` and fetched/built automatically by xmake on first build. You don't need to install them yourself.
 
 ## Installation
 
 ### Quick Installation
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/shimera.git
-cd shimera
+git clone https://github.com/ShimeraTeam/Shimera.git
+cd Shimera
 
 # Build static library for your backend (static by default)
 xmake b shimera-sfml       # SFML backend
@@ -54,12 +55,12 @@ Then in your project's `xmake.lua`:
 add_rules("mode.debug", "mode.release")
 set_languages("c++23")
 
-add_requires("glew")
+add_requires("glew", "glm")
 
 target("myapp")
     set_kind("binary")
     add_files("src/*.cpp")
-    add_packages("glew")
+    add_packages("glew", "glm")
 
     add_includedirs("/usr/local/include")
     add_linkdirs("/usr/local/lib")
@@ -82,12 +83,12 @@ In your `xmake.lua`:
 add_rules("mode.debug", "mode.release")
 set_languages("c++23")
 
-add_requires("glew")
+add_requires("glew", "glm")
 
 target("myapp")
     set_kind("binary")
     add_files("src/*.cpp")
-    add_packages("glew")
+    add_packages("glew", "glm")
 
     add_includedirs("include")
     add_linkdirs("lib")
@@ -107,12 +108,12 @@ In your `xmake.lua`:
 add_rules("mode.debug", "mode.release")
 set_languages("c++23")
 
-add_requires("glew")
+add_requires("glew", "glm")
 
 target("myapp")
     set_kind("binary")
     add_files("src/*.cpp")
-    add_packages("glew")
+    add_packages("glew", "glm")
 
     add_includedirs("include")
     add_linkdirs("lib")
@@ -136,7 +137,7 @@ In your `xmake.lua`:
 add_rules("mode.debug", "mode.release")
 set_languages("c++23")
 
-add_requires("glfw", "glew")  -- add your windowing library here
+add_requires("glfw", "glew", "glm")  -- add your windowing library here
 
 includes("libs/shimera")
 
@@ -145,7 +146,7 @@ target("myapp")
     add_files("src/*.cpp")
 
     add_deps("shimera-sfml")  -- or shimera-opengl, shimera-raylib
-    add_packages("glfw", "glew")
+    add_packages("glfw", "glew", "glm")
 ```
 
 ## Build Examples
@@ -160,26 +161,35 @@ xmake b raylib-example
 ## Project Structure
 ```
 shimera/
-├── include/                # Public headers
+├── include/                    # Public headers
 │   ├── backend/
+│   │   ├── opengl/
 │   │   ├── raylib/
 │   │   └── sfml/
 │   ├── effects/
+│   │   └── materials/
+│   ├── scene/
+│   ├── converts/
 │   ├── uniform/
 │   └── shimera.h
-├── src/                    # Source files
+├── src/                        # Source files
 │   ├── backend/
+│   │   ├── opengl/
 │   │   ├── raylib/
 │   │   └── sfml/
-│   └── effects/
-├── res/                    # Runtime resources (shaders)
+│   ├── effects/
+│   │   └── materials/
+│   ├── scene/
+│   └── converts/
+├── res/                        # Runtime resources (shaders)
 │   └── shader/
-│       └── postprocessing/
+│       ├── postprocessing/
+│       └── material/
 ├── examples/
 │   ├── opengl/
 │   ├── raylib/
 │   └── sfml/
-├── build/              # Build artifacts
+├── build/                      # Build artifacts
 │   └── linux/x86_64/release/
 │       ├── libshimera-sfml.a   # Static library
 │       └── libshimera-sfml.so  # Shared library (if built)
