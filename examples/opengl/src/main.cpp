@@ -211,5 +211,6 @@ int main() {
     delete cube;
     delete backend;
     glfwTerminate();
+    exit(EXIT_SUCCESS);
     return 0;
 }
