@@ -5,7 +5,6 @@
 #include <algorithm>
 #include <cmath>
 #include <iostream>
-#include <print>
 #include <stdexcept>
 
 #include "shimera.h"
