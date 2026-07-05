@@ -1,5 +1,22 @@
-#ifndef OPENGL_LEARNING_UTILS_H
-    #define OPENGL_LEARNING_UTILS_H
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Shimera: a simple way to add visual effects without using any GPU knowledge
+// Copyright (C) 2025-2026 The Shimera Authors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+#ifndef SHIMERA_GLUTILS_H
+    #define SHIMERA_GLUTILS_H
 
     #include <shimera_api.h>
 #include <string>
@@ -39,4 +56,4 @@
     SHIMERA_API unsigned int compileShader(unsigned int type, const std::string &source);
     SHIMERA_API unsigned int createShader(const std::string &vertexSource, const std::string &fragmentSource);
 
-#endif //OPENGL_LEARNING_UTILS_H
+#endif //SHIMERA_GLUTILS_H

@@ -1,3 +1,20 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Shimera: a simple way to add visual effects without using any GPU knowledge
+// Copyright (C) 2025-2026 The Shimera Authors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 #include "backend/sfml/SFMLPostProcessor.hpp"
 #include "backend/sfml/SFMLShader.hpp"
 #include "backend/ITexture.hpp"
@@ -113,10 +130,30 @@ void SFMLPostProcessor::render(ITexture& texture) {
     GLC(glActiveTexture(GL_TEXTURE0));
     GLC(glBindTexture(GL_TEXTURE_2D, texture.getNativeHandle()));
 
+    for (const auto& tex : m_extraTextures) {
+        GLC(glActiveTexture(GL_TEXTURE0 + tex.unit));
+        GLC(glBindTexture(GL_TEXTURE_2D, tex.handle));
+    }
+
     GLC(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+
+    for (const auto& tex : m_extraTextures) {
+        GLC(glActiveTexture(GL_TEXTURE0 + tex.unit));
+        GLC(glBindTexture(GL_TEXTURE_2D, 0));
+    }
+
+    GLC(glActiveTexture(GL_TEXTURE0));
+    GLC(glBindTexture(GL_TEXTURE_2D, 0));
 
     GLC(glBindVertexArray(0));
     m_shader->unbind();
+
+    m_extraTextures.clear();
+}
+
+void SFMLPostProcessor::addInputTexture(const std::string& uniformName, ITexture& texture, unsigned int unit) {
+    setUniform(uniformName, static_cast<int>(unit));
+    m_extraTextures.push_back({.unit=unit, .handle=texture.getNativeHandle()});
 }
 
 void SFMLPostProcessor::setUniform(const std::string& name, const UniformValue& value) {

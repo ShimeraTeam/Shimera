@@ -11,6 +11,7 @@
 #include "backend/sfml/SFMLFramebuffer.hpp"
 #include "effects/DistortionEffect.hpp"
 #include "effects/GaussianBlurEffect.hpp"
+#include "effects/HDRBloomEffect.hpp"
 #include "EffectPipeline.inl"
 #include "effects/VignetteEffect.hpp"
 
@@ -51,7 +52,7 @@ int main()
     // Effect Pipeline: Managing fbo passes automatically
     EffectPipeline pipeline(backend, videoMode.size.x, videoMode.size.y);
     pipeline.addEffect<DistortionEffect>()
-            .addEffect(std::move(gaussianBlurEffect))
+            .addEffect(std::move(hdrBloomEffect))
             .addEffect<VignetteEffect>(1.0f, 0.4f, 0.3f)
             .build();
 

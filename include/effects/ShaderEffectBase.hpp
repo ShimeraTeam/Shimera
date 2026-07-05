@@ -1,3 +1,20 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Shimera: a simple way to add visual effects without using any GPU knowledge
+// Copyright (C) 2025-2026 The Shimera Authors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 #ifndef SHIMERA_SHADEREFFECTBASE_HPP
 #define SHIMERA_SHADEREFFECTBASE_HPP
 
@@ -17,6 +34,9 @@ namespace shimera {
 class SHIMERA_API ShaderEffectBase {
     public:
         virtual ~ShaderEffectBase() = default;
+
+        // shader name, used for debugging and identifying the effect in the pipeline
+        [[nodiscard]] virtual std::string getName() const = 0;
 
         // screen render
         virtual void render(ITexture &texture) = 0;

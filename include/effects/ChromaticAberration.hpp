@@ -1,5 +1,22 @@
-#ifndef SHIMERA_SFML_CHROMATICABERRATION_HPP
-#define SHIMERA_SFML_CHROMATICABERRATION_HPP
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Shimera: a simple way to add visual effects without using any GPU knowledge
+// Copyright (C) 2025-2026 The Shimera Authors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+#ifndef SHIMERA_CHROMATICABERRATION_HPP
+#define SHIMERA_CHROMATICABERRATION_HPP
 
 #include "shimera_api.h"
 #include "ShaderEffect.inl"
@@ -29,8 +46,10 @@ class SHIMERA_API ChromaticAberrationEffect final : public ShaderEffect<Chromati
         ChromaticAberrationEffect &withRadius(bool r);
         ChromaticAberrationEffect &withContrast(float c);
         ChromaticAberrationEffect &withSamples(int s);
+
+        std::string getName() const override;
 };
 
 }
 
-#endif //SHIMERA_SFML_CHROMATICABERRATION_HPP
+#endif //SHIMERA_CHROMATICABERRATION_HPP

@@ -1,5 +1,23 @@
-#ifndef SHIMERA_SFML_EFFECTPIPELINE_HPP
-#define SHIMERA_SFML_EFFECTPIPELINE_HPP
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Shimera: a simple way to add visual effects without using any GPU knowledge
+// Copyright (C) 2025-2026 The Shimera Authors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+#ifndef SHIMERA_EFFECTPIPELINE_INL
+#define SHIMERA_EFFECTPIPELINE_INL
+
 #include <vector>
 
 #include "backend/IBackend.hpp"
@@ -13,6 +31,7 @@ class SHIMERA_API EffectPipeline
     public:
         EffectPipeline(IBackend* backend, const unsigned int width, const unsigned int height)
             : m_backend(backend), m_width(width), m_height(height) {}
+        EffectPipeline(EffectPipeline &&) = default;
         ~EffectPipeline() = default;
 
         template<typename TEffect>
@@ -78,6 +97,18 @@ class SHIMERA_API EffectPipeline
             return m_effects.size();
         }
 
+        std::string getEffectsNames() const {
+            std::string names;
+            if (m_effects.empty())
+                return "no_effects";
+            for (const auto &fx : m_effects) {
+                names += fx->getName() + ", ";
+            }
+            if (!names.empty())
+                names.pop_back(), names.pop_back();
+            return names;
+        }
+
     private:
         IBackend *m_backend;
         std::vector<std::unique_ptr<ShaderEffectBase>> m_effects;
@@ -138,4 +169,4 @@ class SHIMERA_API EffectPipeline
 
 }
 
-#endif //SHIMERA_SFML_EFFECTPIPELINE_HPP
+#endif //SHIMERA_EFFECTPIPELINE_INL

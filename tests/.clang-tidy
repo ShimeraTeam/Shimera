@@ -1,0 +1,6 @@
+InheritParentConfig: true
+Checks: >
+  -misc-use-internal-linkage,
+  -cert-err58-cpp,
+  -readability-function-cognitive-complexity,
+  -modernize-type-traits
