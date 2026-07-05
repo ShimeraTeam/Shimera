@@ -27,8 +27,10 @@ void BenchmarkSfml::setupScene(BenchmarkReport &report) {
     GLint vramBefore = 0;
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &vramBefore);
 
-    m_sceneFramebuffer = m_backend->createFrameBuffer(960, 540);
-    m_pipeline.build();
+    if (m_pipeline.size() > 0) {
+        m_sceneFramebuffer = m_backend->createFrameBuffer(960, 540);
+        m_pipeline.build();
+    }
 
     glFinish();
 
@@ -58,6 +60,14 @@ void BenchmarkSfml::setupScene(BenchmarkReport &report) {
 }
 
 void BenchmarkSfml::renderScene(float &time) {
+    if (m_pipeline.size() == 0) {
+        m_window.clear(sf::Color::Black);
+        m_window.draw(m_circle);
+        m_window.draw(m_rectangle);
+        m_window.draw(m_triangle);
+        m_window.display();
+        return;
+    }
     auto *sfmlRenderTexture = static_cast<sf::RenderTexture*>(m_sceneFramebuffer->getNativeRenderTarget());
     sfmlRenderTexture->clear(sf::Color::Black);
     sfmlRenderTexture->draw(m_circle);
@@ -100,6 +110,8 @@ void BenchmarkSfml::run() {
           .setFrames(FRAMES);
     report.save("../../../../benchmark-results.json");
 
-    delete m_sceneFramebuffer;
+    if (m_pipeline.size() > 0) {
+        delete m_sceneFramebuffer;
+    }
     return;
 }
