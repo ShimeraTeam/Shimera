@@ -118,5 +118,6 @@ int main()
     delete sceneFramebuffer;
     delete backend;
 
+    exit(EXIT_SUCCESS);
     return 0;
 }
