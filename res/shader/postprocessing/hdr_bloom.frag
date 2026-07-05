@@ -1,3 +1,20 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Shimera: a simple way to add visual effects without using any GPU knowledge
+// Copyright (C) 2025-2026 The Shimera Authors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 #version 330 core
 
 in vec2 texCoords;
@@ -21,15 +38,6 @@ vec3 brightPass(vec3 c) {
     float brightness = max(c.r, max(c.g, c.b));
     float w = smoothstep(u_threshold - u_knee, u_threshold + u_knee, brightness);
     return c * w;
-}
-
-vec3 ACESFilm(vec3 x) {
-    const float a = 2.51;
-    const float b = 0.03;
-    const float c = 2.43;
-    const float d = 0.59;
-    const float e = 0.14;
-    return clamp((x * (a * x + b)) / (x * (c * x + d) + e), 0.0, 1.0);
 }
 
 void main() {
@@ -64,6 +72,6 @@ void main() {
         bloom /= totalWeight;
 
         vec3 scene = texture(u_screenTexture, texCoords).rgb;
-        color = vec4(ACESFilm(scene + bloom * u_intensity), 1.0);
+        color = vec4(scene + bloom * u_intensity, 1.0);
     }
 }
