@@ -27,7 +27,15 @@ using shimera::Framebuffer;
 
 
 Framebuffer::Framebuffer(int w, int h)
-    : m_width(w), m_height(h),m_fbo(0), m_texture(0), m_rbo(0) {
+    : m_fbo(0), m_texture(0), m_rbo(0) {
+
+    if (w <= 0 || h <= 0) {
+        throw std::runtime_error("Framebuffer size too small");
+    }
+    
+    m_width = w;
+    m_height = h;
+    
     // Make the framebuffer
     GLC(glGenFramebuffers(1, &m_fbo));
     GLC(glBindFramebuffer(GL_FRAMEBUFFER, m_fbo));
