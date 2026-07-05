@@ -25,7 +25,7 @@
 
 namespace shimera {
 
-SHIMERA_API class RaylibCamera {
+class SHIMERA_API RaylibCamera {
     public:
         static Camera toShimera(const Camera3D& cam, float nearPlane = 0.01f,
                                 float farPlane = 1000.0f, float aspect = -1.0f);

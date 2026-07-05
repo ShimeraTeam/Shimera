@@ -26,7 +26,11 @@
 namespace shimera
 {
 
-class SHIMERA_API EffectPipeline
+// Header-only class: all members are defined inline, so it must NOT carry the
+// dllexport/dllimport macro. On Windows a `dllimport` annotation would make the
+// client emit `__imp_` references for methods the DLL never exports (the class
+// is never compiled into the DLL), causing LNK2019 in shared builds.
+class EffectPipeline
 {
     public:
         EffectPipeline(IBackend* backend, const unsigned int width, const unsigned int height)
