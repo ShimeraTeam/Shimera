@@ -16,6 +16,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <GL/glew.h>
+#include <GLFW/glfw3.h>
 #include <glUtils.h>
 
 #include <stdexcept>
@@ -65,6 +66,28 @@ ITexture& OpenGLFramebuffer::getDepthTexture() {
 }
 
 void OpenGLFramebuffer::resize(const int width, const int height) {
+
+    if (glfwGetCurrentContext() == nullptr) {
+        throw std::runtime_error("No OpenGL context current");
+    }
+
+    if (width <= 0 || height <= 0) {
+        throw std::runtime_error("Framebuffer size too small");
+    }
+
+    GLint maxTextureSize = 0;
+    GLint maxRenderbufferSize = 0;
+    glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
+    glGetIntegerv(GL_MAX_RENDERBUFFER_SIZE, &maxRenderbufferSize);
+
+    if (width > maxTextureSize || height > maxTextureSize) {
+        throw std::runtime_error("Framebuffer texture size too large");
+    }
+
+    if (width > maxRenderbufferSize || height > maxRenderbufferSize) {
+        throw std::runtime_error("Framebuffer renderbuffer size too large");
+    }
+
     m_width = width;
     m_height = height;
 
