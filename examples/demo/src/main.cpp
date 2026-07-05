@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cmath>
 #include <iostream>
+#include <print>
 #include <stdexcept>
 
 #include "shimera.h"
@@ -50,7 +51,7 @@ void updateIfActive(shimera::EffectPipeline &pipeline, Fn &&fn)
     try {
         fn(pipeline.get<TEffect>());
     } catch (const std::out_of_range &) {
-        // effect not in the pipeline this run, nothing to update
+        // Effect not in the pipeline this run, nothing to update
     }
 }
 
@@ -193,7 +194,7 @@ int main()
 
     shimera::PixelisationEffect pixelise(backend);
     pixelise.withPixelSizeX(4.0f)
-            .withPixelSizeY(6.0f)
+            .withPixelSizeY(4.0f)
             .withResolution(resolution);
 
     shimera::GaussianBlurEffect blur(backend);
