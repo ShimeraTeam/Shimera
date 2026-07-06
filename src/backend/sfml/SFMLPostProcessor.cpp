@@ -1,3 +1,20 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Shimera: a simple way to add visual effects without using any GPU knowledge
+// Copyright (C) 2025-2026 The Shimera Authors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 #include "backend/sfml/SFMLPostProcessor.hpp"
 #include "backend/sfml/SFMLShader.hpp"
 #include "backend/ITexture.hpp"
@@ -5,6 +22,7 @@
 #include <glUtils.h>
 #include <iostream>
 #include <stdexcept>
+#include <array>
 
 using shimera::IShader;
 using shimera::ITexture;
@@ -23,7 +41,7 @@ SFMLPostProcessor::~SFMLPostProcessor() {
 }
 
 void SFMLPostProcessor::initializeQuad() {
-    constexpr float quadVert[] = {
+    constexpr std::array<float, 16> quadVert = {
         // positions   // texCoords (uv)
         -1.0f,  1.0f,  0.0f, 1.0f,
         -1.0f, -1.0f,  0.0f, 0.0f,
@@ -31,7 +49,7 @@ void SFMLPostProcessor::initializeQuad() {
          1.0f,  1.0f,  1.0f, 1.0f
     };
 
-    const unsigned int quadIndices[] = {
+    const std::array<unsigned int, 6> quadIndices = {
         0, 1, 2,
         0, 2, 3
     };
@@ -45,18 +63,18 @@ void SFMLPostProcessor::initializeQuad() {
 
     // Upload vertex data
     GLC(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
-    GLC(glBufferData(GL_ARRAY_BUFFER, sizeof(quadVert), quadVert, GL_STATIC_DRAW));
+    GLC(glBufferData(GL_ARRAY_BUFFER, sizeof(quadVert), quadVert.data(), GL_STATIC_DRAW));
 
     // Upload index data
     GLC(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo));
-    GLC(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(quadIndices), quadIndices, GL_STATIC_DRAW));
+    GLC(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(quadIndices), quadIndices.data(), GL_STATIC_DRAW));
 
     // Position attribute (location = 0)
-    GLC(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0));
+    GLC(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)nullptr));
     GLC(glEnableVertexAttribArray(0));
 
     // Texture coordinate attribute (location = 1)
-    GLC(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float))));
+    GLC(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), reinterpret_cast<void*>(2 * sizeof(float)))); // NOLINT(performance-no-int-to-ptr)
     GLC(glEnableVertexAttribArray(1));
 
     GLC(glBindVertexArray(0));
@@ -92,14 +110,14 @@ void SFMLPostProcessor::setShader(const std::string& vert, const std::string& fr
         newShader->loadFromFiles(vert, frag);
         m_shader = std::move(newShader);
     } catch (const std::exception& e) {
-        std::cerr << "Failed to load shader: " << e.what() << std::endl;
+        std::cerr << "Failed to load shader: " << e.what() << '\n';
         throw;
     }
 }
 
 void SFMLPostProcessor::render(ITexture& texture) {
     if (!m_shader) {
-        std::cerr << "Error: No shader loaded for post-processing!" << std::endl;
+        std::cerr << "Error: No shader loaded for post-processing!" << '\n';
         return;
     }
 
@@ -112,15 +130,35 @@ void SFMLPostProcessor::render(ITexture& texture) {
     GLC(glActiveTexture(GL_TEXTURE0));
     GLC(glBindTexture(GL_TEXTURE_2D, texture.getNativeHandle()));
 
+    for (const auto& tex : m_extraTextures) {
+        GLC(glActiveTexture(GL_TEXTURE0 + tex.unit));
+        GLC(glBindTexture(GL_TEXTURE_2D, tex.handle));
+    }
+
     GLC(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+
+    for (const auto& tex : m_extraTextures) {
+        GLC(glActiveTexture(GL_TEXTURE0 + tex.unit));
+        GLC(glBindTexture(GL_TEXTURE_2D, 0));
+    }
+
+    GLC(glActiveTexture(GL_TEXTURE0));
+    GLC(glBindTexture(GL_TEXTURE_2D, 0));
 
     GLC(glBindVertexArray(0));
     m_shader->unbind();
+
+    m_extraTextures.clear();
+}
+
+void SFMLPostProcessor::addInputTexture(const std::string& uniformName, ITexture& texture, unsigned int unit) {
+    setUniform(uniformName, static_cast<int>(unit));
+    m_extraTextures.push_back({.unit=unit, .handle=texture.getNativeHandle()});
 }
 
 void SFMLPostProcessor::setUniform(const std::string& name, const UniformValue& value) {
     if (!m_shader) {
-        std::cerr << "Error: No shader loaded, cannot set uniform!" << std::endl;
+        std::cerr << "Error: No shader loaded, cannot set uniform!" << '\n';
         return;
     }
     
@@ -136,7 +174,7 @@ IShader& SFMLPostProcessor::getShader() {
 
 void SFMLPostProcessor::bindShader() {
     if (!m_shader) {
-        std::cerr << "Error: No shader loaded, cannot bind!" << std::endl;
+        std::cerr << "Error: No shader loaded, cannot bind!" << '\n';
         return;
     }
     m_shader->bind();

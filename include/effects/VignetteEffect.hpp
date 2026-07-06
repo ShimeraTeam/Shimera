@@ -1,3 +1,20 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Shimera: a simple way to add visual effects without using any GPU knowledge
+// Copyright (C) 2025-2026 The Shimera Authors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 #ifndef SHIMERA_VIGNETTEEFFECT_HPP
 #define SHIMERA_VIGNETTEEFFECT_HPP
 #include <shimera_api.h>
@@ -21,9 +38,9 @@ class SHIMERA_API VignetteEffect final : public ShaderEffect<VignetteEffect> {
             float strength,
             float radius,
             float gap,
-            Vec4<float> color = Vec4(0.0f, 0.0f, 0.0f, 1.0f),
+            Vec4<float> color = Vec4<float>(0.0f, 0.0f, 0.0f, 1.0f),
             bool isRounded = false,
-            Vec2<float> resolution = Vec2(1920.0f, 1080.0f));
+            Vec2<float> resolution = Vec2<float>(1920.0f, 1080.0f));
 
         void updateUniforms() override;
 
@@ -33,6 +50,8 @@ class SHIMERA_API VignetteEffect final : public ShaderEffect<VignetteEffect> {
         VignetteEffect &withColor(Vec4<float> color);
         VignetteEffect &withIsRounded(bool isRounded);
         VignetteEffect &withResolution(Vec2<float> resolution);
+
+        std::string getName() const override;
 };
 
 }

@@ -1,3 +1,20 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Shimera: a simple way to add visual effects without using any GPU knowledge
+// Copyright (C) 2025-2026 The Shimera Authors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 #include "effects/DistortionEffect.hpp"
 
 using shimera::DistortionEffect;
@@ -27,22 +44,26 @@ void DistortionEffect::updateUniforms() {
     m_processor->setUniform("timeScale", m_uTimeScale);
 }
 
-DistortionEffect& DistortionEffect::withTime(float t) {
-    m_uTime = t;
+DistortionEffect& DistortionEffect::withTime(float time) {
+    m_uTime = time;
     return *this;
 }
 
-DistortionEffect& DistortionEffect::withNoiseScale(float s) {
-    m_uNoiseScale = s;
+DistortionEffect& DistortionEffect::withNoiseScale(float noiseScale) {
+    m_uNoiseScale = noiseScale;
     return *this;
 }
 
-DistortionEffect& DistortionEffect::withDistortionStrength(float s) {
-    m_uDistortionStrength = s;
+DistortionEffect& DistortionEffect::withDistortionStrength(float distortionStrength) {
+    m_uDistortionStrength = distortionStrength;
     return *this;
 }
 
-DistortionEffect& DistortionEffect::withTimeScale(float s) {
-    m_uTimeScale = s;
+DistortionEffect& DistortionEffect::withTimeScale(float timeScale) {
+    m_uTimeScale = timeScale;
     return *this;
+}
+
+std::string DistortionEffect::getName() const {
+    return "DistortionEffect";
 }

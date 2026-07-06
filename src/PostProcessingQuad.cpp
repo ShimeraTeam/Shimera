@@ -1,3 +1,20 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Shimera: a simple way to add visual effects without using any GPU knowledge
+// Copyright (C) 2025-2026 The Shimera Authors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 //
 // Created by leoma on 24/11/2025.
 //
@@ -5,6 +22,7 @@
 #include <PostProcessingQuad.hpp>
 
 #include <iostream>
+#include <array>
 #include <GL/glew.h>
 
 #include <glUtils.h>
@@ -14,7 +32,7 @@ using shimera::PostProcessingQuad;
 
 PostProcessingQuad::PostProcessingQuad(const std::string& vertPath,
                                        const std::string& fragPath) {
-    float quadVert[] = {
+    const std::array<float, 16> quadVert = {
         // positions   // texCoords (uv)
         -1.0f,  1.0f,  0.0f, 1.0f,
         -1.0f, -1.0f,  0.0f, 0.0f,
@@ -22,7 +40,7 @@ PostProcessingQuad::PostProcessingQuad(const std::string& vertPath,
          1.0f,  1.0f,  1.0f, 1.0f
     };
 
-    unsigned int quadIndices[] = {
+    const std::array<unsigned int, 6> quadIndices = {
         0, 1, 2,
         0, 2, 3
     };
@@ -34,31 +52,31 @@ PostProcessingQuad::PostProcessingQuad(const std::string& vertPath,
     GLC(glBindVertexArray(m_vao));
 
     GLC(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
-    GLC(glBufferData(GL_ARRAY_BUFFER, sizeof(quadVert), quadVert, GL_STATIC_DRAW));
+    GLC(glBufferData(GL_ARRAY_BUFFER, sizeof(quadVert), quadVert.data(), GL_STATIC_DRAW));
 
     GLC(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo));
     GLC(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(quadIndices),
-        quadIndices, GL_STATIC_DRAW));
+        quadIndices.data(), GL_STATIC_DRAW));
 
     GLC(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE,
-        4 * sizeof(float), (void*)0));
+        4 * sizeof(float), (void*)nullptr));
     GLC(glEnableVertexAttribArray(0));
 
     GLC(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE,
-        4 * sizeof(float), (void*)(2 * sizeof(float))));
+        4 * sizeof(float), reinterpret_cast<void*>(2 * sizeof(float)))); // NOLINT(performance-no-int-to-ptr)
     GLC(glEnableVertexAttribArray(1));
 
     GLC(glBindVertexArray(0));
 
-    ShaderProgramSource source = parseShader(vertPath, fragPath);
+    const ShaderProgramSource source = parseShader(vertPath, fragPath);
     m_shader = createShader(source.vertex, source.fragment);
     if (m_shader == 0) {
-        std::cerr << "Failed to create post-processing shader!" << std::endl;
+        std::cerr << "Failed to create post-processing shader!" << '\n';
         return;
     }
 
     GLC(glUseProgram(m_shader));
-    GLC(int location = glGetUniformLocation(m_shader, "u_screenTexture"));
+    GLC(const int location = glGetUniformLocation(m_shader, "u_screenTexture"));
     ASSERT(location != -1);
     GLC(glUniform1i(location, 0));
 }

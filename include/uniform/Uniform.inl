@@ -1,5 +1,22 @@
-#ifndef OPENGL_LEARNING_UNIFORM_H
-#define OPENGL_LEARNING_UNIFORM_H
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Shimera: a simple way to add visual effects without using any GPU knowledge
+// Copyright (C) 2025-2026 The Shimera Authors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+#ifndef SHIMERA_UNIFORM_INL
+#define SHIMERA_UNIFORM_INL
 
 #include <GL/glew.h>
 #include <string>
@@ -8,18 +25,18 @@
 #include <stdexcept>
 
 #include "Vec2.inl"
-#include <uniform/Vec3.inl>
+#include "Vec3.inl"
 #include "Vec4.inl"
-#include <stdexcept>
+#include "Mat4.hpp"
 
 namespace shimera {
 
-using UniformValue = std::variant<float, int, Vec2<float>, Vec3<float>, Vec4<float>>;
+using UniformValue = std::variant<float, int, Vec2<float>, Vec3<float>, Vec4<float>, Mat4>;
 
 template <typename T>
 class Uniform {
     public:
-        Uniform(unsigned int shaderId, std::string name, T value)
+        Uniform(unsigned int shaderId, const std::string& name, T value)
             : m_name(name), m_value(value), m_location(-1) {
             GLC(m_location = glGetUniformLocation(shaderId, name.c_str()));
             if (m_location == -1) {
@@ -64,7 +81,10 @@ class Uniform {
                 GLC(glUniform3f(m_location, newValue.x, newValue.y, newValue.z));
             } else if constexpr (std::is_same_v<T, Vec4<float>>) {
                 GLC(glUniform4f(m_location, newValue.x, newValue.y, newValue.z, newValue.w));
-            } else {
+            } else if constexpr (std::is_same_v<T, Mat4>) {
+                GLC(glUniformMatrix4fv(m_location, 1, GL_FALSE, newValue.m));
+            }
+            else {
                 static_assert(sizeof(T) == 0, "Unsupported uniform type");
             }
         }
@@ -73,4 +93,4 @@ class Uniform {
 }
 
 
-#endif //OPENGL_LEARNING_UNIFORM_H
+#endif //SHIMERA_UNIFORM_INL

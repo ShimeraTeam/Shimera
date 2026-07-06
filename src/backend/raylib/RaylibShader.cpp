@@ -1,3 +1,20 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Shimera: a simple way to add visual effects without using any GPU knowledge
+// Copyright (C) 2025-2026 The Shimera Authors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 #include "backend/raylib/RaylibShader.hpp"
 #include <GL/glew.h>
 #include <glUtils.h>
@@ -21,7 +38,7 @@ RaylibShader::~RaylibShader() {
 }
 
 void RaylibShader::loadFromFiles(const std::string& vertPath, const std::string& fragPath) {
-    ShaderProgramSource source = parseShader(vertPath, fragPath);
+    const ShaderProgramSource source = parseShader(vertPath, fragPath);
     
     m_programId = createShader(source.vertex, source.fragment);
     
@@ -31,7 +48,7 @@ void RaylibShader::loadFromFiles(const std::string& vertPath, const std::string&
     
     // Set up the texture sampler uniform (u_screenTexture) which is automatically bound to texture unit 0
     bind();
-    int location = getUniformLocation("u_screenTexture");
+    const int location = getUniformLocation("u_screenTexture");
     if (location != -1) {
         GLC(glUniform1i(location, 0));
     }
@@ -47,14 +64,15 @@ void RaylibShader::unbind() const {
 }
 
 void RaylibShader::setUniform(const std::string& name, const UniformValue& value) {
-    int location = getUniformLocation(name);
+    const int location = getUniformLocation(name);
     if (location == -1) {
-        std::cerr << "Warning: Uniform '" << name << "' not found in shader." << std::endl;
+        std::cerr << "Warning: Uniform '" << name << "' not found in shader." << '\n';
         return;
     }
     
     bind();
-    
+
+    // TODO: try to avoid code repetition in the future?
     std::visit([location](auto&& val) {
         using T = std::decay_t<decltype(val)>;
         if constexpr (std::is_same_v<T, float>) {
@@ -67,6 +85,8 @@ void RaylibShader::setUniform(const std::string& name, const UniformValue& value
             GLC(glUniform3f(location, val.x, val.y, val.z));
         } else if constexpr (std::is_same_v<T, Vec4<float>>) {
             GLC(glUniform4f(location, val.x, val.y, val.z, val.w));
+        } else if constexpr (std::is_same_v<T, Mat4>) {
+            GLC(glUniformMatrix4fv(location, 1, GL_FALSE, val.m));
         }
     }, value);
 }
@@ -82,7 +102,7 @@ int RaylibShader::getUniformLocation(const std::string& name) {
         return it->second;
     }
 
-    GLC(int location = glGetUniformLocation(m_programId, name.c_str()));
+    GLC(const int location = glGetUniformLocation(m_programId, name.c_str()));
     m_uniformCache[name] = location;
     
     return location;

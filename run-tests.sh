@@ -21,25 +21,26 @@ run_test() {
   fi
 }
 
-run_test "Configure and Build" "xmake f -y -c && xmake"
+run_test "Configure and Build" "xmake f -y -c && xmake require -y && xmake"
 
 run_test "Build Shimera Opengl" "xmake build shimera-opengl"
 run_test "Build Shimera Raylib" "xmake build shimera-raylib"
 run_test "Build Shimera SFML" "xmake build shimera-sfml"
-run_test "Build Memory Test Opengl" "xmake build test-memory-opengl"
-run_test "Build Memory Test Raylib" "xmake build test-memory-raylib"
-run_test "Build Memory Test SFML" "xmake build test-memory-sfml"
-run_test "Build Benchmark Opengl" "xmake build bench-opengl"
-run_test "Build Benchmark Raylib" "xmake build bench-raylib"
-run_test "Build Benchmark Sfml" "xmake build bench-sfml"
+run_test "Build Opengl Tests" "xmake build opengl-tests"
+run_test "Build Raylib Tests" "xmake build raylib-tests"
+run_test "Build SFML Tests" "xmake build sfml-tests"
+run_test "Build Opengl Resilience Tests" "xmake build opengl-resilience-tests"
+run_test "Build Raylib Resilience Tests" "xmake build raylib-resilience-tests"
+run_test "Build SFML Resilience Tests" "xmake build sfml-resilience-tests"
 
 if ! cd build/linux/x86_64/release/; then
   exit 1
 fi
 
-run_test "Memory Opengl" "LSAN_OPTIONS=suppressions=../../../../tests/shimera_asan.supp ./test-memory-opengl"
-run_test "Memory Raylib" "LSAN_OPTIONS=suppressions=../../../../tests/shimera_asan.supp ./test-memory-raylib"
-run_test "Memory Sfml" "LSAN_OPTIONS=suppressions=../../../../tests/shimera_asan.supp ./test-memory-sfml"
-run_test "Benchmark Opengl" "./bench-opengl" "BENCH"
-run_test "Benchmark Raylib" "./bench-raylib" "BENCH"
-run_test "Benchmark Sfml" "./bench-sfml" "BENCH"
+run_test "Run Opengl Tests" "LSAN_OPTIONS=suppressions=../../../../tests/memory/shimera_asan.supp ./opengl-tests"
+run_test "Run Raylib Tests" "LSAN_OPTIONS=suppressions=../../../../tests/memory/shimera_asan.supp ./raylib-tests"
+run_test "Run SFML Tests" "LSAN_OPTIONS=suppressions=../../../../tests/memory/shimera_asan.supp ./sfml-tests"
+echo "=====Resilience Tests====="
+./opengl-resilience-tests
+./raylib-resilience-tests
+./sfml-resilience-tests

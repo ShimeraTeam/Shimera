@@ -1,3 +1,20 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Shimera: a simple way to add visual effects without using any GPU knowledge
+// Copyright (C) 2025-2026 The Shimera Authors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 #include <glUtils.h>
 
 #include <fstream>
@@ -7,14 +24,14 @@
 
 void cglClearError()
 {
-    while (glGetError() != GL_NO_ERROR);
+    while (glGetError() != GL_NO_ERROR) {};
 }
 
 bool cglLogCall(const char *function, const char *file, int line)
 {
     while (const GLenum error = glGetError())
     {
-        std::cerr << "[OpenGL ERROR] (" << error << "): " << function << " -> " << file << ":" << line << std::endl;
+        std::cerr << "[OpenGL ERROR] (" << error << "): " << function << " -> " << file << ":" << line << '\n';
         return false;
     }
     return true;
@@ -22,9 +39,9 @@ bool cglLogCall(const char *function, const char *file, int line)
 
 std::string readFile(const std::string &filePath)
 {
-    std::ifstream stream(filePath);
+    const std::ifstream stream(filePath);
     if (!stream.is_open()) {
-        std::cerr << "ERROR: can't open file: " << filePath << std::endl;
+        std::cerr << "ERROR: can't open file: " << filePath << '\n';
         return "";
     }
     std::stringstream buffer;
@@ -42,7 +59,7 @@ ShaderProgramSource parseShader(const std::string &vertexFilePath, const std::st
 
 unsigned int compileShader(unsigned int type, const std::string &source)
 {
-    GLC(unsigned int id = glCreateShader(type);)
+    GLC(const unsigned int id = glCreateShader(type);)
     const char *str = source.c_str();
     GLC(glShaderSource(id, 1, &str, nullptr));
     GLC(glCompileShader(id));
@@ -53,10 +70,10 @@ unsigned int compileShader(unsigned int type, const std::string &source)
     {
         int lenght;
         GLC(glGetShaderiv(id, GL_INFO_LOG_LENGTH, &lenght));
-        char *message = (char *) alloca(lenght * sizeof(char)); // -> char message[lenght]
+        char *message = static_cast<char *>( alloca(lenght * sizeof(char))); // -> char message[lenght]
         GLC(glGetShaderInfoLog(id, lenght, &lenght, message));
-        std::cout << "Failed to compile " << (type == GL_VERTEX_SHADER ? "vertex" : "fragment") << " shader" << std::endl;
-        std::cout << message << std::endl;
+        std::cout << "Failed to compile " << (type == GL_VERTEX_SHADER ? "vertex" : "fragment") << " shader" << '\n';
+        std::cout << message << '\n';
         GLC(glDeleteShader(id));
         return 0;
     }
@@ -66,9 +83,9 @@ unsigned int compileShader(unsigned int type, const std::string &source)
 
 unsigned int createShader(const std::string &vertexSource, const std::string &fragmentSource)
 {
-    GLC(unsigned int program = glCreateProgram());
-    GLC(unsigned int vertex = compileShader(GL_VERTEX_SHADER, vertexSource));
-    GLC(unsigned int fragment = compileShader(GL_FRAGMENT_SHADER, fragmentSource));
+    GLC(const unsigned int program = glCreateProgram());
+    GLC(const unsigned int vertex = compileShader(GL_VERTEX_SHADER, vertexSource));
+    GLC(const unsigned int fragment = compileShader(GL_FRAGMENT_SHADER, fragmentSource));
 
     GLC(glAttachShader(program, vertex));
     GLC(glAttachShader(program, fragment));

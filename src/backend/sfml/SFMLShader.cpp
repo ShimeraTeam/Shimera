@@ -1,3 +1,20 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Shimera: a simple way to add visual effects without using any GPU knowledge
+// Copyright (C) 2025-2026 The Shimera Authors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 #include "backend/sfml/SFMLShader.hpp"
 #include <GL/glew.h>
 #include <glUtils.h>
@@ -22,7 +39,7 @@ SFMLShader::~SFMLShader() {
 }
 
 void SFMLShader::loadFromFiles(const std::string& vertPath, const std::string& fragPath) {
-    ShaderProgramSource source = parseShader(vertPath, fragPath);
+    const ShaderProgramSource source = parseShader(vertPath, fragPath);
     
     m_programId = createShader(source.vertex, source.fragment);
     
@@ -32,7 +49,7 @@ void SFMLShader::loadFromFiles(const std::string& vertPath, const std::string& f
     
     // Set up the texture sampler uniform (u_screenTexture) which is automatically bound to texture unit 0
     bind();
-    int location = getUniformLocation("u_screenTexture");
+    const int location = getUniformLocation("u_screenTexture");
     if (location != -1) {
         GLC(glUniform1i(location, 0));
     }
@@ -48,9 +65,9 @@ void SFMLShader::unbind() const {
 }
 
 void SFMLShader::setUniform(const std::string& name, const UniformValue& value) {
-    int location = getUniformLocation(name);
+    const int location = getUniformLocation(name);
     if (location == -1) {
-        std::cerr << "Warning: Uniform '" << name << "' not found in shader." << std::endl;
+        std::cerr << "Warning: Uniform '" << name << "' not found in shader." << '\n';
         return;
     }
     
@@ -83,7 +100,7 @@ int SFMLShader::getUniformLocation(const std::string& name) {
         return it->second;
     }
 
-    GLC(int location = glGetUniformLocation(m_programId, name.c_str()));
+    GLC(const int location = glGetUniformLocation(m_programId, name.c_str()));
     m_uniformCache[name] = location;
     
     return location;

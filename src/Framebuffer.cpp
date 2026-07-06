@@ -1,3 +1,20 @@
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Shimera: a simple way to add visual effects without using any GPU knowledge
+// Copyright (C) 2025-2026 The Shimera Authors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 #include <Framebuffer.hpp>
 
 #include <iostream>
@@ -10,7 +27,15 @@ using shimera::Framebuffer;
 
 
 Framebuffer::Framebuffer(int w, int h)
-    : m_width(w), m_height(h),m_fbo(0), m_texture(0), m_rbo(0) {
+    : m_fbo(0), m_texture(0), m_rbo(0) {
+
+    if (w <= 0 || h <= 0) {
+        throw std::runtime_error("Framebuffer size too small");
+    }
+    
+    m_width = w;
+    m_height = h;
+    
     // Make the framebuffer
     GLC(glGenFramebuffers(1, &m_fbo));
     GLC(glBindFramebuffer(GL_FRAMEBUFFER, m_fbo));
@@ -35,7 +60,7 @@ Framebuffer::Framebuffer(int w, int h)
         GL_RENDERBUFFER, m_rbo));
 
     GLC(if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-        std::cerr << "ERROR: Framebuffer is not complete!" << std::endl;)
+        std::cerr << "ERROR: Framebuffer is not complete!" << '\n';)
 
     GLC(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 }

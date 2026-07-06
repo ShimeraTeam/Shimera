@@ -3,19 +3,26 @@
 #include <GL/glew.h>
 
 #include <shimera.h>
+
+#include "EffectPipeline.inl"
 #include "backend/BackendFactory.hpp"
-#include "effects/PixelisationEffect.hpp"
+#include "backend/raylib/converts/RaylibCamera.hpp"
+#include "backend/raylib/RaylibMesh.hpp"
+#include "effects/DistortionEffect.hpp"
+#include "effects/materials/FresnelEffect.hpp"
+#include "scene/Camera.hpp"
 
 int main() {
     const int screenWidth = 960;
     const int screenHeight = 540;
 
-    InitWindow(screenWidth, screenHeight, "Raylib - Multi-Pass Post-Processing");
+    InitWindow(screenWidth, screenHeight, "Raylib - Fresnel Material");
 
-    if (glewInit() != GLEW_OK)
-        std::cerr << "[GLEW] initialization failed!" << std::endl;
+    if (glewInit() != GLEW_OK) {
+        std::cerr << "[GLEW] initialization failed!" << '\n';
+    }
 
-    std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
+    std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << '\n';
 
     Camera camera = { 0 };
     camera.position = { 10.0f, 10.0f, 10.0f };
@@ -24,19 +31,27 @@ int main() {
     camera.fovy = 25.0f;
     camera.projection = CAMERA_PERSPECTIVE;
 
-    Vector3 cubePosition = { 0.0f, 0.0f, 0.0f };
+    shimera::Camera shCam = shimera::RaylibCamera::toShimera(camera);
+
+    // Vector3 cubePosition = { 0.0f, 0.0f, 0.0f };
+    auto spherePosition = shimera::Vec3(0.0f, 0.0f, 0.0f);
 
     shimera::IBackend *backend = shimera::BackendFactory::create();
     if (!backend) {
-        std::cerr << "Failed to create backend!" << std::endl;
+        std::cerr << "Failed to create backend!" << '\n';
         return -1;
     }
 
-    shimera::IFrameBuffer *sceneFramebuffer = backend->createFrameBuffer(screenWidth, screenHeight);
+    Model m = LoadModelFromMesh(GenMeshSphere(1.5f, 48, 48));
+    shimera::RaylibMesh sphere(m);
 
-    shimera::PixelisationEffect pixelisationEffect(backend);
-    pixelisationEffect.withPixelSize(4.0f)
-                      .withResolution(shimera::Vec2(static_cast<float>(screenWidth), static_cast<float>(screenHeight)));
+    shimera::FresnelEffect fresnelMat(backend);
+    fresnelMat.withColor(shimera::Vec3(0.3f, 0.7f, 1.0f))
+           .withPower(3.0f)
+           .withReflectance(0.04f)
+           .withIntensity(1.5f);
+
+    fresnelMat.setTransform(spherePosition);
 
     SetTargetFPS(60);
 
@@ -45,38 +60,28 @@ int main() {
         if (GetMouseWheelMove() != 0)
         {
             UpdateCamera(&camera, CAMERA_THIRD_PERSON);
+            shCam = shimera::RaylibCamera::toShimera(camera);
         }
 
         if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
         {
             UpdateCamera(&camera, CAMERA_THIRD_PERSON);
+            shCam = shimera::RaylibCamera::toShimera(camera);
         }
-
-        sceneFramebuffer->bind();
-        sceneFramebuffer->clear(shimera::Color{0, 0, 0, 1});
-            BeginMode3D(camera);
-                DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, RED);
-                DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, BLACK);
-            EndMode3D();
-        sceneFramebuffer->unbind();
-
-        // Project cube center to screen space and align the pixel grid on it
-        Vector2 cubeScreen = GetWorldToScreen(cubePosition, camera);
-        float pixelUVx = pixelisationEffect.m_uPixelSizeX / screenWidth;
-        float pixelUVy = pixelisationEffect.m_uPixelSizeY / screenHeight;
-        pixelisationEffect.m_uOffset = shimera::Vec2(
-            cubeScreen.x / screenWidth - pixelUVx * 0.5f,
-            cubeScreen.y / screenHeight - pixelUVy * 0.5f
-        );
 
         BeginDrawing();
             ClearBackground(BLACK);
-            pixelisationEffect.render(sceneFramebuffer->getTexture());
+            BeginMode3D(camera);
+                fresnelMat.render(sphere, shCam);
+                DrawCube({5, 0, 0}, 2.0f, 2.0f, 2.0f, RED);
+                DrawCubeWires({5, 0, 0}, 2.0f, 2.0f, 2.0f, WHITE);
+            EndMode3D();
         EndDrawing();
     }
 
-    CloseWindow();
-    delete sceneFramebuffer;
+    UnloadModel(m);
     delete backend;
+    CloseWindow();
+    exit(EXIT_SUCCESS);
     return 0;
 }
