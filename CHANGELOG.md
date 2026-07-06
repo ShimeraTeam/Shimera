@@ -13,8 +13,6 @@
 - GPL-3.0 license header added to remaining files ([90c5f09](https://github.com/ShimeraTeam/Shimera/commit/90c5f09f4067648eb78515e7f5a3b72e42cbb466))
 - Licensing information and updated contribution guidelines ([55d008e](https://github.com/ShimeraTeam/Shimera/commit/55d008ed94788d3f649f1a98326b32352f2ff6ba) / [87d1d26](https://github.com/ShimeraTeam/Shimera/commit/87d1d2601808ac2988b5a63cf4a90b36a34e75c3))
 
----
-
 ## Materials, Fresnel & Atmospheric Scattering *(Jun 2026)*
 
 ### Added
@@ -29,8 +27,6 @@
 - Duplicate includes and member variable removed from `SFMLPostProcessor` ([39a5131](https://github.com/ShimeraTeam/Shimera/commit/39a5131239d8e4e34360113369359194fb288878))
 - Wrong `#ifndef` guards renamed across older files ([f1441a3](https://github.com/ShimeraTeam/Shimera/commit/f1441a3c9231dc011e40373b5ad0ead2d1de7cda))
 
----
-
 ## HDR Bloom, Gaussian Blur & Pixelation *(May - Jun 2026)*
 
 ### Added
@@ -44,8 +40,6 @@
 - Removed `ACESFilm` function and adjusted bloom color calculation ([7a2783e](https://github.com/ShimeraTeam/Shimera/commit/7a2783e5745fce956b6a4eb6006cce4a3cf2b2fe))
 - Blur and HDR bloom temporarily disabled on Raylib backend pending fix ([31b9346](https://github.com/ShimeraTeam/Shimera/commit/31b934624b10f831b7b613d5e9d25bd859f705cb))
 - `gaussianBlur` and `HdrBloom` missing declarations in SFML example ([5a2d3d3](https://github.com/ShimeraTeam/Shimera/commit/5a2d3d39f6c1731a9be48b8ae2c3ae54d5522336))
-
----
 
 ## Effect Pipeline, Shared Builds & Dependencies *(Apr - Jul 2026)*
 
@@ -63,8 +57,6 @@
 - Dependency installation issues resolved ([55c7ba8](https://github.com/ShimeraTeam/Shimera/commit/55c7ba86f6a94de93701a46c2d3c3233e6a7a062))
 - Framebuffer creation validation added ([ff267ac](https://github.com/ShimeraTeam/Shimera/commit/ff267ace0d6b94ed3069f941985d345f1e0aef08))
 - Distortion effect updated to use `withTime` for time parameter ([13aa5f8](https://github.com/ShimeraTeam/Shimera/commit/13aa5f8914e1d64ab1b40ff74cd155ae5f49554e))
-
----
 
 ## Testing Infrastructure Expansion *(Apr - Jul 2026)*
 
@@ -85,8 +77,6 @@
 - Windows CI process no longer hangs (force close) ([43873db](https://github.com/ShimeraTeam/Shimera/commit/43873db69699fa59d5b7a18dc3bcf7018164c739))
 - vsync disabled for benchmarks; Raylib VRAM measurement fixed ([a8d4cbb](https://github.com/ShimeraTeam/Shimera/commit/a8d4cbbb2ec634471e1cc3c9520e212e057f9e24))
 
----
-
 ## CI/CD & Release Pipeline *(Apr - Jun 2026)*
 
 ### Added
@@ -101,8 +91,6 @@
 
 - Include folder path fixed in release packaging ([95675af](https://github.com/ShimeraTeam/Shimera/commit/95675af242ced91b4d95a0850327d035fe8dfd9e))
 
----
-
 ## Documentation *(Apr - Jul 2026)*
 
 ### Added
@@ -115,16 +103,12 @@
 
 - `AUTHORS.md` updated ([f22e4dd](https://github.com/ShimeraTeam/Shimera/commit/f22e4ddeed24955a4b09ec53b63b019d216f573c))
 
----
-
 ## Tests and Benchmarks *(Apr 2026)*
 
 ### Added
 
 - Tests workflow with dedicated GPU runner ([9d097d5](https://github.com/ShimeraTeam/Shimera/commit/9d097d59ac537e98b06c58462466c5b36ce71e77))
 - Basic VRAM, FPS and memory benchmark tests ([4a781e9](https://github.com/ShimeraTeam/Shimera/commit/4a781e949afaf0f99e08425969b892e53449c20a))
-
----
 
 ## OpenGL Backend & Full Effect Suite *(Mar - Apr 2026)*
 
@@ -163,8 +147,6 @@
 - Raylib camera initialization made Windows-compatible ([67675fc](https://github.com/ShimeraTeam/Shimera/commit/67675fc019917c06506681cf0152391f15e5b78f))
 - SFML/Linux platform build compatibility ([44b8cd6](https://github.com/ShimeraTeam/Shimera/commit/44b8cd67f57d0ac1c4ebb739de5c20d69358880f))
 
----
-
 ## Multi-Backend Abstraction *(Feb - Mar 2026)*
 
 ### Added
@@ -180,8 +162,6 @@
 
 - Build workflow refactored and deprecated pipeline removed ([a34d362](https://github.com/ShimeraTeam/Shimera/commit/a34d362f5a31c3d44ec828d502b1bd47c0374acf))
 
----
-
 ## CI/CD, Deploy and First Shaders *(Jan - Feb 2026)*
 
 ### Added
@@ -195,8 +175,6 @@
 - Documentation submodule linked to ShimeraDoc repo ([708d595](https://github.com/ShimeraTeam/Shimera/commit/708d5952ce332118a20f8ba1e22e3f02470fe26a))
 - Beta test plan ([17d41f0](https://github.com/ShimeraTeam/Shimera/commit/17d41f09f8b44fa530b502f2cad1eefe5728161c))
 
----
-
 ## Example Projects and Project Bootstrap *(Oct - Nov 2025)*
 
 ### Added
@@ -207,8 +185,6 @@
 - Learnings submodules ([b1d0db0](https://github.com/ShimeraTeam/Shimera/commit/b1d0db0b250b2db584a1dd8a22445b6dbcd370f1))
 - SFML + OpenGL post-processing integration ([a02d53f](https://github.com/ShimeraTeam/Shimera/commit/a02d53febd82ee0d86732e2f421d90ba9a2d9928))
 - Shimera accessibility file ([58dd87d](https://github.com/ShimeraTeam/Shimera/commit/58dd87d628957214a8c2c6457ea76b1b064b9cbd))
-
----
 
 ## Project Bootstrap *(Jun 2025)*
 
