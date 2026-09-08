@@ -15,7 +15,14 @@ target("demo")
     set_targetdir("$(builddir)/$(plat)/$(arch)/$(mode)")
     -- only the active main is built; other mainX.cpp variants are kept aside.
     -- swap one in by renaming it to src/main.cpp, then just build.
-    add_files("src/main.cpp")
+    -- the demo units are listed one by one for that reason: a src/*.cpp glob
+    -- would also pick up the variants sitting next to main.cpp.
+    add_files("src/main.cpp",
+              "src/CameraController.cpp",
+              "src/Hud.cpp",
+              "src/Scene.cpp",
+              "src/ShaderMenu.cpp",
+              "src/ShaderShowcase.cpp")
 
     -- `mv` preserves a file's old mtime, so after renaming a variant onto
     -- main.cpp xmake would think the cached object is still up to date and
