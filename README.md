@@ -17,141 +17,52 @@ Our goal is to provide a simple and efficient way for developers to add visual e
 ## Installation
 
 ### Quick Installation
-```bash
-# Clone the repository
-git clone https://github.com/ShimeraTeam/Shimera.git
-cd Shimera
 
-# Build static library for your backend (static by default)
-xmake b shimera-sfml       # SFML backend
-xmake b shimera-opengl     # Pure OpenGL backend
-xmake b shimera-raylib     # Raylib backend
+Download the latest release from here: https://github.com/ShimeraTeam/Shimera/releases
+> There will be multiple version of the library, choose the one that is compatible with your project's graphics library. (If you have a SFML project on windows x64, choose `shimera-X.X.X-sfml-windows-x64.zip`)
 
-# Build shared library
-xmake f --shared=y
-xmake b shimera-sfml       # or any other backend
+In your xmake.lua, add this to your target:
+```
+-- add glew and glm as requirements in addition to your library or other dependencies
+-- add_requires(..., "glew", "glm")
 
-# Build in release mode
-xmake f -m release
-xmake b shimera-sfml       # or any other backend
-
-# Install to system (optional)
-sudo xmake install shimera-sfml       # or any other backend
+-- In your target:
+add_includedirs("path/to/shimera-0.3.6/include")
+add_linkdirs("path/to/shimera-0.3.6/lib")
+if is_mode("debug") then
+    add_links("shimera-raylib-s-d")
+else
+    add_links("shimera-raylib-s")
+end
 ```
 
-> **Note:** Shimera is split into backend-specific targets. You must build the target that matches the windowing library you use in your project.
-
-## Using Shimera in Your Project
-
-### Option 1: System Installation
-
-After building, install the library system-wide:
-```bash
-sudo xmake install shimera-sfml       # or any other backend
+If you don't have a xmake.lua already or just starting a new project, here is a example:
 ```
-
-Then in your project's `xmake.lua`:
-```lua
 add_rules("mode.debug", "mode.release")
-set_languages("c++23")
 
-add_requires("glew", "glm")
+add_requires("raylib", "glew", "glm")
 
-target("myapp")
+target("my_raylib_shimera") -- rename this if you want
     set_kind("binary")
+    set_languages("c++23")
     add_files("src/*.cpp")
-    add_packages("glew", "glm")
+    add_packages("raylib", "glew", "glm")
 
-    add_includedirs("/usr/local/include")
-    add_linkdirs("/usr/local/lib")
-    add_links("shimera-sfml")
+    add_includedirs("path/to/shimera-0.3.6/include")
+    add_linkdirs("path/to/shimera-0.3.6/lib")
+    if is_mode("debug") then
+        add_links("shimera-raylib-s-d")
+    else
+        add_links("shimera-raylib-s")
+    end
+
 ```
 
-### Option 2: Local Library
-
-Build shimera first, then copy the built library files to your project:
-
-#### Using Static Library (.a / .lib)
-```bash
-xmake b shimera-sfml
-cp -r shimera/include /path/to/your/project/
-cp shimera/build/linux/x86_64/release/libshimera-sfml.a /path/to/your/project/lib/
-```
-
-In your `xmake.lua`:
-```lua
-add_rules("mode.debug", "mode.release")
-set_languages("c++23")
-
-add_requires("glew", "glm")
-
-target("myapp")
-    set_kind("binary")
-    add_files("src/*.cpp")
-    add_packages("glew", "glm")
-
-    add_includedirs("include")
-    add_linkdirs("lib")
-    add_links("shimera-sfml")
-```
-
-#### Using Shared Library (.so / .dll)
-```bash
-xmake f --shared=y
-xmake b shimera-sfml
-cp -r shimera/include /path/to/your/project/
-cp shimera/build/linux/x86_64/release/libshimera-sfml.so /path/to/your/project/lib/
-```
-
-In your `xmake.lua`:
-```lua
-add_rules("mode.debug", "mode.release")
-set_languages("c++23")
-
-add_requires("glew", "glm")
-
-target("myapp")
-    set_kind("binary")
-    add_files("src/*.cpp")
-    add_packages("glew", "glm")
-
-    add_includedirs("include")
-    add_linkdirs("lib")
-    add_links("shimera-sfml")
-    add_rpathdirs("lib")  -- ensures the .so is found at runtime
-```
-
-> **Note:** With shared libraries, you need to ensure libshimera.so is accessible at runtime: 
-> - Option 1: Add `add_rpathdirs()` in xmake (recommended) 
-> - Option 2: Copy `libshimera.so` next to your executable 
-> - Option 3: Add the library path to `LD_LIBRARY_PATH`.
-
-### Option 3: Git Submodule (Recommended for Development)
-```bash
-cd your-project
-git submodule add https://github.com/ShimeraTeam/Shimera.git libs/shimera
-```
-
-In your `xmake.lua`:
-```lua
-add_rules("mode.debug", "mode.release")
-set_languages("c++23")
-
-add_requires("glfw", "glew", "glm")  -- add your windowing library here
-
-includes("libs/shimera")
-
-target("myapp")
-    set_kind("binary")
-    add_files("src/*.cpp")
-
-    add_deps("shimera-sfml")  -- or shimera-opengl, shimera-raylib
-    add_packages("glfw", "glew", "glm")
-```
+> You can use other build tools like CMake, Meson and more, but we just don't provide any explanations for them.
 
 ## Build Examples
 
-To build a specific example:
+To build the project's examples:
 ```bash
 xmake b opengl-example
 xmake b sfml-example
