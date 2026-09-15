@@ -237,7 +237,7 @@ ShaderShowcase::ShaderShowcase(shimera::IBackend *backend)
         describeParams(m_toggles.back(), m_fresnel);
     } else {
         // Manual mode: uncomment a line to enable that effect.
-        // m_pipeline.addEffect(std::move(bloom));        // HDR bloom: glow on bright areas
+        m_pipeline.addEffect(std::move(bloom));        // HDR bloom: glow on bright areas
         // m_pipeline.addEffect(std::move(chroma));       // chromatic aberration
         // m_pipeline.addEffect(std::move(vignette));     // darkened edges
         // m_pipeline.addEffect(std::move(pixelise));     // retro pixelation
