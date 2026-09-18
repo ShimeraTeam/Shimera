@@ -8,6 +8,7 @@ compile_commands.json
 /.idea/
 /.vs/
 /.vscode/
+/.cache/
 *.user
 
 # artifacts
