@@ -1,0 +1,33 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Release" type="XMakeRunConfiguration" factoryName="Start and Debug" folderName="Build" show_console_on_std_err="false" show_console_on_std_out="false">
+    <target name="runTarget" />
+    <option name="allowRunningInParallel" value="false" />
+    <option name="projectPathOnTarget" />
+    <option name="selectedOptions">
+      <list />
+    </option>
+    <activatedToolkit name="runToolkit">
+      <toolkit name="Windows" path="C:\Program Files\xmake\xmake.exe" version="v3.0.8+HEAD.4f45b5a6b" id="46d46c5f-8b22-30ba-b572-f72b5aeb7f4e">
+        <toolkitHost type="LOCAL">
+          <option name="target" />
+        </toolkitHost>
+      </toolkit>
+    </activatedToolkit>
+    <target name="runTarget" value="shimera" />
+    <platform name="runPlatform" value="default" />
+    <architecture name="runArchitecture" value="default" />
+    <toolchain name="runToolchain" value="default" />
+    <mode name="runMode" value="release" />
+    <arguments name="runArguments" value="" />
+    <workingDirectory name="runWorkingDir" value="$PROJECT_DIR$" />
+    <buildDirectory name="buildDirectory" value="" />
+    <androidNDKDirectory name="androidNDKDirectory" value="" />
+    <enableVerbose name="enableVerbose" value="false" />
+    <additionalConfiguration name="additionalConfiguration" value="" />
+    <dapDriverPath name="dapDriverPath" value="" />
+    <dapDriverAutoDetect name="dapDriverAutoDetect" value="true" />
+    <launchConfiguration name="launchConfiguration" value="{&#10;    &quot;stopOnEntry&quot;: true,&#10;    &quot;sourceMap&quot;: {&#10;        &quot;enabled&quot;: &quot;true&quot;&#10;    },&#10;    &quot;showDisassembly&quot;: &quot;auto&quot;,&#10;    &quot;initCommands&quot;: [],&#10;    &quot;preRunTask&quot;: {&#10;        &quot;commands&quot;: []&#10;    },&#10;    &quot;variables&quot;: {&#10;        &quot;showArguments&quot;: true,&#10;        &quot;showLocals&quot;: true,&#10;        &quot;showGlobals&quot;: true,&#10;        &quot;showStatics&quot;: true,&#10;        &quot;showRegisters&quot;: true&#10;    },&#10;    &quot;ignoreFunctionBpoints&quot;: false,&#10;    &quot;stopAtConnectTime&quot;: false&#10;}" />
+    <envs />
+    <method v="2" />
+  </configuration>
+</component>

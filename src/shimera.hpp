@@ -1,0 +1,16 @@
+#pragma once
+
+#include "Context.hpp"
+#include "EffectPipeline.hpp"
+#include "Error.hpp"
+#include "GL/GLFramebuffer.hpp"
+#include "GL/GLStateGuard.hpp"
+#include "GL/GLMesh.hpp"
+#include "GL/GLTexture.hpp"
+#include "common/Color.inl"
+#include "effects/Distortion.hpp"
+#include "effects/HDRBloom.hpp"
+#include "effects/Vignette.hpp"
+#include "materials/Fresnel.hpp"
+#include "scene/Camera.hpp"
+#include "scene/Transform.hpp"

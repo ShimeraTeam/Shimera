@@ -1,0 +1,20 @@
+# build output
+/build/
+/.xmake/
+CMakeLists.txt
+compile_commands.json
+
+# IDEs
+/.idea/
+/.vs/
+/.vscode/
+/.cache/
+*.user
+
+# artifacts
+/out/
+*.ppm
+*.png.actual
+
+# slang output
+/res/shader/generated/
