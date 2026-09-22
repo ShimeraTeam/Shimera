@@ -185,14 +185,7 @@ end
 if has_config("raylib") then
 target("raylib_example")
     set_kind("binary")
-    add_files("examples/raylib_main.cpp")
-    add_deps("shimera-raylib")
-    set_rundir("$(projectdir)")
-
--- test material depth-sort
-target("raylib3d_example")
-    set_kind("binary")
-    add_files("examples/raylib3d_main.cpp")
+    add_files("examples/raylib/RaylibMain.cpp")
     add_deps("shimera-raylib")
     set_rundir("$(projectdir)")
 end
