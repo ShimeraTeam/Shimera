@@ -16,7 +16,7 @@ end
 -- we have the choice to not use certains host libraries: xmake f --sfml=n --raylib=n
 option("sfml",   {default = true,  description = "Build the SFML host shim and example"})
 option("raylib", {default = true,  description = "Build the raylib host shim and example"})
-option("sdl",    {default = true,  description = "Build the SDL3 host shim and example (phase 6)"})
+option("sdl",    {default = true,  description = "Build SDL3 target and example"})
 option("slangc", {default = "",    description = "Path to slangc, when it is not in PATH", type = "string"})
 
 add_requires("glew 2.2.0", "glm 1.0.1", "glfw 3.4")
@@ -31,7 +31,8 @@ if has_config("raylib") then
     add_requires("raylib 5.5")
 end
 if has_config("sdl") then
-    add_requires("libsdl3")
+    -- SDL3 core only decodes BMP, the examples' PNG assets need SDL_image.
+    add_requires("libsdl3", "libsdl3_image")
 end
 
 -- Slang -> SPIR-V -> desktop GLSL 330, run as part of the build.
@@ -197,9 +198,11 @@ target("raylib3d_example")
 end
 
 if has_config("sdl") then
+-- Plain SDL3 2D example, no Shimera yet: it links the packages directly.
 target("sdl_example")
     set_kind("binary")
-    add_files("examples/sdl_main.cpp")
+    add_files("examples/SdlMain.cpp")
     add_deps("shimera-sdl")
+    add_packages("libsdl3_image")
     set_rundir("$(projectdir)")
 end
