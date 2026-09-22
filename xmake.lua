@@ -198,10 +198,9 @@ target("raylib3d_example")
 end
 
 if has_config("sdl") then
--- Plain SDL3 2D example, no Shimera yet: it links the packages directly.
 target("sdl_example")
     set_kind("binary")
-    add_files("examples/SdlMain.cpp")
+    add_files("examples/sdl/SdlMain.cpp")
     add_deps("shimera-sdl")
     add_packages("libsdl3_image")
     set_rundir("$(projectdir)")
