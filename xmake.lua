@@ -177,7 +177,7 @@ target("glfw_example")
 if has_config("sfml") then
 target("sfml_example")
     set_kind("binary")
-    add_files("examples/sfml_main.cpp")
+    add_files("examples/sfml/SfmlMain.cpp")
     add_deps("shimera-sfml")
     set_rundir("$(projectdir)")
 end
