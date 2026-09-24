@@ -20,6 +20,8 @@ option("sdl",    {default = true,  description = "Build SDL3 target and example"
 option("slangc", {default = "",    description = "Path to slangc, when it is not in PATH", type = "string"})
 
 add_requires("glew 2.2.0", "glm 1.0.1", "glfw 3.4")
+-- PNG loading for the OpenGL example, which has no host library to decode images.
+add_requires("stb")
 -- Build-time only, converts Slang's Vulkan-flavoured SPIR-V into desktop GLSL 330.
 add_requires("spirv-cross 1.3.268+0")
 
@@ -169,9 +171,9 @@ end
 target("glfw_example")
     set_kind("binary")
     set_default(true)
-    add_files("examples/glfw_main.cpp", "examples/Scene.cpp")
+    add_files("examples/opengl/OpenGLMain.cpp")
     add_deps("shimera-glfw")
-    add_packages("glfw")
+    add_packages("glfw", "stb")
     set_rundir("$(projectdir)")
 
 if has_config("sfml") then
