@@ -8,6 +8,7 @@
 #include "GL/GLMesh.hpp"
 #include "GL/GLTexture.hpp"
 #include "common/Color.inl"
+#include "effects/Contrast.hpp"
 #include "effects/Distortion.hpp"
 #include "effects/HDRBloom.hpp"
 #include "effects/Vignette.hpp"
