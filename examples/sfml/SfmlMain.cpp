@@ -51,7 +51,7 @@ void SfmlMain::initShimera() {
     const auto height = static_cast<int>(m_window.getSize().y);
 
     m_context = shimera::Context::create();
-    std::cout << shimera::Context::getRendererInfo() << std::endl;
+    std::cout << shimera::Context::getRendererInfo() << '\n';
 
     m_target.emplace(m_window, width, height);
     m_pipeline.emplace(width, height);
@@ -120,7 +120,7 @@ int main() {
         example.initShimera();
         example.run();
     } catch (const std::exception& error) {
-        std::cerr << error.what() << std::endl;
+        std::cerr << error.what() << '\n';
         return 1;
     }
 
