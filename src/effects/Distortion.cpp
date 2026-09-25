@@ -6,7 +6,7 @@ using shimera::Distortion;
 
 Distortion::Distortion(const float noiseScale, const float distortionStrength, const float timeScale)
     : m_noiseScale(noiseScale), m_distortionStrength(distortionStrength), m_timeScale(timeScale) {
-    m_processor = std::make_unique<GLPostProcessor>(postProcessVertex(), builtinShader("distortion.frag"));
+    m_processor = std::make_unique<GLPostProcessor>(generatedShader("postprocess.vert"), generatedShader("distortion.frag"));
 }
 
 void Distortion::updateUniforms() {
@@ -36,4 +36,20 @@ Distortion& Distortion::withDistortionStrength(const float distortionStrength) {
 Distortion& Distortion::withTimeScale(const float timeScale) {
     m_timeScale = timeScale;
     return *this;
+}
+
+float Distortion::getTime() const {
+    return m_time;
+}
+
+float Distortion::getNoiseScale() const {
+    return m_noiseScale;
+}
+
+float Distortion::getDistortionStrength() const {
+    return m_distortionStrength;
+}
+
+float Distortion::getTimeScale() const {
+    return m_timeScale;
 }
