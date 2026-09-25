@@ -12,6 +12,7 @@
 #include "effects/Distortion.hpp"
 #include "effects/HDRBloom.hpp"
 #include "effects/Vignette.hpp"
+#include "effects/ChromaticAberration.hpp"
 #include "materials/Fresnel.hpp"
 #include "scene/Camera.hpp"
 #include "scene/Transform.hpp"
