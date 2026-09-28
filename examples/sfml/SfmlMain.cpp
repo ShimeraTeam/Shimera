@@ -58,7 +58,7 @@ void SfmlMain::initShimera() {
 
     m_pipeline->add<shimera::Vignette>(1.0f, 0.45f, 0.35f)
         .add<shimera::Distortion>()
-        .add<shimera::HDRBloom>();
+        .add<shimera::Bloom>(0.7f, 0.2f, 1.0f, 10.0f, 30);
 }
 
 void SfmlMain::run() {

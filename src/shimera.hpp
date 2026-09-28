@@ -10,7 +10,7 @@
 #include "common/Color.inl"
 #include "effects/Contrast.hpp"
 #include "effects/Distortion.hpp"
-#include "effects/HDRBloom.hpp"
+#include "effects/Bloom.hpp"
 #include "effects/Vignette.hpp"
 #include "materials/Fresnel.hpp"
 #include "scene/Camera.hpp"

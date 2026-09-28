@@ -1,7 +1,7 @@
 #include "SdlMain.hpp"
 
 #include "effects/Distortion.hpp"
-#include "effects/HDRBloom.hpp"
+#include "effects/Bloom.hpp"
 #include "effects/Vignette.hpp"
 
 #include <SDL3/SDL_main.h>
@@ -73,7 +73,7 @@ bool SdlMain::init(const char* title, const int width, const int height) {
     m_fx.emplace(width, height);
     m_fx->add<shimera::Vignette>(1.0f, 0.45f, 0.35f)
         .add<shimera::Distortion>()
-        .add<shimera::HDRBloom>();
+        .add<shimera::Bloom>();
 
     return true;
 }
