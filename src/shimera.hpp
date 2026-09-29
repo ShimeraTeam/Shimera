@@ -11,6 +11,7 @@
 #include "effects/Brightness.hpp"
 #include "effects/Contrast.hpp"
 #include "effects/Distortion.hpp"
+#include "effects/Pixelisation.hpp"
 #include "effects/Bloom.hpp"
 #include "effects/Saturation.hpp"
 #include "effects/Vignette.hpp"
