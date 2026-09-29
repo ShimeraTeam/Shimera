@@ -14,6 +14,7 @@
 #include "effects/Bloom.hpp"
 #include "effects/Saturation.hpp"
 #include "effects/Vignette.hpp"
+#include "effects/ChromaticAberration.hpp"
 #include "effects/GaussianBlur.hpp"
 #include "materials/Fresnel.hpp"
 #include "scene/Camera.hpp"
