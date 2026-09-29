@@ -118,3 +118,11 @@ Shimera is an open-source project, and it needs your help to grow! If you want t
 Shimera is licensed under the **GNU General Public License v3.0** (`GPL-3.0-only`). See the [LICENSE](LICENSE) file for the full text and [AUTHORS.md](AUTHORS.md) for the copyright holders.
 
 You are free to use, study, share, and modify Shimera, but any distributed work based on it must also remain open source under the GPL-3.0. See <https://www.gnu.org/licenses/gpl-3.0.html> for a summary.
+
+In practice:
+
+- **Personal, internal or educational use:** no obligation, as long as you do not distribute the program.
+- **Distributing a program that links Shimera** (statically or dynamically): the whole program must be released under a GPL-3.0-compatible license, with its source code.
+- **Selling a game or tool built with Shimera** is allowed, as long as its source code is provided to its users under the GPL-3.0.
+
+The name "Shimera" and its logo are not covered by the GPL (see [AUTHORS.md](AUTHORS.md)).
