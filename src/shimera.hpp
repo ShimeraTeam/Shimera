@@ -11,7 +11,7 @@
 #include "effects/Brightness.hpp"
 #include "effects/Contrast.hpp"
 #include "effects/Distortion.hpp"
-#include "effects/HDRBloom.hpp"
+#include "effects/Bloom.hpp"
 #include "effects/Saturation.hpp"
 #include "effects/Vignette.hpp"
 #include "effects/GaussianBlur.hpp"
