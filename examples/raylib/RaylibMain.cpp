@@ -33,7 +33,7 @@ void RaylibMain::InitShimera() {
 
     m_scene.emplace(kWindowWidth, kWindowHeight);
     m_fx.emplace(kWindowWidth, kWindowHeight);
-    m_fx->add<shimera::HDRBloom>();
+    m_fx->add<shimera::Bloom>();
     m_fx->add<shimera::Distortion>();
 }
 
