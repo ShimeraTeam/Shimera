@@ -12,8 +12,8 @@ To achieve this, we follow these core principles:
 - **Consistency across backends.** The same code should work the same way on SFML, Raylib and OpenGL.
 - **Keep interfaces minimal.** Add only what is necessary to solve the user's problem.
 - **Support effect chaining.** Multiple effects should work together cleanly.
-- **Performance**: We care about the performance of the library and its users' applications.
-- **Documentation**: We want to make it easy for users to understand how to use the library and for contributors to understand how it works.
+- **Care about performance.** The library should stay fast for its users' applications.
+- **Document everything.** Users should easily understand how to use the library, and contributors how it works.
 
 When you contribute, ask yourself: *Does this change make it easier for users to display shaders? Does it keep the library consistent and maintainable?*
 
@@ -23,11 +23,11 @@ When you contribute, ask yourself: *Does this change make it easier for users to
 - Keep changes scoped to a single goal when possible.
 - Open an issue first if you want to discuss a larger feature or a breaking change.
 
-#### Some interesting reads before you start:
+### Useful reading
 - [Shimera's README](README.md) - for an overview of the project and its goals.
 - [Shimera's License](LICENSE) - to understand the terms under which you are contributing.
-- [Shimera developer documentation](https://shimerateam.github.io/ShimeraDocs/devdoc/) - for in-depth technical details and guidelines.
-- [Shimera user documentation](https://shimerateam.github.io/ShimeraDocs/userdoc/) - for examples and user-facing documentation.
+- [Shimera developer documentation](https://shimerateam.github.io/ShimeraDocs/devdoc.html) - for in-depth technical details and guidelines.
+- [Shimera user documentation](https://shimerateam.github.io/ShimeraDocs/userdoc.html) - for examples and user-facing documentation.
 
 If you prefer to read the docs locally, see the `ShimeraDocs/public/docs` folder for the source content.
 
@@ -43,7 +43,61 @@ By submitting a contribution (a pull request, patch, or any other form of change
 
 This grant lets the project adapt its license over time and pursue dual-licensing while keeping every contribution usable. The license you grant is **non-exclusive**: you keep full copyright to your own contributions and may use them elsewhere as you wish.
 
-New source files should start with the standard license header used across the codebase (`SPDX-License-Identifier: GPL-3.0-only` and the `The Shimera Authors` copyright line).
+### License header
+
+Every source file (`.cpp`, `.hpp`, `.h`, `.inl`, `.slang`, `.frag`, `.vert`), including examples and shaders, must start with the standard license header:
+
+```cpp
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// Shimera: a simple way to add visual effects without using any GPU knowledge
+// Copyright (C) 2025-2026 The Shimera Authors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+```
+
+### Third-party code and shaders
+
+Only submit code you wrote yourself. Do not copy code or shaders from other projects, tutorials or websites unless their license is compatible with the GPL-3.0 **and** you say so in the pull request. Many popular graphics sources are **not** compatible: Shadertoy shaders (CC BY-NC-SA 3.0 by default), LearnOpenGL code (CC BY-NC 4.0), and snippets published without any license. When you implement a known technique, write your own implementation and cite the paper or article it comes from in a comment.
+
+### Authors
+
+When your first contribution is merged, add yourself to the **Contributors** section of [AUTHORS.md](AUTHORS.md) in the same pull request.
+
+## Branches and Commits
+
+Branch names and commit messages are **required** to follow the [Conventional Branch](https://conventional-branch.github.io) and [Conventional Commits](https://www.conventionalcommits.org/) specifications. Pull requests that do not follow them will be asked to rename the branch or reword the commits before being merged.
+
+### Branch naming
+
+Name your branch `<prefix>/<short-description>`, in lowercase, with words separated by hyphens:
+
+Examples: `feat/post-processing-bloom`, `fix/framebuffer-resize-crash`, `chore/update-docs-links`.
+
+### Commit messages
+
+Write every commit message in the following format:
+
+```text
+<type>(optional scope): <description>
+```
+Examples:
+
+- `feat(renderer): add chromatic aberration effect`
+- `fix(opengl): prevent invalid framebuffer bind`
+- `docs(readme): clarify Raylib setup`
+
+The full list of prefixes, types and the pre-commit hooks setup is described in the [Git Workflow](https://shimerateam.github.io/ShimeraDocs/devdoc/git_workflow.html) documentation.
 
 ## Code Style
 
@@ -53,7 +107,7 @@ New source files should start with the standard license header used across the c
 - Avoid unrelated formatting changes.
 - If a change affects multiple backends, keep the behavior consistent across them.
 
-For more information on code standards and practices, see the [Coding Standards](https://shimerateam.github.io/ShimeraDocs/devdoc/code_standards/) and the [Git Workflow](https://shimerateam.github.io/ShimeraDocs/devdoc/git_workflow/) documentation.
+For more information on code standards and practices, see the [Coding Standards](https://shimerateam.github.io/ShimeraDocs/devdoc/code_standards.html) documentation.
 
 ## Testing
 
@@ -76,7 +130,7 @@ Good pull requests are:
 - backed by a successful build or relevant test run,
 - and accompanied by screenshots or logs when they help explain the change.
 
-Please mention the backend you changed, the commands you ran, and any known limitations.
+Please mention the backend you changed, the commands you ran, and any known limitations. Give the pull request a title in the Conventional Commits format too (for example `fix(raylib): restore texture filtering`).
 
 ## Community
 

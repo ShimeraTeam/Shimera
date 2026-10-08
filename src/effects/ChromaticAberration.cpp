@@ -15,53 +15,43 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include "effects/ChromaticAberration.hpp"
+#include "ChromaticAberration.hpp"
 
-using shimera::ChromaticAberrationEffect;
-using shimera::IBackend;
-using shimera::IPostProcessor;
+#include "../GL/GLPostProcessor.hpp"
+#include "../Resources.inl"
 
-ChromaticAberrationEffect::ChromaticAberrationEffect(IBackend* backend)
-    : ChromaticAberrationEffect(backend, 1.0f, false, 2.0f, 20) {}
+using shimera::ChromaticAberration;
 
-ChromaticAberrationEffect::ChromaticAberrationEffect(IBackend* backend, const float strength, const bool radius,
-    const float contrast, const int samples)
+ChromaticAberration::ChromaticAberration(const float strength, const bool radius,
+                                         const float contrast, const int samples)
     : m_uStrength(strength), m_uRadius(radius), m_uContrast(contrast), m_uSamples(samples) {
-     m_processor = std::unique_ptr<IPostProcessor>(
-        backend->createPostProcessor(
-            "../../../../res/shader/postprocessing/postprocess.vert",
-            "../../../../res/shader/postprocessing/chromatic_aberration.frag"
-        )
-     );
+    m_processor = std::make_unique<GLPostProcessor>(generatedShader("postprocess.vert"),
+                                                    generatedShader("chromatic_aberration.frag"));
 }
 
-void ChromaticAberrationEffect::updateUniforms() {
+void ChromaticAberration::updateUniforms() {
     m_processor->setUniform("u_strength", m_uStrength);
-    m_processor->setUniform("u_radius", m_uRadius ? 1 : 0);
+    m_processor->setUniform("u_radius", m_uRadius);
     m_processor->setUniform("u_contrast", m_uContrast);
-        m_processor->setUniform("u_samples", m_uSamples);
+    m_processor->setUniform("u_samples", m_uSamples);
 }
 
-ChromaticAberrationEffect& ChromaticAberrationEffect::withStrength(float s) {
+ChromaticAberration& ChromaticAberration::withStrength(const float s) {
     m_uStrength = s;
     return *this;
 }
 
-ChromaticAberrationEffect& ChromaticAberrationEffect::withRadius(bool r) {
+ChromaticAberration& ChromaticAberration::withRadius(const bool r) {
     m_uRadius = r;
     return *this;
 }
 
-ChromaticAberrationEffect& ChromaticAberrationEffect::withContrast(float c) {
+ChromaticAberration& ChromaticAberration::withContrast(const float c) {
     m_uContrast = c;
     return *this;
 }
 
-ChromaticAberrationEffect& ChromaticAberrationEffect::withSamples(int s) {
+ChromaticAberration& ChromaticAberration::withSamples(const int s) {
     m_uSamples = s;
     return *this;
-}
-
-std::string ChromaticAberrationEffect::getName() const {
-    return "ChromaticAberrationEffect";
 }
