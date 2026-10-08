@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 //
-// Shimera: a simple way to add visual effects without using any GPU knowledge
+// Shimera: a simple way to add visual effects without any GPU knowledge
 // Copyright (C) 2025-2026 The Shimera Authors
 //
 // This program is free software: you can redistribute it and/or modify
