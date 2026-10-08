@@ -12,8 +12,8 @@ To achieve this, we follow these core principles:
 - **Consistency across backends.** The same code should work the same way on SFML, Raylib and OpenGL.
 - **Keep interfaces minimal.** Add only what is necessary to solve the user's problem.
 - **Support effect chaining.** Multiple effects should work together cleanly.
-- **Performance**: We care about the performance of the library and its users' applications.
-- **Documentation**: We want to make it easy for users to understand how to use the library and for contributors to understand how it works.
+- **Care about performance.** The library should stay fast for its users' applications.
+- **Document everything.** Users should easily understand how to use the library, and contributors how it works.
 
 When you contribute, ask yourself: *Does this change make it easier for users to display shaders? Does it keep the library consistent and maintainable?*
 
@@ -23,7 +23,7 @@ When you contribute, ask yourself: *Does this change make it easier for users to
 - Keep changes scoped to a single goal when possible.
 - Open an issue first if you want to discuss a larger feature or a breaking change.
 
-#### Some interesting reads before you start:
+### Useful reading
 - [Shimera's README](README.md) - for an overview of the project and its goals.
 - [Shimera's License](LICENSE) - to understand the terms under which you are contributing.
 - [Shimera developer documentation](https://shimerateam.github.io/ShimeraDocs/devdoc/) - for in-depth technical details and guidelines.
@@ -74,6 +74,31 @@ Only submit code you wrote yourself. Do not copy code or shaders from other proj
 
 When your first contribution is merged, add yourself to the **Contributors** section of [AUTHORS.md](AUTHORS.md) in the same pull request.
 
+## Branches and Commits
+
+Branch names and commit messages are **required** to follow the [Conventional Branch](https://conventional-branch.github.io) and [Conventional Commits](https://www.conventionalcommits.org/) specifications. Pull requests that do not follow them will be asked to rename the branch or reword the commits before being merged.
+
+### Branch naming
+
+Name your branch `<prefix>/<short-description>`, in lowercase, with words separated by hyphens:
+
+Examples: `feat/post-processing-bloom`, `fix/framebuffer-resize-crash`, `chore/update-docs-links`.
+
+### Commit messages
+
+Write every commit message in the following format:
+
+```text
+<type>(optional scope): <description>
+```
+Examples:
+
+- `feat(renderer): add chromatic aberration effect`
+- `fix(opengl): prevent invalid framebuffer bind`
+- `docs(readme): clarify Raylib setup`
+
+The full list of prefixes, types and the pre-commit hooks setup is described in the [Git Workflow](https://shimerateam.github.io/ShimeraDocs/devdoc/git_workflow/) documentation.
+
 ## Code Style
 
 - Follow the existing style in the file you are editing.
@@ -82,7 +107,7 @@ When your first contribution is merged, add yourself to the **Contributors** sec
 - Avoid unrelated formatting changes.
 - If a change affects multiple backends, keep the behavior consistent across them.
 
-For more information on code standards and practices, see the [Coding Standards](https://shimerateam.github.io/ShimeraDocs/devdoc/code_standards/) and the [Git Workflow](https://shimerateam.github.io/ShimeraDocs/devdoc/git_workflow/) documentation.
+For more information on code standards and practices, see the [Coding Standards](https://shimerateam.github.io/ShimeraDocs/devdoc/code_standards/) documentation.
 
 ## Testing
 
@@ -105,7 +130,7 @@ Good pull requests are:
 - backed by a successful build or relevant test run,
 - and accompanied by screenshots or logs when they help explain the change.
 
-Please mention the backend you changed, the commands you ran, and any known limitations.
+Please mention the backend you changed, the commands you ran, and any known limitations. Give the pull request a title in the Conventional Commits format too (for example `fix(raylib): restore texture filtering`).
 
 ## Community
 
