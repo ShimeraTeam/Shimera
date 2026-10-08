@@ -27,4 +27,12 @@ above.
 ## Contributors
 
 Everyone who has contributed to Shimera. Each keeps the copyright to their own
-contributions. New contributors are added here as their first contribution is merged.
+contributions. New contributors add themselves here in the pull request of their
+first contribution (see [CONTRIBUTING.md](CONTRIBUTING.md)), using the format
+`- Full Name ([@github-handle](https://github.com/github-handle))`.
+
+## Name and logo
+
+The GPL-3.0 covers the source code only. The name "Shimera" and the Shimera logo
+are not licensed under the GPL: forks are welcome to reuse the code, but must not
+present themselves as the official Shimera project.
