@@ -56,7 +56,7 @@ void GaussianBlur::renderImpl(const GLTexture& input, const uint32_t target) {
 
     m_processor->setUniform("u_direction", Vec2(0.0f, 1.0f));
     bindFramebuffer(target);
-    m_processor->render(input);
+    m_processor->render(m_intermediateBuffer->color());
 }
 
 void GaussianBlur::updateUniforms() {
