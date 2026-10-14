@@ -21,7 +21,7 @@
 
 using shimera::Pixelisation;
 
-Pixelisation::Pixelisation(const float pixelSizeX, const float pixelSizeY, const float gap,
+Pixelisation::Pixelisation(const float pixelSizeX, const float pixelSizeY,
                    const Vec2<float> resolution, const Vec2<float> offset)
     : m_pixelSizeX(pixelSizeX), m_pixelSizeY(pixelSizeY), m_resolution(resolution), m_offset(offset) {
     // The only diff between Slang shader and hand written shaders.

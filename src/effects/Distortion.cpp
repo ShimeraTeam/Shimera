@@ -54,19 +54,3 @@ Distortion& Distortion::withTimeScale(const float timeScale) {
     m_timeScale = timeScale;
     return *this;
 }
-
-float Distortion::getTime() const {
-    return m_time;
-}
-
-float Distortion::getNoiseScale() const {
-    return m_noiseScale;
-}
-
-float Distortion::getDistortionStrength() const {
-    return m_distortionStrength;
-}
-
-float Distortion::getTimeScale() const {
-    return m_timeScale;
-}
