@@ -40,6 +40,10 @@ class Vignette final : public ShaderEffect<Vignette> {
         Vignette& withRounded(bool rounded);
 
         [[nodiscard]] float getStrength() const { return m_strength; }
+        [[nodiscard]] float getRadius() const { return m_radius; }
+        [[nodiscard]] float getGap() const { return m_gap; }
+        [[nodiscard]] Vec4<float> getColor() const { return m_color; }
+        [[nodiscard]] bool isRounded() const { return m_rounded; }
 
     private:
         float m_strength;
