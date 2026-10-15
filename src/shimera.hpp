@@ -26,6 +26,7 @@
 #include "GL/GLTexture.hpp"
 #include "common/Color.inl"
 #include "effects/Brightness.hpp"
+#include "effects/ColorTint.hpp"
 #include "effects/Contrast.hpp"
 #include "effects/Distortion.hpp"
 #include "effects/Pixelisation.hpp"

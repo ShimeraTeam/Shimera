@@ -26,7 +26,6 @@ class Pixelisation final : public ShaderEffect<Pixelisation> {
     public:
         explicit Pixelisation(float m_pixelSizeX = 4.0f,
                           float m_pixelSizeY = 4.0f,
-                          float gap = 0.3f,
                           Vec2<float> m_uResolution = Vec2(1920.0f, 1080.0f),
                           Vec2<float> m_uOffset = Vec2(0.0f, 0.0f));
 

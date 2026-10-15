@@ -34,10 +34,11 @@ class Distortion final : public ShaderEffect<Distortion> {
         Distortion& withNoiseScale(float noiseScale);
         Distortion& withDistortionStrength(float distortionStrength);
         Distortion& withTimeScale(float timeScale);
-        float getTime() const;
-        float getNoiseScale() const;
-        float getDistortionStrength() const;
-        float getTimeScale() const;
+        
+        [[nodiscard]] float getTime() const { return m_time; }
+        [[nodiscard]] float getNoiseScale() const { return m_noiseScale; }
+        [[nodiscard]] float getDistortionStrength() const { return m_distortionStrength; }
+        [[nodiscard]] float getTimeScale() const { return m_timeScale; }
 
     private:
         float m_time = 0.0f;

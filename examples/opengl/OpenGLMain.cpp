@@ -208,7 +208,7 @@ bool OpenGLMain::init(const char* title, const int width, const int height) {
     m_fx.emplace(m_width, m_height);
     m_fx->add<shimera::Vignette>(1.0f, 0.45f, 0.35f)
         .add<shimera::Distortion>(1.0f, 0.1f, 0.1f)
-        .add<shimera::HDRBloom>();
+        .add<shimera::Bloom>();
 
     const Geometry sphere = createSphere(kSphereRadius, kSphereSlices, kSphereStacks);
     m_sphere.emplace(sphere.positions, sphere.normals, sphere.indices);

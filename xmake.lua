@@ -45,10 +45,9 @@ target("shaders")
         import("core.project.depend")
         import("lib.detect.find_program")
 
-        -- Search slangc in PATH.
         local slangc = get_config("slangc")
         if slangc == "" then
-            slangc = find_program("slangc", {check = "-v"})
+            slangc = find_program("slangc", {check = "-v", force = true})
         end
 
         if not slangc then
