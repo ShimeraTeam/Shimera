@@ -26,10 +26,10 @@ When you contribute, ask yourself: *Does this change make it easier for users to
 ### Useful reading
 - [Shimera's README](README.md) - for an overview of the project and its goals.
 - [Shimera's License](LICENSE) - to understand the terms under which you are contributing.
-- [Shimera developer documentation](https://shimerateam.github.io/ShimeraDocs/devdoc.html) - for in-depth technical details and guidelines.
-- [Shimera user documentation](https://shimerateam.github.io/ShimeraDocs/userdoc.html) - for examples and user-facing documentation.
+- [Shimera contributor documentation](https://shimerateam.github.io/Docs/contributor/) - for in-depth technical details and guidelines.
+- [Shimera user documentation](https://shimerateam.github.io/Docs/user/) - for examples and user-facing documentation.
 
-If you prefer to read the docs locally, see the `ShimeraDocs/public/docs` folder for the source content.
+If you prefer to read the docs locally, the source content lives in the [ShimeraTeam/Docs](https://github.com/ShimeraTeam/Docs) repository.
 
 ## Licensing of Contributions
 
@@ -97,7 +97,7 @@ Examples:
 - `fix(opengl): prevent invalid framebuffer bind`
 - `docs(readme): clarify Raylib setup`
 
-The full list of prefixes, types and the pre-commit hooks setup is described in the [Git Workflow](https://shimerateam.github.io/ShimeraDocs/devdoc/git_workflow.html) documentation.
+The full list of prefixes, types and the pre-commit hooks setup is described in the [Git Workflow](https://shimerateam.github.io/Docs/contributor/git_workflow.html) documentation.
 
 ## Code Style
 
@@ -107,7 +107,7 @@ The full list of prefixes, types and the pre-commit hooks setup is described in 
 - Avoid unrelated formatting changes.
 - If a change affects multiple backends, keep the behavior consistent across them.
 
-For more information on code standards and practices, see the [Coding Standards](https://shimerateam.github.io/ShimeraDocs/devdoc/code_standards.html) documentation.
+For more information on code standards and practices, see the [Coding Standards](https://shimerateam.github.io/Docs/contributor/code_standards.html) documentation.
 
 ## Testing
 
@@ -120,6 +120,8 @@ If your change affects rendering, shaders, or backend behavior, add or update an
 If you change a public API, build step, or user-facing behavior, update the README or the documentation alongside the code.
 
 For docs work, keep the English and French versions in sync when the change applies to both.
+
+The documentation website is maintained in [ShimeraTeam/Docs](https://github.com/ShimeraTeam/Docs) and licensed under **CC BY 4.0** (`CC-BY-4.0`), not under the GPL. Contributions to it follow that repository's own [CONTRIBUTING.md](https://github.com/ShimeraTeam/Docs/blob/main/CONTRIBUTING.md).
 
 ## Pull Requests
 
