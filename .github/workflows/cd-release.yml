@@ -14,7 +14,7 @@ jobs:
       strategy:
         matrix:
           plateform: [ubuntu-latest, windows-latest]
-          backend: [ opengl, sfml, raylib ]
+          backend: [glfw, sfml, raylib, sdl]
           architecture: [x86, x64]
           exclude:
             - plateform: ubuntu-latest
@@ -30,8 +30,10 @@ jobs:
           run: |
             sudo apt-get update
             sudo apt-get install -y \
-            build-essential cmake \
+            build-essential cmake pkg-config \
+            xutils-dev autoconf automake libtool gperf \
             libx11-dev libxrandr-dev libxi-dev libxinerama-dev libxcursor-dev \
+            libxss-dev libxext-dev libxfixes-dev libudev-dev \
             libgl1-mesa-dev libglu1-mesa-dev libpng-dev libfreetype6-dev \
             libxkbcommon-dev libxcb1-dev libxcb-image0-dev libxcb-keysyms1-dev \
             libxcb-shm0-dev libxcb-randr0-dev
@@ -57,10 +59,8 @@ jobs:
           if: runner.os == 'Linux'
           run: |
             for mode in release debug; do
-              for shared in n y; do
-                xmake f -y -c -m $mode --shared=$shared
-                xmake build shimera-${{ matrix.backend }}
-              done
+              xmake f -y -c -m $mode
+              xmake build shimera-${{ matrix.backend }}
             done
 
         - name: Builds Windows
@@ -68,20 +68,21 @@ jobs:
           shell: powershell
           run: |
             foreach ($mode in @("release", "debug")) {
-              foreach ($shared in @("n", "y")) {
-                xmake f -y -c -m $mode --shared=$shared -a ${{ matrix.architecture }}
-                xmake build shimera-${{ matrix.backend }}
-              }
+              xmake f -y -c -m $mode -a ${{ matrix.architecture }}
+              xmake build shimera-${{ matrix.backend }}
             }
 
         - name: Tar Linux builds
           if: runner.os == 'Linux'
           run: |
-            mkdir -p shimera-${{ env.version }}/lib
-            mv build/linux/x86_64/{release,debug}/*.{so,a} shimera-${{ env.version }}/lib/
-            mv include shimera-${{ env.version }}
+            mkdir -p shimera-${{ env.version }}/lib/release shimera-${{ env.version }}/lib/debug
+            mkdir -p shimera-${{ env.version }}/include
+            mkdir -p shimera-${{ env.version }}/res
+            # Both modes produce the same file names, so they need separate folders.
+            mv build/linux/x86_64/release/*.a shimera-${{ env.version }}/lib/release/
+            mv build/linux/x86_64/debug/*.a shimera-${{ env.version }}/lib/debug/
+            (cd src && find . -type f \( -name '*.h' -o -name '*.hpp' -o -name '*.inl' \) -exec cp --parents {} ../shimera-${{ env.version }}/include/ \;)
             mv README.md shimera-${{ env.version }}
-            mv CHANGELOG.md shimera-${{ env.version }}
             mv LICENSE shimera-${{ env.version }}
             mv res/shader shimera-${{ env.version }}/res/
             tar -cvf shimera-${{ env.version }}-${{ matrix.backend }}-linux-${{ matrix.architecture }}.tar shimera-${{ env.version }}
@@ -90,13 +91,21 @@ jobs:
           if: runner.os == 'Windows'
           shell: powershell
           run: |
-            New-Item -ItemType Directory -Force -Path shimera-${{ env.version }}\lib, shimera-${{ env.version }}\bin
-            Move-Item build\windows\${{ matrix.architecture }}\release\*.lib, build\windows\${{ matrix.architecture }}\debug\*.lib shimera-${{ env.version }}\lib\
-            Move-Item build\windows\${{ matrix.architecture }}\release\*.dll, build\windows\${{ matrix.architecture }}\debug\*.dll shimera-${{ env.version }}\bin\
-            Get-ChildItem build\windows\${{ matrix.architecture }}\release\*.pdb, build\windows\${{ matrix.architecture }}\debug\*.pdb | Where-Object { $_.Name -notlike "compile.*" } | Move-Item -Destination shimera-${{ env.version }}\bin\
-            Move-Item include shimera-${{ env.version }}
+            New-Item -ItemType Directory -Force -Path shimera-${{ env.version }}\include, shimera-${{ env.version }}\res
+            # Both modes produce the same file names, so they need separate folders.
+            foreach ($mode in @("release", "debug")) {
+              New-Item -ItemType Directory -Force -Path shimera-${{ env.version }}\lib\$mode, shimera-${{ env.version }}\bin\$mode
+              Move-Item build\windows\${{ matrix.architecture }}\$mode\*.lib shimera-${{ env.version }}\lib\$mode\
+              Get-ChildItem build\windows\${{ matrix.architecture }}\$mode\*.pdb | Where-Object { $_.Name -notlike "compile.*" } | Move-Item -Destination shimera-${{ env.version }}\bin\$mode\
+            }
+            Push-Location src
+            Get-ChildItem -Recurse -File -Include *.h, *.hpp, *.inl | ForEach-Object {
+              $dest = Join-Path ..\shimera-${{ env.version }}\include (Resolve-Path -Relative $_.FullName)
+              New-Item -ItemType Directory -Force -Path (Split-Path $dest) | Out-Null
+              Copy-Item $_.FullName $dest
+            }
+            Pop-Location
             Move-Item README.md shimera-${{ env.version }}
-            Move-Item CHANGELOG.md shimera-${{ env.version }}
             Move-Item LICENSE shimera-${{ env.version }}
             Move-Item res/shader shimera-${{ env.version }}/res/
             Compress-Archive -Path shimera-${{ env.version }} -DestinationPath shimera-${{ env.version }}-${{ matrix.backend }}-windows-${{ matrix.architecture }}.zip
@@ -153,7 +162,7 @@ jobs:
           tag_name: ${{ github.ref_name }}
           name: Shimera ${{ env.version }}
           prerelease: ${{ env.prerelease }}
-          body_path: CHANGELOG.md
+          generate_release_notes: true
           files: |
             *.tar
             *.zip
