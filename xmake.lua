@@ -83,14 +83,23 @@ target("shaders")
         local sharedvertex = path.join(slangdir, "postprocess.slang")
 
         -- slangc => SPIR-V -> spirv-cross => GLSL 330.
-        local function compile(sourcefile, entry, stage, ext, io_dir)
+        -- opts.includedirs: extra -I search paths for `import` and #include.
+        -- opts.outdir: where the GLSL lands (default: res/shader/generated).
+        local function compile(sourcefile, entry, stage, ext, io_dir, opts)
+            opts = opts or {}
+            local outdir = opts.outdir or outputdir
             local spv = path.join(spvdir, path.basename(sourcefile) .. "." .. ext .. ".spv")
-            local glsl = path.join(outputdir, path.basename(sourcefile) .. "." .. ext)
+            local glsl = path.join(outdir, path.basename(sourcefile) .. "." .. ext)
 
             -- -no-mangle keeps the original uniform names, which is what lets GLShader find
             -- them through OpenGL's own uses instead of a generated layout table.
-            os.vrunv(slangc, {sourcefile, "-entry", entry, "-stage", stage,
-                              "-target", "spirv", "-no-mangle", "-o", spv})
+            local args = {sourcefile, "-entry", entry, "-stage", stage,
+                          "-target", "spirv", "-no-mangle", "-o", spv}
+            for _, dir in ipairs(opts.includedirs or {}) do
+                table.insert(args, "-I")
+                table.insert(args, dir)
+            end
+            os.vrunv(slangc, args)
             os.vrunv(spirvcross, {spv, "--version", "330", "--no-es", "--no-420pack-extension",
                                   "--rename-interface-variable", io_dir, "0", "v_texCoords",
                                   "--output", glsl})
@@ -114,6 +123,32 @@ target("shaders")
                     compile(sourcefile, "fragMain", "fragment", "frag", "in")
                 end, {files = {sourcefile, sharedvertex},
                       dependfile = path.join(target:autogendir(), name .. ".slang.d")})
+            end
+        end
+
+        -- Multi-layered shaders "res/shader/multi_layered/<effect>/", one folder per effect
+        -- too big for a single file.
+        local multidir = path.join(os.projectdir(), "res", "shader", "multi_layered")
+        for _, effectdir in ipairs(os.dirs(path.join(multidir, "*"))) do
+            local effectname = path.filename(effectdir)
+            local effectout = path.join(outputdir, effectname)
+            os.mkdir(effectout)
+
+            local includedirs = {effectdir, slangdir}
+            for _, sub in ipairs(os.dirs(path.join(effectdir, "*"))) do
+                table.insert(includedirs, sub)
+            end
+            local modules = os.files(path.join(effectdir, "**.slang"))
+            table.insert(modules, sharedvertex)
+
+            for _, sourcefile in ipairs(os.files(path.join(effectdir, "passes", "*.slang"))) do
+                local name = path.basename(sourcefile)
+                depend.on_changed(function ()
+                    cprint("${color.build.object}[slang]${clear} %s/%s", effectname, path.filename(sourcefile))
+                    compile(sourcefile, "fragMain", "fragment", "frag", "in",
+                            {includedirs = includedirs, outdir = effectout})
+                end, {files = modules,
+                      dependfile = path.join(target:autogendir(), effectname .. "." .. name .. ".slang.d")})
             end
         end
     end)

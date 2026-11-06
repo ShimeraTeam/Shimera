@@ -63,6 +63,11 @@ class Effect {
         void setEnabled(const bool enabled) { m_enabled = enabled; }
         [[nodiscard]] bool isEnabled() const { return m_enabled; }
 
+        /* Told by the pipeline. An effect that produces radiance (the atmosphere) writes
+         * raw HDR into a float chain and tonemaps itself into an 8-bit one. */
+        void setPipelineHdr(const bool hdr) { m_pipelineHdr = hdr; }
+        [[nodiscard]] bool isPipelineHdr() const { return m_pipelineHdr; }
+
         [[nodiscard]] GLPostProcessor& processor() const { return *m_processor; }
 
     protected:
@@ -70,6 +75,7 @@ class Effect {
         const GLTexture* m_depth = nullptr;
         Vec2<float> m_resolution{1.0f, 1.0f};
         bool m_enabled = true;
+        bool m_pipelineHdr = false;
 };
 
 }

@@ -21,6 +21,7 @@
 #include "GL/GLError.hpp"
 
 #include <cstring>
+#include <string>
 #include <utility>
 #include <variant>
 
@@ -30,6 +31,20 @@
 #include "Mat4.hpp"
 
 using shimera::UniformBlock;
+
+std::string UniformBlock::normalizeName(std::string name) {
+    /* GL reports "BlockName.member" when the block has an instance name, which Slang's
+     * output always does. Effects know the bare name, so drop the first segment. */
+    if (const auto dot = name.find('.'); dot != std::string::npos)
+        name.erase(0, dot + 1);
+
+    /* SPIRV-Cross wraps every std140 array in a struct with a single `data` member, so an
+     * array element arrives as "u_arr.data[3]". Fold that back to "u_arr[3]". */
+    for (auto pos = name.find(".data["); pos != std::string::npos; pos = name.find(".data[", pos))
+        name.erase(pos, 5);
+
+    return name;
+}
 
 std::vector<UniformBlock> UniformBlock::discoverAll(const uint32_t program) {
     int blockCount = 0;
@@ -58,28 +73,39 @@ std::vector<UniformBlock> UniformBlock::discoverAll(const uint32_t program) {
             GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS, &memberCount));
 
         if (memberCount > 0) {
-            std::vector<int> signedIndices(static_cast<std::size_t>(memberCount));
+            const auto count = static_cast<std::size_t>(memberCount);
+            std::vector<int> signedIndices(count);
             GLC(glGetActiveUniformBlockiv(program, index,
                 GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES, signedIndices.data()));
 
             const std::vector<unsigned int> indices(signedIndices.begin(), signedIndices.end());
-            std::vector<int> offsets(static_cast<std::size_t>(memberCount));
-            GLC(glGetActiveUniformsiv(program, memberCount, indices.data(),
-                GL_UNIFORM_OFFSET, offsets.data()));
+            std::vector<int> offsets(count);
+            std::vector<int> sizes(count);
+            std::vector<int> arrayStrides(count);
+            GLC(glGetActiveUniformsiv(program, memberCount, indices.data(), GL_UNIFORM_OFFSET, offsets.data()));
+            GLC(glGetActiveUniformsiv(program, memberCount, indices.data(), GL_UNIFORM_SIZE, sizes.data()));
+            GLC(glGetActiveUniformsiv(program, memberCount, indices.data(), GL_UNIFORM_ARRAY_STRIDE, arrayStrides.data()));
 
-            for (int i = 0; i < memberCount; ++i) {
-                char nameBuffer[256] = {};
+            for (std::size_t i = 0; i < count; ++i) {
+                char nameBuffer[512] = {};
                 int length = 0;
                 GLC(glGetActiveUniformName(program, indices[i],
                     static_cast<int>(sizeof(nameBuffer)), &length, nameBuffer));
 
-                std::string memberName(nameBuffer, static_cast<std::size_t>(length));
-                /* GL reports "BlockName.member" when the block has an instance name, which
-                 * Slang's output always does. Effects know the bare name, so store that. */
-                if (const auto dot = memberName.rfind('.'); dot != std::string::npos)
-                    memberName = memberName.substr(dot + 1);
+                const std::string memberName =
+                    normalizeName(std::string(nameBuffer, static_cast<std::size_t>(length)));
 
-                block.m_offsets[memberName] = offsets[i];
+                /* Arrays of scalars, vectors or matrices are reported once, as "name[0]" with
+                 * a size and a stride. Arrays of structs are already enumerated per element. */
+                const bool isArray = sizes[i] > 1 && memberName.size() > 3
+                    && memberName.compare(memberName.size() - 3, 3, "[0]") == 0;
+                if (isArray) {
+                    const std::string base = memberName.substr(0, memberName.size() - 3);
+                    for (int element = 0; element < sizes[i]; ++element)
+                        block.m_offsets[base + "[" + std::to_string(element) + "]"] = offsets[i] + element * arrayStrides[i];
+                } else {
+                    block.m_offsets[memberName] = offsets[i];
+                }
             }
         }
         blocks.push_back(std::move(block));
@@ -150,8 +176,11 @@ bool UniformBlock::write(const std::string& member, const UniformValue& value) {
         } else if constexpr (std::is_same_v<T, Vec4<float>>) {
             const float packed[4] = {val.x, val.y, val.z, val.w};
             store(packed, sizeof(packed));
+        } else if constexpr (std::is_same_v<T, Vec4<int>>) {
+            const int packed[4] = {val.x, val.y, val.z, val.w};
+            store(packed, sizeof(packed));
         } else if constexpr (std::is_same_v<T, Mat4>) {
-            // std140 gives a mat4 a 16-byte column stride, so its 64 bytes are contiguous.
+            // std140 gives a mat4 a 16-byte vector stride, so its 64 bytes are contiguous.
             store(val.m, sizeof(val.m));
         }
     }, value);

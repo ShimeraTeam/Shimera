@@ -28,7 +28,9 @@ namespace shimera {
  */
 class GLTexture {
     public:
-        enum class Format { Color, Depth };
+        /* Color is RGBA8, the LDR default. ColorHDR is RGBA16F, for HDR pipelines and for
+         * lookup tables that store physical quantities above 1.0 or far below 1/255. */
+        enum class Format { Color, ColorHDR, Depth };
 
         /* adopt a texture someone else created (the host library), this is the most widely used method
          * Shimera never deletes it. This is the normal case. */
@@ -50,6 +52,7 @@ class GLTexture {
         [[nodiscard]] int getWidth() const { return m_width; }
         [[nodiscard]] int getHeight() const { return m_height; }
         [[nodiscard]] bool owned() const { return m_owned; }
+        [[nodiscard]] Format getFormat() const { return m_format; }
 
     private:
         void destroy() noexcept;
@@ -58,6 +61,7 @@ class GLTexture {
         int m_width = 0;
         int m_height = 0;
         bool m_owned = false;
+        Format m_format = Format::Color;
 };
 
 }
