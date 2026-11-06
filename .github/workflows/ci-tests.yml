@@ -1,4 +1,4 @@
-name: CI - Tests Linux
+name: CI - Tests Linux & Windows
 
 permissions:
   contents: write
@@ -10,18 +10,30 @@ on:
     branches:
       - master
       - dev
-      - feat/231-cicd-pipeline
 
 jobs:
   run-shimera-tests:
-    runs-on: self-hosted
-    name: Run Tests
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: ubuntu-latest
+            slang-asset: linux-x86_64-glibc-2.27
+          - platform: windows-latest
+            slang-asset: windows-x86_64
+
+    runs-on: ${{ matrix.platform }}
+    name: Run Tests (${{ matrix.platform }})
+    timeout-minutes: 60
+    env:
+      GALLIUM_DRIVER: llvmpipe
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Install system dependencies
+        if: runner.os == 'Linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -31,33 +43,38 @@ jobs:
           libxss-dev libxext-dev libxfixes-dev libudev-dev \
           libgl1-mesa-dev libglu1-mesa-dev libpng-dev libfreetype6-dev \
           libxkbcommon-dev libxcb1-dev libxcb-image0-dev libxcb-keysyms1-dev \
-          libxcb-shm0-dev libxcb-randr0-dev
+          libxcb-shm0-dev libxcb-randr0-dev \
+          xvfb libgl1-mesa-dri
 
-      - name: Set xmake path
-        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Install Mesa
+        if: runner.os == 'Windows'
+        uses: ssciwr/setup-mesa-dist-win@v3
+
+      - name: Setup xmake
+        uses: xmake-io/github-action-setup-xmake@v1
+        with:
+          xmake-version: latest
+          actions-cache-folder: ".xmake-cache"
 
       - name: Install slangc
+        shell: bash
         env:
           SLANG_VERSION: "2026.21"
         run: |
-          slang_dir="$HOME/.local/slang-$SLANG_VERSION"
-          if [ ! -x "$slang_dir/bin/slangc" ]; then
-            archive="$(mktemp)"
-            curl -fsSL --retry 3 -o "$archive" \
-              "https://github.com/shader-slang/slang/releases/download/v$SLANG_VERSION/slang-$SLANG_VERSION-linux-x86_64-glibc-2.27.tar.gz"
-            rm -rf "$slang_dir.tmp"
-            mkdir -p "$slang_dir.tmp"
-            tar -xzf "$archive" -C "$slang_dir.tmp"
-            rm -f "$archive"
-            mv "$slang_dir.tmp" "$slang_dir"
-          fi
-          "$slang_dir/bin/slangc" -v
-          echo "$slang_dir/bin" >> "$GITHUB_PATH"
+          cd "$RUNNER_TEMP"
+          curl -fsSL --retry 3 -o slang.tar.gz \
+            "https://github.com/shader-slang/slang/releases/download/v$SLANG_VERSION/slang-$SLANG_VERSION-${{ matrix.slang-asset }}.tar.gz"
+          mkdir slang
+          tar -xzf slang.tar.gz -C slang
+          slang/bin/slangc -v
+          echo "$RUNNER_TEMP/slang/bin" >> "$GITHUB_PATH"
 
-      - name: Set permissions
-        run: chmod +x run-tests.sh
+      - name: Run Linux
+        if: runner.os == 'Linux'
+        run: |
+          chmod +x run-tests.sh
+          xvfb-run -a -s "-screen 0 1280x720x24" ./run-tests.sh
 
-      - name: Run
-        run: ./run-tests.sh
-        env:
-          DISPLAY: :0
+      - name: Run Windows
+        if: runner.os == 'Windows'
+        run: .\run-tests.bat

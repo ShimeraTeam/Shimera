@@ -1,20 +1,3 @@
-// SPDX-License-Identifier: GPL-3.0-only
-//
-// Shimera: a simple way to add visual effects without any GPU knowledge
-// Copyright (C) 2025-2026 The Shimera Authors
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, version 3 of the License.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 #pragma once
 
 #include <gtest/gtest.h>
@@ -33,6 +16,11 @@
 #elif defined(SHIMERA_HOST_RAYLIB)
     #include <raylib.h>
     #include "hosts/RaylibTarget.hpp"
+    #if defined(__linux__)
+        #include <sys/resource.h>
+        #include <sys/wait.h>
+        #include <unistd.h>
+    #endif
 #elif defined(SHIMERA_HOST_SDL)
     #include <SDL3/SDL.h>
     #include "hosts/SdlTarget.hpp"
@@ -119,6 +107,28 @@ class ContextTest : public ::testing::Test {
         }
 
     private:
+#if defined(SHIMERA_HOST_RAYLIB) && defined(__linux__)
+        static bool raylibCanOpenWindow() {
+            const pid_t child = fork();
+            if (child < 0)
+                return true;
+
+            if (child == 0) {
+                const rlimit noCoreDump{0, 0};
+                setrlimit(RLIMIT_CORE, &noCoreDump);
+                SetTraceLogLevel(LOG_NONE);
+                SetConfigFlags(FLAG_WINDOW_HIDDEN);
+                InitWindow(kWidth, kHeight, "Raylib probe");
+                _exit(IsWindowReady() ? 0 : 1);
+            }
+
+            int status = 0;
+            if (waitpid(child, &status, 0) != child)
+                return true;
+            return WIFEXITED(status) && WEXITSTATUS(status) == 0;
+        }
+#endif
+
         static inline std::optional<shimera::Context> s_context;
 #if defined(SHIMERA_HOST_GLFW)
         static inline GLFWwindow* s_window = nullptr;
