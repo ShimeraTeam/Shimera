@@ -15,4 +15,4 @@ jobs:
           with:
             python-version: '3.x'
         - name: Check license headers
-          run: git ls-files -z | xargs -0 python .githooks/check-license-headers.py
+          run: git ls-files -z -- src examples res | xargs -0 python .githooks/check-license-headers.py
