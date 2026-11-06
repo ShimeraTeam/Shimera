@@ -23,7 +23,7 @@ run_test() {
 
 status=0
 
-run_test "Configure and Build" "xmake f -y -c && xmake require -y && xmake" || status=1
+run_test "Configure and Build" "xmake f -y -c && xmake require -y && xmake" || exit 1
 
 run_test "Build Shimera GLFW" "xmake build shimera-glfw" || status=1
 run_test "Build Shimera Raylib" "xmake build shimera-raylib" || status=1
