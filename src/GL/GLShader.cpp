@@ -170,17 +170,20 @@ int GLShader::uniformLocation(const std::string& uniform) {
 }
 
 void GLShader::setUniform(const std::string& name, const UniformValue& value) {
+    if (!trySetUniform(name, value))
+        std::cerr << "shimera: uniform '" << name << "' not found in shader '" << m_name << "'\n";
+}
+
+bool GLShader::trySetUniform(const std::string& name, const UniformValue& value) {
     // if uniform found in a block
     for (UniformBlock& block : m_blocks) {
         if (block.write(name, value))
-            return;
+            return true;
     }
     // else its a normal uniform (probably from a handwritten shader)
     const int location = uniformLocation(name);
-    if (location == -1) {
-        std::cerr << "shimera: uniform '" << name << "' not found in shader '" << m_name << "'\n";
-        return;
-    }
+    if (location == -1)
+        return false;
 
     bind();
 
@@ -197,8 +200,11 @@ void GLShader::setUniform(const std::string& name, const UniformValue& value) {
             GLC(glUniform3f(location, val.x, val.y, val.z));
         } else if constexpr (std::is_same_v<T, Vec4<float>>) {
             GLC(glUniform4f(location, val.x, val.y, val.z, val.w));
+        } else if constexpr (std::is_same_v<T, Vec4<int>>) {
+            GLC(glUniform4i(location, val.x, val.y, val.z, val.w));
         } else if constexpr (std::is_same_v<T, Mat4>) {
             GLC(glUniformMatrix4fv(location, 1, GL_FALSE, val.m));
         }
     }, value);
+    return true;
 }

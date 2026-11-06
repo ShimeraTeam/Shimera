@@ -22,6 +22,13 @@ namespace shimera {
 struct Mat4 {
     float m[16];
     bool operator==(const Mat4& o) const;
+
+    static Mat4 identity();
+
+    [[nodiscard]] Mat4 transposed() const;
+    // General inverse. A singular matrix returns the identity rather than NaNs.
+    [[nodiscard]] Mat4 inverse() const;
+    [[nodiscard]] Mat4 operator*(const Mat4& o) const;
 };
 
 }

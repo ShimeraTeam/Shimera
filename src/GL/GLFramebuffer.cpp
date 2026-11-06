@@ -63,8 +63,13 @@ void shimera::clearDepth() {
     GLC(glDepthMask(depthMask));
 }
 
-GLFramebuffer::GLFramebuffer(const int width, const int height, const bool samplableDepth)
-    : m_samplableDepth(samplableDepth) {
+GLFramebuffer::GLFramebuffer(const int width, const int height, const bool samplableDepth,
+                             const GLTexture::Format colorFormat)
+    : GLFramebuffer(width, height, samplableDepth ? Depth::Texture : Depth::Renderbuffer, colorFormat) {}
+
+GLFramebuffer::GLFramebuffer(const int width, const int height, const Depth depth,
+                             const GLTexture::Format colorFormat)
+    : m_depthMode(depth), m_colorFormat(colorFormat) {
     resize(width, height);
 }
 
@@ -106,15 +111,15 @@ void GLFramebuffer::resize(const int width, const int height) {
     }
     GLC(glBindFramebuffer(GL_FRAMEBUFFER, m_fbo));
 
-    m_color.emplace(width, height, GLTexture::Format::Color);
+    m_color.emplace(width, height, m_colorFormat);
     GLC(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
         GL_TEXTURE_2D, m_color->getHandle(), 0));
 
-    if (m_samplableDepth) {
+    if (m_depthMode == Depth::Texture) {
         m_depth.emplace(width, height, GLTexture::Format::Depth);
         GLC(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
             GL_TEXTURE_2D, m_depth->getHandle(), 0));
-    } else {
+    } else if (m_depthMode == Depth::Renderbuffer) {
         if (m_rbo == 0) {
             GLC(glGenRenderbuffers(1, &m_rbo));
         }

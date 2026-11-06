@@ -26,15 +26,37 @@ using shimera::Effect;
 using shimera::GLFramebuffer;
 using shimera::GLTexture;
 
-EffectPipeline::EffectPipeline(const int width, const int height)
-    : m_width(width), m_height(height) {}
+EffectPipeline::EffectPipeline(const int width, const int height, const bool hdr)
+    : m_width(width), m_height(height), m_hdr(hdr) {}
 
 void EffectPipeline::build() {
     if (m_built)
         return;
-    m_fboA = std::make_unique<GLFramebuffer>(m_width, m_height);
-    m_fboB = std::make_unique<GLFramebuffer>(m_width, m_height);
+    const auto format = m_hdr ? GLTexture::Format::ColorHDR : GLTexture::Format::Color;
+    // Intermediates only ever receive fullscreen passes, so they carry no depth.
+    m_fboA = std::make_unique<GLFramebuffer>(m_width, m_height, GLFramebuffer::Depth::None, format);
+    m_fboB = std::make_unique<GLFramebuffer>(m_width, m_height, GLFramebuffer::Depth::None, format);
     m_built = true;
+}
+
+void EffectPipeline::setHdr(const bool hdr) {
+    if (hdr == m_hdr)
+        return;
+    m_hdr = hdr;
+    // The intermediates change format, so let the next render rebuild them.
+    m_fboA.reset();
+    m_fboB.reset();
+    m_built = false;
+    for (const auto& fx : m_effects)
+        fx->setPipelineHdr(hdr);
+}
+
+shimera::Tonemap& EffectPipeline::tonemap() {
+    if (!m_tonemap) {
+        m_tonemap = std::make_unique<Tonemap>();
+        m_tonemap->resize(m_width, m_height);
+    }
+    return *m_tonemap;
 }
 
 void EffectPipeline::resize(const int width, const int height) {
@@ -42,6 +64,7 @@ void EffectPipeline::resize(const int width, const int height) {
     m_height = height;
     if (m_fboA) m_fboA->resize(width, height);
     if (m_fboB) m_fboB->resize(width, height);
+    if (m_tonemap) m_tonemap->resize(width, height);
     for (const auto& fx : m_effects)
         fx->resize(width, height);
 }
@@ -80,6 +103,10 @@ void EffectPipeline::renderImpl(const GLTexture& input, const uint32_t target) {
     }
     if (active.empty())
         return;
+
+    // An HDR chain ends in 8 bits whatever happens, so the display mapping is ours to do.
+    if (m_hdr && m_autoTonemap)
+        active.push_back(&tonemap());
 
     for (auto* fx : active) {
         if (fx->needsDepth()) {

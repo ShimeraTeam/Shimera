@@ -106,3 +106,7 @@ void GLPostProcessor::addInputTexture(const std::string& uniformName, const GLTe
 void GLPostProcessor::setUniform(const std::string& name, const UniformValue& value) {
     m_shader->setUniform(name, value);
 }
+
+bool GLPostProcessor::trySetUniform(const std::string& name, const UniformValue& value) {
+    return m_shader->trySetUniform(name, value);
+}
