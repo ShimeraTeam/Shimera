@@ -29,6 +29,7 @@ run_test "Build Shimera GLFW" "xmake build shimera-glfw" || status=1
 run_test "Build Shimera Raylib" "xmake build shimera-raylib" || status=1
 run_test "Build Shimera SFML" "xmake build shimera-sfml" || status=1
 run_test "Build Shimera SDL" "xmake build shimera-sdl" || status=1
+run_test "Build Glsl Shaders" "xmake build shaders" || exit 1
 run_test "Build Glfw Resilience Tests" "xmake build glfw-resilience-tests" || status=1
 run_test "Build Raylib Resilience Tests" "xmake build raylib-resilience-tests" || status=1
 run_test "Build SFML Resilience Tests" "xmake build sfml-resilience-tests" || status=1

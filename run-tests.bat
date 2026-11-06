@@ -13,6 +13,7 @@ call :run_test "Build Shimera GLFW" "xmake build shimera-glfw" || set "status=1"
 call :run_test "Build Shimera Raylib" "xmake build shimera-raylib" || set "status=1"
 call :run_test "Build Shimera SFML" "xmake build shimera-sfml" || set "status=1"
 call :run_test "Build Shimera SDL" "xmake build shimera-sdl" || set "status=1"
+call :run_test "Build Glsl Shaders" "xmake build shaders" || EXIT /B 1
 call :run_test "Build Glfw Resilience Tests" "xmake build glfw-resilience-tests" || set "status=1"
 call :run_test "Build Raylib Resilience Tests" "xmake build raylib-resilience-tests" || set "status=1"
 call :run_test "Build SFML Resilience Tests" "xmake build sfml-resilience-tests" || set "status=1"

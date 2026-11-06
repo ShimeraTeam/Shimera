@@ -36,6 +36,24 @@ jobs:
       - name: Set xmake path
         run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
+      - name: Install slangc
+        env:
+          SLANG_VERSION: "2026.21"
+        run: |
+          slang_dir="$HOME/.local/slang-$SLANG_VERSION"
+          if [ ! -x "$slang_dir/bin/slangc" ]; then
+            archive="$(mktemp)"
+            curl -fsSL --retry 3 -o "$archive" \
+              "https://github.com/shader-slang/slang/releases/download/v$SLANG_VERSION/slang-$SLANG_VERSION-linux-x86_64-glibc-2.27.tar.gz"
+            rm -rf "$slang_dir.tmp"
+            mkdir -p "$slang_dir.tmp"
+            tar -xzf "$archive" -C "$slang_dir.tmp"
+            rm -f "$archive"
+            mv "$slang_dir.tmp" "$slang_dir"
+          fi
+          "$slang_dir/bin/slangc" -v
+          echo "$slang_dir/bin" >> "$GITHUB_PATH"
+
       - name: Set permissions
         run: chmod +x run-tests.sh
 
