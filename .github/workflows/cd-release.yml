@@ -75,12 +75,13 @@ jobs:
         - name: Tar Linux builds
           if: runner.os == 'Linux'
           run: |
-            mkdir -p shimera-${{ env.version }}/lib/release shimera-${{ env.version }}/lib/debug
+            mkdir -p shimera-${{ env.version }}/lib
             mkdir -p shimera-${{ env.version }}/include
             mkdir -p shimera-${{ env.version }}/res
-            # Both modes produce the same file names, so they need separate folders.
-            mv build/linux/x86_64/release/*.a shimera-${{ env.version }}/lib/release/
-            mv build/linux/x86_64/debug/*.a shimera-${{ env.version }}/lib/debug/
+            mv build/linux/x86_64/release/*.a shimera-${{ env.version }}/lib/
+            for lib in build/linux/x86_64/debug/*.a; do
+              mv "$lib" "shimera-${{ env.version }}/lib/$(basename "$lib" .a)-d.a"
+            done
             (cd src && find . -type f \( -name '*.h' -o -name '*.hpp' -o -name '*.inl' \) -exec cp --parents {} ../shimera-${{ env.version }}/include/ \;)
             mv README.md shimera-${{ env.version }}
             mv LICENSE shimera-${{ env.version }}
@@ -91,20 +92,19 @@ jobs:
           if: runner.os == 'Windows'
           shell: powershell
           run: |
-            New-Item -ItemType Directory -Force -Path shimera-${{ env.version }}\include, shimera-${{ env.version }}\res
-            # Both modes produce the same file names, so they need separate folders.
-            foreach ($mode in @("release", "debug")) {
-              New-Item -ItemType Directory -Force -Path shimera-${{ env.version }}\lib\$mode, shimera-${{ env.version }}\bin\$mode
-              Move-Item build\windows\${{ matrix.architecture }}\$mode\*.lib shimera-${{ env.version }}\lib\$mode\
-              Get-ChildItem build\windows\${{ matrix.architecture }}\$mode\*.pdb | Where-Object { $_.Name -notlike "compile.*" } | Move-Item -Destination shimera-${{ env.version }}\bin\$mode\
+            New-Item -ItemType Directory -Force -Path shimera-${{ env.version }}\lib, shimera-${{ env.version }}\bin, shimera-${{ env.version }}\include, shimera-${{ env.version }}\res
+            Move-Item build\windows\${{ matrix.architecture }}\release\*.lib shimera-${{ env.version }}\lib\
+            Get-ChildItem build\windows\${{ matrix.architecture }}\debug\*.lib | ForEach-Object {
+              Move-Item $_.FullName "shimera-${{ env.version }}\lib\$($_.BaseName)-d.lib"
             }
-            Push-Location src
+            Get-ChildItem build\windows\${{ matrix.architecture }}\debug\*.pdb | Where-Object { $_.Name -notlike "compile.*" } | Move-Item -Destination shimera-${{ env.version }}\bin\
+            cd src
             Get-ChildItem -Recurse -File -Include *.h, *.hpp, *.inl | ForEach-Object {
               $dest = Join-Path ..\shimera-${{ env.version }}\include (Resolve-Path -Relative $_.FullName)
               New-Item -ItemType Directory -Force -Path (Split-Path $dest) | Out-Null
               Copy-Item $_.FullName $dest
             }
-            Pop-Location
+            cd ..
             Move-Item README.md shimera-${{ env.version }}
             Move-Item LICENSE shimera-${{ env.version }}
             Move-Item res/shader shimera-${{ env.version }}/res/
