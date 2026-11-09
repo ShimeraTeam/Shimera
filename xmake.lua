@@ -24,6 +24,7 @@ add_requires("glew 2.2.0", "glm 1.0.1", "glfw 3.4")
 add_requires("stb")
 -- Build-time only, converts Slang's Vulkan-flavoured SPIR-V into desktop GLSL 330.
 add_requires("spirv-cross 1.3.268+0")
+add_requires("gtest")
 
 if has_config("sfml") then
     -- graphics + window only. the libs used by Shimera never plays a sound or opens a socket.
@@ -198,4 +199,43 @@ target("sdl_example")
     add_deps("shimera-sdl")
     add_packages("libsdl3_image")
     set_rundir("$(projectdir)")
+end
+
+-- resilience tests, one binary per host
+target("glfw-resilience-tests")
+    set_kind("binary")
+    set_default(false)
+    add_files("tests/resilience/*.cpp")
+    add_deps("shimera-glfw")
+    add_defines("SHIMERA_HOST_GLFW")
+    add_packages("gtest", "glfw")
+
+if has_config("sfml") then
+target("sfml-resilience-tests")
+    set_kind("binary")
+    set_default(false)
+    add_files("tests/resilience/*.cpp")
+    add_deps("shimera-sfml")
+    add_defines("SHIMERA_HOST_SFML")
+    add_packages("gtest")
+end
+
+if has_config("raylib") then
+target("raylib-resilience-tests")
+    set_kind("binary")
+    set_default(false)
+    add_files("tests/resilience/*.cpp")
+    add_deps("shimera-raylib")
+    add_defines("SHIMERA_HOST_RAYLIB")
+    add_packages("gtest")
+end
+
+if has_config("sdl") then
+target("sdl-resilience-tests")
+    set_kind("binary")
+    set_default(false)
+    add_files("tests/resilience/*.cpp")
+    add_deps("shimera-sdl")
+    add_defines("SHIMERA_HOST_SDL")
+    add_packages("gtest")
 end
