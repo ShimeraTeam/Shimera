@@ -8,6 +8,13 @@ repos:
         language: python
         stages: [commit-msg]
 
+      - id: check-license-headers
+        name: Check license headers
+        entry: python .githooks/check-license-headers.py
+        language: system
+        files: ^(src|res/shader|examples)/.*\.(cpp|hpp|h|inl|slang|frag|vert)$
+        stages: [pre-commit]
+
       - id: compile-commands
         name: Generate compile_commands.json
         entry: xmake project -k compile_commands --outputdir=build
