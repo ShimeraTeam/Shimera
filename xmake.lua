@@ -34,9 +34,21 @@ if has_config("raylib") then
     add_requires("raylib 5.5")
 end
 if has_config("sdl") then
-    -- SDL3 core only decodes BMP, the examples' PNG assets need SDL_image.
-    add_requires("libsdl3", "libsdl3_image")
+    add_requires("libsdl3")
+    add_requires("shimera_libsdl3_image", {alias = "libsdl3_image"})
 end
+
+-- The xmake-repo libsdl3_image recipe keeps SDL_image's defaults.
+package("shimera_libsdl3_image")
+    set_base("libsdl3_image")
+    on_install(function (package)
+        local configs = {"-DSDLIMAGE_SAMPLES=OFF", "-DSDLIMAGE_TESTS=OFF", "-DSDLIMAGE_VENDORED=OFF",
+                         "-DSDLIMAGE_BACKEND_STB=ON", "-DSDLIMAGE_PNG_LIBPNG=OFF"}
+        table.insert(configs, "-DCMAKE_BUILD_TYPE=" .. (package:debug() and "Debug" or "Release"))
+        table.insert(configs, "-DBUILD_SHARED_LIBS=" .. (package:config("shared") and "ON" or "OFF"))
+        import("package.tools.cmake").install(package, configs)
+    end)
+package_end()
 
 -- Slang -> SPIR-V -> desktop GLSL 330, run as part of the build.
 target("shaders")
