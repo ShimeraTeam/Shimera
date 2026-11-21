@@ -52,6 +52,9 @@ class GLShader {
 
         // Binds the program itself, a uniform cannot be set on an unbound program.
         void setUniform(const std::string& name, const UniformValue& value);
+        /* Same, but a name the program does not have is a quiet `false` instead of a
+         * message. For shaders that share one parameter struct and use different parts. */
+        bool trySetUniform(const std::string& name, const UniformValue& value);
 
         [[nodiscard]] uint32_t handle() const { return m_program; }
         [[nodiscard]] const std::string& name() const { return m_name; }

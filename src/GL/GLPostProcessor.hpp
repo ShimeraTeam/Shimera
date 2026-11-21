@@ -55,6 +55,7 @@ class GLPostProcessor {
         void addInputTexture(const std::string& uniformName, const GLTexture& texture, int unit);
 
         void setUniform(const std::string& name, const UniformValue& value);
+        bool trySetUniform(const std::string& name, const UniformValue& value);
 
         [[nodiscard]] GLShader& shader() const { return *m_shader; }
 

@@ -33,6 +33,11 @@ namespace shimera {
  * GPU when its bytes actually changed. Effects re-send every parameter every frame and most
  * never move, which turns a guaranteed upload per frame into an upload per real change
  * (Similar to what is done for regular Uniforms).
+ *
+ * Members are addressed by the name the Slang source gives them, including nested structs
+ * and array elements "u_components[2].layers[0].width". The block-instance prefix and the
+ * `.data[` wrappers SPIRV-Cross puts around std140 arrays are stripped on discovery, and
+ * arrays of scalars or vectors are expanded element by element from GL's array stride.
  */
 class UniformBlock {
     public:
@@ -56,6 +61,8 @@ class UniformBlock {
 
     private:
         void destroy() noexcept;
+
+        static std::string normalizeName(std::string name);
 
         uint32_t m_buffer = 0;
         uint32_t m_bindingPoint = 0;

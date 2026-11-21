@@ -29,6 +29,6 @@ namespace shimera {
 /* Anything an effect can hand to a shader.
  *
  * Split out of Uniform.inl so public headers can name it without dragging in GL. */
-using UniformValue = std::variant<float, int, Vec2<float>, Vec3<float>, Vec4<float>, Mat4>;
+using UniformValue = std::variant<float, int, Vec2<float>, Vec3<float>, Vec4<float>, Vec4<int>, Mat4>;
 
 }

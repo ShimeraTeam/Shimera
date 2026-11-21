@@ -26,13 +26,23 @@
 #include "GL/GLFramebuffer.hpp"
 #include "GL/GLTexture.hpp"
 #include "effects/Effect.hpp"
+#include "effects/Tonemap.hpp"
 #include "hosts/IHostTarget.hpp"
 
 namespace shimera {
 
+/**
+ * A chain of effects, ping-ponged through two intermediate framebuffers.
+ *
+ * LDR by default: intermediates are RGBA8, like every host's scene texture. Opt into HDR
+ * with the constructor flag or setHdr(): intermediates become RGBA16F, nothing is clamped
+ * between effects, and a Tonemap step is appended before the final write, because the
+ * window's framebuffer is still 8-bit. Tune it through tonemap(), or disable it with
+ * setAutoTonemap(false) when the last effect of the chain already outputs display values.
+ */
 class EffectPipeline {
     public:
-        EffectPipeline(int width, int height);
+        EffectPipeline(int width, int height, bool hdr = false);
 
         EffectPipeline(const EffectPipeline&) = delete;
         EffectPipeline& operator=(const EffectPipeline&) = delete;
@@ -45,9 +55,16 @@ class EffectPipeline {
                 "EffectPipeline::add<T> requires T to derive from shimera::Effect");
             auto effect = std::make_unique<TEffect>(std::forward<Args>(args)...);
             effect->resize(m_width, m_height);
+            effect->setPipelineHdr(m_hdr);
             m_effects.emplace_back(std::move(effect));
             return *this;
         }
+
+        void setHdr(bool hdr);
+        [[nodiscard]] bool isHdr() const { return m_hdr; }
+        void setAutoTonemap(const bool enabled) { m_autoTonemap = enabled; }
+        // The automatic tonemap step of an HDR pipeline, created on demand.
+        Tonemap& tonemap();
 
         // Effects are addressed by type, index disambiguate repeats of one type.
         template<typename TEffect>
@@ -89,10 +106,13 @@ class EffectPipeline {
         std::vector<std::unique_ptr<Effect>> m_effects;
         std::unique_ptr<GLFramebuffer> m_fboA;
         std::unique_ptr<GLFramebuffer> m_fboB;
+        std::unique_ptr<Tonemap> m_tonemap;
         const GLTexture* m_depth = nullptr;
         int m_width;
         int m_height;
         bool m_built = false;
+        bool m_hdr = false;
+        bool m_autoTonemap = true;
 };
 
 }

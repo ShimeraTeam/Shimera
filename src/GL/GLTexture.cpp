@@ -29,7 +29,7 @@ GLTexture::GLTexture(const uint32_t handle, const int width, const int height) n
     : m_handle(handle), m_width(width), m_height(height), m_owned(false) {}
 
 GLTexture::GLTexture(const int width, const int height, const Format format)
-    : m_width(width), m_height(height), m_owned(true) {
+    : m_width(width), m_height(height), m_owned(true), m_format(format) {
     // Hosts cache which texture they think is bound, guard those so we don't mess those up.
     const GLStateGuard guard;
 
@@ -41,6 +41,12 @@ GLTexture::GLTexture(const int width, const int height, const Format format)
             0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, nullptr));
         GLC(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
         GLC(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+    } else if (format == Format::ColorHDR) {
+        // Half floats are colour-renderable in core GL 3.0+, no extension check needed.
+        GLC(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height,
+            0, GL_RGBA, GL_HALF_FLOAT, nullptr));
+        GLC(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+        GLC(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
     } else {
         /* RGBA rather than the beta's RGB. effects composite with alpha, and an
         RGB attachment silently drops it.*/
@@ -59,7 +65,7 @@ GLTexture::~GLTexture() {
 
 GLTexture::GLTexture(GLTexture&& other) noexcept
     : m_handle(other.m_handle), m_width(other.m_width),
-      m_height(other.m_height), m_owned(other.m_owned) {
+      m_height(other.m_height), m_owned(other.m_owned), m_format(other.m_format) {
     other.m_handle = 0;
     other.m_owned = false;
 }
@@ -71,6 +77,7 @@ GLTexture& GLTexture::operator=(GLTexture&& other) noexcept {
         m_width = other.m_width;
         m_height = other.m_height;
         m_owned = std::exchange(other.m_owned, false);
+        m_format = other.m_format;
     }
     return *this;
 }

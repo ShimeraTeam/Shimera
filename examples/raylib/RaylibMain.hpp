@@ -22,7 +22,13 @@
 #include <shimera.hpp>
 #include <hosts/RaylibTarget.hpp>
 
-/* A standalone Raylib 3D example */
+#include <optional>
+
+/**
+ * A standalone Raylib 3D example. Shimera's atmosphere over a planet with a box and a
+ * sphere on it, or over a flat ground (sky mode), with a free camera. Keys are printed
+ * at start.
+ */
 class RaylibMain {
 public:
     RaylibMain(const char* title, int width, int height);
@@ -34,13 +40,21 @@ public:
     void run();
 
 private:
-    void update();
+    void drawPlanet() const;
+    void drawFlatWorld() const;
+    void applyMode();
+    void update(float dt);
+    void updateCamera(float dt);
+    void updateSun(float dt);
     void draw();
-    void drawCube(Vector3 position, Vector3 size, Color color) const;
-    void drawSphere(Vector3 position, float radius, Color color) const;
 
     Camera3D m_camera{};
+    float m_sunElevation = 30.0f; // degrees above the horizon
+    float m_sunAzimuth = 150.0f; // degrees, compass: 0 north (-Z), 90 east (+X)
+    bool m_sunMoves = true;
+    bool m_skyMode = false;
     bool m_running = true;
+
     std::optional<shimera::Context> m_context;
     std::optional<shimera::RaylibTarget> m_scene;
     std::optional<shimera::EffectPipeline> m_fx;

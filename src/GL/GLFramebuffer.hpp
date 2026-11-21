@@ -37,11 +37,19 @@ void clearDepth();
 
 /**
  * An offscreen render target, one colour texture, plus depth as either a samplable
- * texture or a plain renderbuffer.
+ * texture, a plain renderbuffer, or nothing at all.
+ *
+ * `colorFormat` picks LDR (RGBA8) or HDR (RGBA16F) storage. `Depth::None` is for
+ * targets that only ever receive fullscreen passes, such as lookup tables, where a
+ * depth attachment would be memory spent on nothing.
  */
 class GLFramebuffer {
     public:
-        GLFramebuffer(int width, int height, bool samplableDepth = false);
+        enum class Depth { None, Renderbuffer, Texture };
+
+        GLFramebuffer(int width, int height, bool samplableDepth = false,
+                      GLTexture::Format colorFormat = GLTexture::Format::Color);
+        GLFramebuffer(int width, int height, Depth depth, GLTexture::Format colorFormat);
         ~GLFramebuffer();
 
         GLFramebuffer(const GLFramebuffer&) = delete;
@@ -62,6 +70,7 @@ class GLFramebuffer {
         [[nodiscard]] uint32_t handle() const { return m_fbo; }
         [[nodiscard]] int width() const { return m_width; }
         [[nodiscard]] int height() const { return m_height; }
+        [[nodiscard]] GLTexture::Format colorFormat() const { return m_colorFormat; }
 
     private:
         uint32_t m_fbo = 0;
@@ -70,7 +79,8 @@ class GLFramebuffer {
         std::optional<GLTexture> m_depth;
         int m_width = 0;
         int m_height = 0;
-        bool m_samplableDepth = false;
+        Depth m_depthMode = Depth::Renderbuffer;
+        GLTexture::Format m_colorFormat = GLTexture::Format::Color;
 };
 
 }
