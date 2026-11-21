@@ -50,6 +50,24 @@ jobs:
             xmake-version: latest
             actions-cache-folder: ".xmake-cache"
 
+        - name: Install slangc
+          shell: bash
+          env:
+            SLANG_VERSION: "2026.21"
+          run: |
+            if [ "$RUNNER_OS" = "Windows" ]; then
+              SLANG_ASSET=windows-x86_64
+            else
+              SLANG_ASSET=linux-x86_64-glibc-2.27
+            fi
+            cd "$RUNNER_TEMP"
+            curl -fsSL --retry 3 -o slang.tar.gz \
+              "https://github.com/shader-slang/slang/releases/download/v$SLANG_VERSION/slang-$SLANG_VERSION-$SLANG_ASSET.tar.gz"
+            mkdir slang
+            tar -xzf slang.tar.gz -C slang
+            slang/bin/slangc -v
+            echo "$RUNNER_TEMP/slang/bin" >> "$GITHUB_PATH"
+
         - name: Extract version
           id: get_version
           shell: bash
@@ -77,7 +95,7 @@ jobs:
           run: |
             mkdir -p shimera-${{ env.version }}/lib
             mkdir -p shimera-${{ env.version }}/include
-            mkdir -p shimera-${{ env.version }}/res
+            mkdir -p shimera-${{ env.version }}/res/shader
             mv build/linux/x86_64/release/*.a shimera-${{ env.version }}/lib/
             for lib in build/linux/x86_64/debug/*.a; do
               mv "$lib" "shimera-${{ env.version }}/lib/$(basename "$lib" .a)-d.a"
@@ -85,14 +103,15 @@ jobs:
             (cd src && find . -type f \( -name '*.h' -o -name '*.hpp' -o -name '*.inl' \) -exec cp --parents {} ../shimera-${{ env.version }}/include/ \;)
             mv README.md shimera-${{ env.version }}
             mv LICENSE shimera-${{ env.version }}
-            mv res/shader shimera-${{ env.version }}/res/
+            mv res/shader/generated shimera-${{ env.version }}/res/shader
+            mv res/shader/material shimera-${{ env.version }}/res/shader
             tar -cvf shimera-${{ env.version }}-${{ matrix.backend }}-linux-${{ matrix.architecture }}.tar shimera-${{ env.version }}
 
         - name: Zip Windows builds
           if: runner.os == 'Windows'
           shell: powershell
           run: |
-            New-Item -ItemType Directory -Force -Path shimera-${{ env.version }}\lib, shimera-${{ env.version }}\bin, shimera-${{ env.version }}\include, shimera-${{ env.version }}\res
+            New-Item -ItemType Directory -Force -Path shimera-${{ env.version }}\lib, shimera-${{ env.version }}\bin, shimera-${{ env.version }}\include, shimera-${{ env.version }}\res\shader
             Move-Item build\windows\${{ matrix.architecture }}\release\*.lib shimera-${{ env.version }}\lib\
             Get-ChildItem build\windows\${{ matrix.architecture }}\debug\*.lib | ForEach-Object {
               Move-Item $_.FullName "shimera-${{ env.version }}\lib\$($_.BaseName)-d.lib"
@@ -107,7 +126,8 @@ jobs:
             cd ..
             Move-Item README.md shimera-${{ env.version }}
             Move-Item LICENSE shimera-${{ env.version }}
-            Move-Item res/shader shimera-${{ env.version }}/res/
+            Move-Item res/shader/generated shimera-${{ env.version }}/res/shader
+            Move-Item res/shader/material shimera-${{ env.version }}/res/shader
             Compress-Archive -Path shimera-${{ env.version }} -DestinationPath shimera-${{ env.version }}-${{ matrix.backend }}-windows-${{ matrix.architecture }}.zip
 
         - name: Upload Linux artifact
